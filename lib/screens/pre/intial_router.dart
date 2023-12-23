@@ -8,6 +8,8 @@ import 'package:winhealth_admin/screens/activity_stats.dart';
 import 'package:winhealth_admin/screens/auth/login_screen.dart';
 import 'package:winhealth_admin/screens/diet_home.dart';
 import 'package:winhealth_admin/screens/landing_screen.dart';
+import 'package:winhealth_admin/screens/notes_home.dart';
+import 'package:winhealth_admin/screens/report_home.dart';
 import 'package:winhealth_admin/services/auth_service.dart';
 import 'package:winhealth_admin/services/base_service.dart';
 
@@ -42,6 +44,7 @@ class _InitialRouterState extends State<InitialRouter> {
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
               builder: (context) => const LandingScreen(),
+             
             ),
           );
         } else {

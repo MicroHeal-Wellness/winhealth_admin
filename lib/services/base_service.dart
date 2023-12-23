@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -92,6 +93,38 @@ class BaseService {
         default:
           return http.post(Uri.parse(url), headers: sentHeaders, body: body);
       }
+    } catch (err) {
+      rethrow;
+    }
+  }
+
+  static Future<http.StreamedResponse> authenticatedFileUpload(
+      PlatformFile file) async {
+    try {
+      if (kDebugMode) {
+        print(
+            "authenticatedFileUpload ${file.name} of size : ${file.size} bytes");
+      }
+      Map<String, dynamic> auth = await getSavedAuth();
+      await refreshAuth();
+      var sentHeaders = {
+        "Authorization": "Bearer ${auth['access_token']}",
+        "Content-Type": "multipart/form-data"
+      };
+
+      http.MultipartRequest request =
+          http.MultipartRequest('POST', Uri.parse("$BASE_URL/files"));
+
+      request.files.add(
+        http.MultipartFile.fromBytes(
+          'file',
+          file.bytes!.toList(),
+          filename: file.name,
+        ),
+      );
+      request.fields.addAll({"type": "image/png"});
+      request.headers.addAll(sentHeaders);
+      return await request.send();
     } catch (err) {
       rethrow;
     }

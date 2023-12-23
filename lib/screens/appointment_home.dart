@@ -23,7 +23,7 @@ class _AppointmentHomeState extends State<AppointmentHome> {
   TextEditingController notesController = TextEditingController();
   bool showbtn = false;
   bool showNotes = false;
-  DateTime? currentDate = DateTime(2023, 12, 21);
+  DateTime? currentDate = DateTime.now();
   @override
   void initState() {
     scrollController.addListener(() {

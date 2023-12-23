@@ -30,6 +30,8 @@ environment:
 dependencies:
   chips_choice: ^3.0.1
   cupertino_icons: ^1.0.2
+  file_picker: ^6.1.1
+  file_saver: ^0.2.9
   firebase_auth: ^4.15.3
   firebase_core: ^2.24.2
   fl_chart: ^0.65.0

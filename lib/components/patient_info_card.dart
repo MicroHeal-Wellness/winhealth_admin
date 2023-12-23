@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:winhealth_admin/models/user_model.dart';
 import 'package:winhealth_admin/screens/activity_stats.dart';
 import 'package:winhealth_admin/screens/diet_home.dart';
+import 'package:winhealth_admin/screens/notes_home.dart';
+import 'package:winhealth_admin/screens/report_home.dart';
 
 class PatientInfoCard extends StatelessWidget {
   final UserModel patient;
@@ -78,7 +80,15 @@ class PatientInfoCard extends StatelessWidget {
                       style: const ButtonStyle(
                         backgroundColor: MaterialStatePropertyAll(Colors.white),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => NotesHome(
+                              patient: patient,
+                            ),
+                          ),
+                        );
+                      },
                       child: const Text('Notes'),
                     ),
                     MenuItemButton(
@@ -92,8 +102,14 @@ class PatientInfoCard extends StatelessWidget {
                       style: const ButtonStyle(
                         backgroundColor: MaterialStatePropertyAll(Colors.white),
                       ),
-                      onPressed: () {},
-                      child: const Text('Reports'),
+                      onPressed: () {Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => ReportHome(
+                              patient: patient,
+                            ),
+                          ),
+                        );},
+                      child: const Text('Uploads'),
                     ),
                   ],
                 ),

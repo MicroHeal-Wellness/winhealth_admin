@@ -369,7 +369,7 @@ class _DietHomeState extends State<DietHome> {
                                         fontWeight: FontWeight.bold,
                                         fontSize: 24),
                                   ),
-                                  Spacer(),
+                                  const Spacer(),
                                   MaterialButton(
                                     onPressed: () async {
                                       await showDialog(
@@ -397,51 +397,66 @@ class _DietHomeState extends State<DietHome> {
                               const SizedBox(
                                 height: 16,
                               ),
-                              ListView.builder(
-                                itemBuilder: (context, index) {
-                                  return GestureDetector(
-                                    child: RecommendedDietCard(
-                                      onDelete: () async {
-                                        // bool resp = await DietService
-                                        //     .removeRecommendedDietGroup(
-                                        //         recommendedDiets[index].id);
-                                        // if (resp) {
-                                        //   await getInitData();
-                                        // } else {
-                                        Fluttertoast.showToast(
-                                          msg:
-                                              "Something Went Wrong, Please Try again",
+                              recommendedDiets.isEmpty
+                                  ? const Center(
+                                      child: Text(
+                                        "No Diet Group",
+                                        style: TextStyle(
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    )
+                                  : ListView.builder(
+                                      itemBuilder: (context, index) {
+                                        return GestureDetector(
+                                          child: RecommendedDietCard(
+                                            onDelete: () async {
+                                              // bool resp = await DietService
+                                              //     .removeRecommendedDietGroup(
+                                              //         recommendedDiets[index].id);
+                                              // if (resp) {
+                                              //   await getInitData();
+                                              // } else {
+                                              Fluttertoast.showToast(
+                                                msg:
+                                                    "Something Went Wrong, Please Try again",
+                                              );
+                                              // }
+                                            },
+                                            recommendedDiet:
+                                                recommendedDiets[index],
+                                            isSelected:
+                                                selecetedRecommendedDiet == null
+                                                    ? false
+                                                    : selecetedRecommendedDiet!
+                                                            .id ==
+                                                        recommendedDiets[index]
+                                                            .id,
+                                          ),
+                                          onTap: () {
+                                            if (selecetedRecommendedDiet !=
+                                                    null &&
+                                                selecetedRecommendedDiet!.id ==
+                                                    recommendedDiets[index]
+                                                        .id) {
+                                              setState(() {
+                                                selecetedRecommendedDiet = null;
+                                                showNotes = !showNotes;
+                                              });
+                                            } else {
+                                              setState(() {
+                                                selecetedRecommendedDiet =
+                                                    recommendedDiets[index];
+                                                showNotes = !showNotes;
+                                              });
+                                            }
+                                          },
                                         );
-                                        // }
                                       },
-                                      recommendedDiet: recommendedDiets[index],
-                                      isSelected:
-                                          selecetedRecommendedDiet == null
-                                              ? false
-                                              : selecetedRecommendedDiet!.id ==
-                                                  recommendedDiets[index].id,
+                                      shrinkWrap: true,
+                                      itemCount: recommendedDiets.length,
                                     ),
-                                    onTap: () {
-                                      if (selecetedRecommendedDiet != null &&
-                                          selecetedRecommendedDiet!.id ==
-                                              recommendedDiets[index].id) {
-                                        setState(() {
-                                          selecetedRecommendedDiet = null;
-                                          showNotes = !showNotes;
-                                        });
-                                      } else {
-                                        setState(() {
-                                          selecetedRecommendedDiet =
-                                              recommendedDiets[index];
-                                          showNotes = !showNotes;
-                                        });
-                                      }
-                                    },
-                                  );
-                                },
-                                shrinkWrap: true,
-                                itemCount: recommendedDiets.length,
-                              ),
                             ],
                           ),
                         ),
@@ -505,48 +520,58 @@ class _DietHomeState extends State<DietHome> {
                                     ),
                               !showNotes
                                   ? const SizedBox()
-                                  : ListView.builder(
-                                      shrinkWrap: true,
-                                      itemBuilder: (context, index) {
-                                        return FoodItemCard(
-                                          recommendedDietItem:
-                                              selecetedRecommendedDiet!
-                                                  .items![index],
-                                          onEdit: () async {
-                                            setState(() {
-                                              qunatityController.text =
+                                  : selecetedRecommendedDiet!.items!.isEmpty
+                                      ? const Center(
+                                          child: Text(
+                                            "No Recommended Diet",
+                                            style: TextStyle(
+                                              fontSize: 24,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        )
+                                      : ListView.builder(
+                                          shrinkWrap: true,
+                                          itemBuilder: (context, index) {
+                                            return FoodItemCard(
+                                              recommendedDietItem:
                                                   selecetedRecommendedDiet!
-                                                          .items![index]
-                                                          .quantity ??
-                                                      "1";
-                                              instructionController.text =
+                                                      .items![index],
+                                              onEdit: () async {
+                                                setState(() {
+                                                  qunatityController.text =
+                                                      selecetedRecommendedDiet!
+                                                              .items![index]
+                                                              .quantity ??
+                                                          "1";
+                                                  instructionController.text =
+                                                      selecetedRecommendedDiet!
+                                                              .items![index]
+                                                              .cookingInstruction ??
+                                                          "N/A";
+                                                });
+                                                await showDialog(
+                                                  context: context,
+                                                  builder: (context) =>
+                                                      editFoodDialogBoxPopup(
+                                                    selecetedRecommendedDiet!
+                                                        .items![index],
+                                                  ),
+                                                );
+                                                await getInitData();
+                                              },
+                                              onRemove: () async {
+                                                bool resp = await DietService
+                                                    .removeRecommendedDietItem(
                                                   selecetedRecommendedDiet!
-                                                          .items![index]
-                                                          .cookingInstruction ??
-                                                      "N/A";
-                                            });
-                                            await showDialog(
-                                              context: context,
-                                              builder: (context) =>
-                                                  editFoodDialogBoxPopup(
-                                                selecetedRecommendedDiet!
-                                                    .items![index],
-                                              ),
-                                            );
-                                            await getInitData();
-                                          },
-                                          onRemove: () async {
-                                            bool resp = await DietService
-                                                .removeRecommendedDietItem(
-                                              selecetedRecommendedDiet!
-                                                  .items![index].id,
+                                                      .items![index].id,
+                                                );
+                                              },
                                             );
                                           },
-                                        );
-                                      },
-                                      itemCount: selecetedRecommendedDiet!
-                                          .items!.length,
-                                    ),
+                                          itemCount: selecetedRecommendedDiet!
+                                              .items!.length,
+                                        ),
                               !showNotes
                                   ? const SizedBox()
                                   : const SizedBox(

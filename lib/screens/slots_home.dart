@@ -2,9 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:winhealth_admin/components/appointment_card.dart';
-import 'package:winhealth_admin/components/notes_card.dart';
-import 'package:winhealth_admin/components/pateint_card.dart';
 import 'package:winhealth_admin/components/slot_card.dart';
 import 'package:winhealth_admin/models/slot.dart';
 import 'package:winhealth_admin/models/user_model.dart';

@@ -2,14 +2,14 @@ import 'package:file_saver/file_saver.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:winhealth_admin/models/notes.dart';
+import 'package:winhealth_admin/models/report.dart';
 import 'package:winhealth_admin/services/base_service.dart';
 import 'package:winhealth_admin/services/note_service.dart';
 import 'package:winhealth_admin/utils/constants.dart';
 
-class NotesCard extends StatelessWidget {
-  final Note note;
-  final VoidCallback onRemove;
-  const NotesCard({super.key, required this.note, required this.onRemove});
+class ReportsCard extends StatelessWidget {
+  final Report report;
+  const ReportsCard({super.key, required this.report});
 
   @override
   Widget build(BuildContext context) {
@@ -24,51 +24,19 @@ class NotesCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Text(
-                "Added on: ${(note.dateUpdated ?? note.dateCreated).toString().split(".").first}",
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                ),
-              ),
-              const Spacer(),
-              IconButton(
-                onPressed: () {
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        return StatefulBuilder(builder: (context, setState) {
-                          return AlertDialog(
-                            title:
-                                const Text("Are you sure you want to delete?"),
-                            actions: [
-                              MaterialButton(
-                                onPressed: onRemove,
-                                child: const Text("yes"),
-                              ),
-                              MaterialButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: const Text("No"),
-                              ),
-                            ],
-                          );
-                        });
-                      });
-                },
-                icon: const Icon(Icons.delete),
-              )
-            ],
+          Text(
+            "Added on: ${(report.dateCreated).toString().split(".").first}",
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+            ),
           ),
           const Divider(),
-          note.attachment != null
+          report.file != null
               ? Row(
                   children: [
                     Text(
-                      "Attachment: ${note.attachment!.filenameDownload}",
+                      "Attachment: ${report.file!.filenameDownload}",
                       style: const TextStyle(
                         fontSize: 18,
                       ),
@@ -77,10 +45,10 @@ class NotesCard extends StatelessWidget {
                     MaterialButton(
                       onPressed: () async {
                         await FileSaver.instance.saveFile(
-                            name: note.attachment!.filenameDownload!,
+                            name: report.file!.filenameDownload!,
                             link: LinkDetails(
                                 link:
-                                    "${BaseService.BASE_URL}/assets/${note.attachment!.id!}"));
+                                    "${BaseService.BASE_URL}/assets/${report.file!.id!}"));
                       },
                       color: primaryColor,
                       shape: RoundedRectangleBorder(
@@ -112,14 +80,14 @@ class NotesCard extends StatelessWidget {
                 )
               : const SizedBox(),
           const Text(
-            "Note:",
+            "Type:",
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 18,
             ),
           ),
           Text(
-            "${note.content}",
+            "${report.type}",
           )
         ],
       ),

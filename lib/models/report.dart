@@ -1,55 +1,44 @@
-// To parse this JSON data, do
-//
-//     final report = reportFromJson(jsonString);
 
 import 'dart:convert';
 
-import 'package:winhealth_admin/models/user_model.dart';
+import 'package:winhealth_admin/models/attachment.dart';
 
-List<Report> reportFromJson(String str) =>
-    List<Report>.from(json.decode(str).map((x) => Report.fromJson(x)));
+List<Report> reportFromJson(String str) => List<Report>.from(json.decode(str).map((x) => Report.fromJson(x)));
 
-String reportToJson(List<Report> data) =>
-    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String reportToJson(List<Report> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class Report {
-  String? id;
-  String? url;
-  String? type;
-  String? key;
-  String? userId;
-  DateTime? createdAt;
-  UserModel? user;
+    String? id;
+    String? userCreated;
+    DateTime? dateCreated;
+    String? type;
+    String? fileName;
+    Attachment? file;
 
-  Report({
-    this.id,
-    this.url,
-    this.type,
-    this.key,
-    this.userId,
-    this.createdAt,
-    this.user,
-  });
+    Report({
+        this.id,
+        this.userCreated,
+        this.dateCreated,
+        this.type,
+        this.fileName,
+        this.file,
+    });
 
-  factory Report.fromJson(Map<String, dynamic> json) => Report(
+    factory Report.fromJson(Map<String, dynamic> json) => Report(
         id: json["id"],
-        url: json["url"],
+        userCreated: json["user_created"],
+        dateCreated: json["date_created"] == null ? null : DateTime.parse(json["date_created"]),
         type: json["type"],
-        key: json["key"],
-        userId: json["user_id"],
-        createdAt: json["created_at"] == null
-            ? null
-            : DateTime.parse(json["created_at"]),
-        user: json["user"] == null ? null : UserModel.fromJson(json["user"]),
-      );
+        fileName: json["file_name"],
+        file: json["file"] == null ? null : Attachment.fromJson(json["file"]),
+    );
 
-  Map<String, dynamic> toJson() => {
+    Map<String, dynamic> toJson() => {
         "id": id,
-        "url": url,
+        "user_created": userCreated,
+        "date_created": dateCreated?.toIso8601String(),
         "type": type,
-        "key": key,
-        "user_id": userId,
-        "created_at": createdAt?.toIso8601String(),
-        "user": user?.toJson(),
-      };
+        "file_name": fileName,
+        "file": file?.toJson(),
+    };
 }
