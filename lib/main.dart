@@ -4,7 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:winhealth_admin/firebase_options.dart';
-import 'package:winhealth_admin/screens/auth/login_screen.dart';
 import 'provider/sidebar_provvider.dart';
 import 'screens/pre/intial_router.dart';
 

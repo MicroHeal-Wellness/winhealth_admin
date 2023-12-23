@@ -31,6 +31,66 @@ class DietService {
     }
   }
 
+  static Future<bool> addRecommendedDietGroup(payload) async {
+    final response = await BaseService.makeAuthenticatedRequest(
+        '${BaseService.BASE_URL}/items/recommended_diet',
+        method: 'POST',
+        body: jsonEncode(payload));
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  static Future<bool> removeRecommendedDietGroup(id) async {
+    final response = await BaseService.makeAuthenticatedRequest(
+      '${BaseService.BASE_URL}/items/recommended_diet/$id',
+      method: 'DELETE',
+    );
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  static Future<bool> addRecommendedDietItem(payload) async {
+    final response = await BaseService.makeAuthenticatedRequest(
+        '${BaseService.BASE_URL}/items/recommended_diet_recommended_diet_item',
+        method: 'POST',
+        body: jsonEncode(payload));
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  static Future<bool> udpateRecommendedDietItem(payload, id) async {
+    final response = await BaseService.makeAuthenticatedRequest(
+        '${BaseService.BASE_URL}/items/recommended_diet_recommended_diet_item/$id',
+        method: 'PATCH',
+        body: jsonEncode(payload));
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  static Future<bool> removeRecommendedDietItem(id) async {
+    final response = await BaseService.makeAuthenticatedRequest(
+      '${BaseService.BASE_URL}/items/recommended_diet_item/$id',
+      method: 'DELETE',
+    );
+    if (response.statusCode == 204) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   static Future<List<FoodItem>> getFoodItemsByQuery(String query) async {
     final response = await BaseService.makeAuthenticatedRequest(
       '${BaseService.BASE_URL}/items/food_items?search=$query',

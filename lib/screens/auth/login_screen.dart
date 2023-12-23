@@ -4,6 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:winhealth_admin/services/auth_service.dart';
 
 import 'package:responsive_framework/responsive_framework.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -178,7 +179,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   formKey.currentState!.validate();
                   if (!emailController.text
                       .contains(RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$'))) {
-                    Fluttertoast.showToast(msg: 'Please enter valid email');
+                    Fluttertoast.showToast(
+                        msg: 'Please enter valid email');
                   } else {
                     if (emailController.text.isEmpty) {
                       Fluttertoast.showToast(

@@ -41,15 +41,15 @@ class _InitialRouterState extends State<InitialRouter> {
         if (currentUser != null) {
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
-                builder: (context) => 
-                DietHome(
+                builder: (context) => DietHome(
                       patient: currentUser,
                     )
                 // const LandingScreen(),
                 ),
           );
         } else {
-          Fluttertoast.showToast(msg: "Not a valid user type");
+          Fluttertoast.showToast(
+              msg: "Not a valid user type");
           await AuthService.logOut(context);
           // logout
           Navigator.of(context).push(

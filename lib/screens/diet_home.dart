@@ -1,4 +1,8 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:winhealth_admin/components/food_item_card.dart';
 import 'package:winhealth_admin/components/recommended_diet_card.dart';
 import 'package:winhealth_admin/models/food_item.dart';
@@ -26,8 +30,8 @@ class _DietHomeState extends State<DietHome> {
   List<FoodItem> filterdFoodItems = [];
   RecommendedDiet? selecetedRecommendedDiet;
   TextEditingController searchController = TextEditingController();
-  TextEditingController qunatityController = TextEditingController();
-  TextEditingController instructionController = TextEditingController();
+  TextEditingController qunatityController = TextEditingController(text: "");
+  TextEditingController instructionController = TextEditingController(text: "");
 
   @override
   void initState() {
@@ -56,29 +60,93 @@ class _DietHomeState extends State<DietHome> {
     setState(() {
       loading = true;
     });
-    // recommendedDiets = await DietService.getRecommendedDietByPatientID(widget.patient.id!);
-    recommendedDiets = await DietService.getRecommendedDietByPatientID(
-        "dd38322a-35ed-4681-b46e-3e8a803dc17b");
-    // await getPatients();
+    recommendedDiets =
+        await DietService.getRecommendedDietByPatientID(widget.patient.id!);
     setState(() {
-      selecetedRecommendedDiet = recommendedDiets.first;
-      showNotes = !showNotes;
       loading = false;
     });
   }
 
-  // getPatients() async {
-  //   patientList = await PatientService.getPatients();
-  // }
   var typeBreif = {
     'morning': 'Mornning 8 AM - 11 AM',
     'afternoon': 'Afternoon 12 PM - 2 PM',
     'evening': 'Evening 5 PM - 7 PM',
     'night': 'Night 8 PM - 11 PM',
   };
+  List<String> typeList = [
+    'morning',
+    'afternoon',
+    'evening',
+    'night',
+  ];
+
+  String selectedType = 'morning';
+
+  double maxKcal = 0;
+  double eatenKcal = 0;
+
+  double maxcarbs = 0;
+  double eatencarbs = 0;
+
+  double maxProtien = 0;
+  double eatenProtien = 0;
+
+  double maxFat = 0;
+  double eatenFat = 0;
+
+  void genNutrientLimits() {
+    double age = (DateTime.now().difference(widget.patient.dob!).inDays / 365)
+        .ceilToDouble();
+    double weight = double.parse(widget.patient.weight ?? "0.0");
+    double height = double.parse(widget.patient.height ?? "0.0");
+    if (widget.patient.exercise ?? false) {
+      if (widget.patient.gender == "male") {
+        maxKcal = ((9.99 * weight) + (6.25 * height) - (4.92 * age) + 5);
+      } else {
+        maxKcal = ((9.99 * weight) + (6.25 * height) - (4.92 * age) - 161);
+      }
+    } else {
+      if (widget.patient.gender == "male") {
+        maxKcal = 66.47 + (13.75 * weight) + (5.003 * height) - (6.755 * age);
+      } else {
+        maxKcal = 65.1 + (9.563 * weight) + (1.85 * height) - (4.676 * age);
+      }
+    }
+    setState(() {
+      maxcarbs = double.parse((maxKcal / 4).toStringAsFixed(2));
+      maxProtien = double.parse((maxKcal / 4).toStringAsFixed(2));
+      maxFat = double.parse((maxKcal / 9).toStringAsFixed(2));
+
+      maxKcal = double.parse(maxKcal.toStringAsFixed(2));
+    });
+  }
+
+  void genNutrientValue() {
+    genNutrientLimits();
+    eatenKcal = 0;
+    eatencarbs = 0;
+    eatenProtien = 0;
+    eatenFat = 0;
+    for (int i = 0; i < recommendedDiets.length; i++) {
+      for (int j = 0; j < recommendedDiets[i].items!.length; j++) {
+        eatenKcal += recommendedDiets[i].items![j].foodItem!.energy!;
+        eatencarbs += recommendedDiets[i].items![j].foodItem!.cho!;
+        eatenProtien += recommendedDiets[i].items![j].foodItem!.protien!;
+        eatenFat += recommendedDiets[i].items![j].foodItem!.unsaturatedFats!;
+        eatenFat += recommendedDiets[i].items![j].foodItem!.saturatedFat!;
+      }
+    }
+    setState(() {
+      eatenKcal = double.parse(eatenKcal.toStringAsFixed(2));
+      eatencarbs = double.parse(eatencarbs.toStringAsFixed(2));
+      eatenProtien = double.parse(eatenProtien.toStringAsFixed(2));
+      eatenFat = double.parse(eatenFat.toStringAsFixed(2));
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    genNutrientValue();
     return Scaffold(
       backgroundColor: Colors.grey.shade100.withOpacity(0.4),
       floatingActionButton: AnimatedOpacity(
@@ -135,36 +203,245 @@ class _DietHomeState extends State<DietHome> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Expanded(
-                          child: ListView.builder(
-                            itemBuilder: (context, index) {
-                              return GestureDetector(
-                                child: RecommendedDietCard(
-                                  recommendedDiet: recommendedDiets[index],
-                                  isSelected: selecetedRecommendedDiet == null
-                                      ? false
-                                      : selecetedRecommendedDiet!.id ==
-                                          recommendedDiets[index].id,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "Summary",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 24),
+                              ),
+                              const SizedBox(
+                                height: 16,
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(16.0),
+                                    border: Border.all(
+                                        color: Colors.grey.withOpacity(0.4))),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(20.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          const Text(
+                                            "Carbs",
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              color: Colors.grey,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 8.0),
+                                          Text(
+                                            "$eatencarbs g / $maxcarbs g",
+                                            style: const TextStyle(
+                                              fontSize: 18,
+                                              color: Colors.grey,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 8.0),
+                                          const Text(
+                                            "Protien",
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              color: Colors.grey,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 8.0),
+                                          Text(
+                                            "$eatenProtien g / $maxProtien g",
+                                            style: const TextStyle(
+                                              fontSize: 18,
+                                              color: Colors.grey,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 8.0),
+                                          const Text(
+                                            "Fat",
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              color: Colors.grey,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 8.0),
+                                          Text(
+                                            "$eatenFat g / $maxFat g",
+                                            style: const TextStyle(
+                                              fontSize: 18,
+                                              color: Colors.grey,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      CircularPercentIndicator(
+                                        radius: 55,
+                                        lineWidth: 8,
+                                        percent: (eatenKcal / maxKcal) > 1
+                                            ? 1
+                                            : (eatenKcal / maxKcal),
+                                        progressColor: primaryColor,
+                                        backgroundColor: Colors.grey,
+                                        circularStrokeCap:
+                                            CircularStrokeCap.round,
+                                        center: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              (maxKcal - eatenKcal)
+                                                  .toStringAsFixed(2),
+                                              style: const TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize: 20),
+                                            ),
+                                            const Text(
+                                              "Kcal left",
+                                              style: TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize: 16),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      const SizedBox(width: 16.0),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          const Text(
+                                            "Eaten",
+                                            style: TextStyle(
+                                                fontSize: 18,
+                                                color: Colors.grey,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          const SizedBox(height: 8.0),
+                                          Text(
+                                            "$eatenKcal Kcal",
+                                            style: const TextStyle(
+                                              fontSize: 20,
+                                              color: Colors.grey,
+                                              fontWeight: FontWeight.w300,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 16.0),
+                                          const Text(
+                                            "Total Required",
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              color: Color(0xFF3982EC),
+                                            ),
+                                          ),
+                                          const SizedBox(height: 8.0),
+                                          Text(
+                                            "$maxKcal Kcal",
+                                            style: const TextStyle(
+                                              fontSize: 20,
+                                              color: Colors.grey,
+                                              fontWeight: FontWeight.w300,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                                onTap: () {
-                                  if (selecetedRecommendedDiet != null &&
-                                      selecetedRecommendedDiet!.id ==
-                                          recommendedDiets[index].id) {
-                                    setState(() {
-                                      selecetedRecommendedDiet = null;
-                                      showNotes = !showNotes;
-                                    });
-                                  } else {
-                                    setState(() {
-                                      selecetedRecommendedDiet =
-                                          recommendedDiets[index];
-                                      showNotes = !showNotes;
-                                    });
-                                  }
+                              ),
+                              const SizedBox(
+                                height: 16,
+                              ),
+                              Row(
+                                children: [
+                                  const Text(
+                                    "Routines",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 24),
+                                  ),
+                                  Spacer(),
+                                  MaterialButton(
+                                    onPressed: () async {
+                                      await showDialog(
+                                        context: context,
+                                        builder: (context) =>
+                                            addRoutuineDialogBoxPopup(),
+                                      );
+                                      await getInitData();
+                                    },
+                                    color: primaryColor,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: const Padding(
+                                      padding: EdgeInsets.all(6.0),
+                                      child: Text(
+                                        "Add Routine",
+                                        style: TextStyle(
+                                            fontSize: 18, color: Colors.white),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 16,
+                              ),
+                              ListView.builder(
+                                itemBuilder: (context, index) {
+                                  return GestureDetector(
+                                    child: RecommendedDietCard(
+                                      onDelete: () async {
+                                        // bool resp = await DietService
+                                        //     .removeRecommendedDietGroup(
+                                        //         recommendedDiets[index].id);
+                                        // if (resp) {
+                                        //   await getInitData();
+                                        // } else {
+                                          Fluttertoast.showToast(
+                                              msg:
+                                                  "Something Went Wrong, Please Try again",);
+                                        // }
+                                      },
+                                      recommendedDiet: recommendedDiets[index],
+                                      isSelected:
+                                          selecetedRecommendedDiet == null
+                                              ? false
+                                              : selecetedRecommendedDiet!.id ==
+                                                  recommendedDiets[index].id,
+                                    ),
+                                    onTap: () {
+                                      if (selecetedRecommendedDiet != null &&
+                                          selecetedRecommendedDiet!.id ==
+                                              recommendedDiets[index].id) {
+                                        setState(() {
+                                          selecetedRecommendedDiet = null;
+                                          showNotes = !showNotes;
+                                        });
+                                      } else {
+                                        setState(() {
+                                          selecetedRecommendedDiet =
+                                              recommendedDiets[index];
+                                          showNotes = !showNotes;
+                                        });
+                                      }
+                                    },
+                                  );
                                 },
-                              );
-                            },
-                            shrinkWrap: true,
-                            itemCount: recommendedDiets.length,
+                                shrinkWrap: true,
+                                itemCount: recommendedDiets.length,
+                              ),
+                            ],
                           ),
                         ),
                         const SizedBox(
@@ -190,12 +467,13 @@ class _DietHomeState extends State<DietHome> {
                                               fontWeight: FontWeight.bold),
                                         ),
                                         MaterialButton(
-                                          onPressed: () {
-                                            showDialog(
+                                          onPressed: () async {
+                                            await showDialog(
                                               context: context,
                                               builder: (context) =>
                                                   addFoodDialogBoxPopup(),
                                             );
+                                            await getInitData();
                                           },
                                           color: primaryColor,
                                           shape: RoundedRectangleBorder(
@@ -233,6 +511,36 @@ class _DietHomeState extends State<DietHome> {
                                           recommendedDietItem:
                                               selecetedRecommendedDiet!
                                                   .items![index],
+                                          onEdit: () async {
+                                            setState(() {
+                                              qunatityController.text =
+                                                  selecetedRecommendedDiet!
+                                                          .items![index]
+                                                          .quantity ??
+                                                      "1";
+                                              instructionController.text =
+                                                  selecetedRecommendedDiet!
+                                                          .items![index]
+                                                          .cookingInstruction ??
+                                                      "N/A";
+                                            });
+                                            await showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  editFoodDialogBoxPopup(
+                                                selecetedRecommendedDiet!
+                                                    .items![index],
+                                              ),
+                                            );
+                                            await getInitData();
+                                          },
+                                          onRemove: () async {
+                                            bool resp = await DietService
+                                                .removeRecommendedDietItem(
+                                              selecetedRecommendedDiet!
+                                                  .items![index].id,
+                                            );
+                                          },
                                         );
                                       },
                                       itemCount: selecetedRecommendedDiet!
@@ -339,185 +647,247 @@ class _DietHomeState extends State<DietHome> {
                               shrinkWrap: true,
                               itemCount: filterdFoodItems.length,
                               itemBuilder: (context, index) {
-                                return Padding(
-                                  padding: const EdgeInsets.only(bottom: 8.0),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) => AlertDialog(
-                                          title: const Text("Add Food Item"),
-                                          content: Column(
-                                            children: [
-                                              FoodItemCard(
-                                                showMenu: false,
-                                                recommendedDietItem:
-                                                    RecommendedDietItem(
-                                                  id: filterdFoodItems[index]
-                                                      .id,
-                                                  quantity:
-                                                      filterdFoodItems[index]
-                                                          .recomendedQuantity,
-                                                  foodItem:
-                                                      filterdFoodItems[index],
-                                                  cookingInstruction: filterdFoodItems[index]
-                                                          .recomendedQuantity,
-                                                ),
-                                              ),
-                                              const SizedBox(
-                                                height: 12,
-                                              ),
-                                              const Align(
-                                                alignment: Alignment.topLeft,
-                                                child: Text(
-                                                  'Updated Recommended Quantity:',
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 16,
-                                                  ),
-                                                ),
-                                              ),
-                                              const SizedBox(
-                                                height: 12,
-                                              ),
-                                              TextFormField(
-                                                initialValue: filterdFoodItems[index]
-                                                          .recomendedQuantity,
-                                                controller: qunatityController,
-                                                style: const TextStyle(
-                                                    color: Colors.black),
-                                                decoration:
-                                                    const InputDecoration(
-                                                  hintText:
-                                                      'Updated Recommended Quantity:',
-                                                  hintStyle: TextStyle(
-                                                    color: Colors.black,
-                                                  ),
-                                                  fillColor: Colors.transparent,
-                                                  filled: true,
-                                                  border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                      Radius.circular(10.0),
-                                                    ),
-                                                    borderSide: BorderSide(
-                                                      color: Colors.black,
-                                                    ),
-                                                  ),
-                                                  focusedBorder:
-                                                      OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                      width: 1,
-                                                      color: Colors.black,
-                                                    ),
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                      Radius.circular(10.0),
-                                                    ),
-                                                  ),
-                                                  enabledBorder:
-                                                      OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                      width: 1,
-                                                      color: Colors.grey,
-                                                    ),
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                      Radius.circular(10.0),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              const SizedBox(
-                                                height: 12,
-                                              ),
-                                              const Align(
-                                                alignment: Alignment.topLeft,
-                                                child: Text(
-                                                  'Updated Instructions:',
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 16,
-                                                  ),
-                                                ),
-                                              ),
-                                              const SizedBox(
-                                                height: 12,
-                                              ),
-                                              TextFormField(
-                                                initialValue: "N/A",
-                                                controller: instructionController,
-                                                style: const TextStyle(
-                                                    color: Colors.black),
-                                                decoration:
-                                                    const InputDecoration(
-                                                  hintText:
-                                                      'Enter updated instructions',
-                                                  hintStyle: TextStyle(
-                                                    color: Colors.black,
-                                                  ),
-                                                  fillColor: Colors.transparent,
-                                                  filled: true,
-                                                  border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                      Radius.circular(10.0),
-                                                    ),
-                                                    borderSide: BorderSide(
-                                                      color: Colors.black,
-                                                    ),
-                                                  ),
-                                                  focusedBorder:
-                                                      OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                      width: 1,
-                                                      color: Colors.black,
-                                                    ),
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                      Radius.circular(10.0),
-                                                    ),
-                                                  ),
-                                                  enabledBorder:
-                                                      OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                      width: 1,
-                                                      color: Colors.grey,
-                                                    ),
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                      Radius.circular(10.0),
-                                                    ),
-                                                  ),
-                                                ),
-                                                onFieldSubmitted:
-                                                    (value) async {
-                                                  setState(() {
-                                                    searchLoading = true;
-                                                  });
-                                                  filterdFoodItems =
-                                                      await DietService
-                                                          .getFoodItemsByQuery(
-                                                              value);
-                                                  setState(() {
-                                                    searchLoading = false;
-                                                  });
-                                                },
-                                              ),
-                                            ],
-                                          ),
+                                return GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      qunatityController.text =
+                                          filterdFoodItems[index]
+                                                  .recomendedQuantity ??
+                                              "1";
+                                      instructionController.text = "N/A";
+                                    });
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                        scrollable: true,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(12),
                                         ),
-                                      );
-                                    },
-                                    child: FoodItemCard(
-                                      showMenu: false,
-                                      recommendedDietItem: RecommendedDietItem(
-                                        id: filterdFoodItems[index].id,
-                                        quantity: filterdFoodItems[index]
-                                            .recomendedQuantity,
-                                        foodItem: filterdFoodItems[index],
-                                        cookingInstruction: "N/A",
+                                        title: const Text("Add Food Item"),
+                                        content: Column(
+                                          children: [
+                                            FoodItemCard(
+                                              showMenu: false,
+                                              onEdit: () {},
+                                              onRemove: () {},
+                                              recommendedDietItem:
+                                                  RecommendedDietItem(
+                                                id: filterdFoodItems[index].id,
+                                                quantity:
+                                                    filterdFoodItems[index]
+                                                        .recomendedQuantity,
+                                                foodItem:
+                                                    filterdFoodItems[index],
+                                                cookingInstruction:
+                                                    filterdFoodItems[index]
+                                                        .recomendedQuantity,
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 12,
+                                            ),
+                                            const Align(
+                                              alignment: Alignment.topLeft,
+                                              child: Text(
+                                                'Updated Recommended Quantity:',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 16,
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 12,
+                                            ),
+                                            TextFormField(
+                                              controller: qunatityController,
+                                              style: const TextStyle(
+                                                  color: Colors.black),
+                                              decoration: const InputDecoration(
+                                                hintText:
+                                                    'Updated Recommended Quantity:',
+                                                hintStyle: TextStyle(
+                                                  color: Colors.black,
+                                                ),
+                                                fillColor: Colors.transparent,
+                                                filled: true,
+                                                border: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                    Radius.circular(10.0),
+                                                  ),
+                                                  borderSide: BorderSide(
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                                focusedBorder:
+                                                    OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                    width: 1,
+                                                    color: Colors.black,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                    Radius.circular(10.0),
+                                                  ),
+                                                ),
+                                                enabledBorder:
+                                                    OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                    width: 1,
+                                                    color: Colors.grey,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                    Radius.circular(10.0),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 12,
+                                            ),
+                                            const Align(
+                                              alignment: Alignment.topLeft,
+                                              child: Text(
+                                                'Updated Instructions:',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 16,
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 12,
+                                            ),
+                                            TextFormField(
+                                              controller: instructionController,
+                                              minLines: 5,
+                                              maxLines: 10,
+                                              style: const TextStyle(
+                                                  color: Colors.black),
+                                              decoration: const InputDecoration(
+                                                hintText:
+                                                    'Enter updated instructions',
+                                                hintStyle: TextStyle(
+                                                  color: Colors.black,
+                                                ),
+                                                fillColor: Colors.transparent,
+                                                filled: true,
+                                                border: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                    Radius.circular(10.0),
+                                                  ),
+                                                  borderSide: BorderSide(
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                                focusedBorder:
+                                                    OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                    width: 1,
+                                                    color: Colors.black,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                    Radius.circular(10.0),
+                                                  ),
+                                                ),
+                                                enabledBorder:
+                                                    OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                    width: 1,
+                                                    color: Colors.grey,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                    Radius.circular(10.0),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 12,
+                                            ),
+                                            MaterialButton(
+                                              onPressed: () async {
+                                                bool resp = await DietService
+                                                    .addRecommendedDietItem({
+                                                  "recommended_diet_id":
+                                                      selecetedRecommendedDiet!
+                                                          .id,
+                                                  "recommended_diet_item_id": {
+                                                    "food_item":
+                                                        filterdFoodItems[index]
+                                                            .id,
+                                                    "cooking_instruction":
+                                                        instructionController
+                                                                .text.isEmpty
+                                                            ? "N/A"
+                                                            : instructionController
+                                                                .text,
+                                                    "quantity":
+                                                        qunatityController
+                                                                .text.isEmpty
+                                                            ? "N/A"
+                                                            : qunatityController
+                                                                .text,
+                                                  }
+                                                });
+                                                if (resp) {
+                                                  Navigator.of(context).pop();
+                                                  Navigator.of(context).pop();
+                                                  Fluttertoast.showToast(
+                                                    msg:
+                                                        "Added Food Item for ${widget.patient.firstName}",
+                                                  );
+                                                } else {
+                                                  Navigator.of(context).pop();
+                                                  Navigator.of(context).pop();
+                                                  Fluttertoast.showToast(
+                                                    msg:
+                                                        "Something Went Wrong Please Try Again",
+                                                  );
+                                                }
+                                              },
+                                              color: primaryColor,
+                                              minWidth: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                              ),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Text(
+                                                  "Add Item for ${widget.patient.firstName}",
+                                                  style: const TextStyle(
+                                                    fontSize: 20,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        ),
                                       ),
+                                    );
+                                  },
+                                  child: FoodItemCard(
+                                    showMenu: false,
+                                    onEdit: () {},
+                                    onRemove: () {},
+                                    recommendedDietItem: RecommendedDietItem(
+                                      id: filterdFoodItems[index].id,
+                                      quantity: filterdFoodItems[index]
+                                          .recomendedQuantity,
+                                      foodItem: filterdFoodItems[index],
+                                      cookingInstruction: "N/A",
                                     ),
                                   ),
                                 );
@@ -527,6 +897,294 @@ class _DietHomeState extends State<DietHome> {
               ],
             ),
           ),
+        ),
+      );
+    });
+  }
+
+  editFoodDialogBoxPopup(RecommendedDietItem recommendedDietItem) {
+    return StatefulBuilder(builder: (context, setState) {
+      return AlertDialog(
+        scrollable: true,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        title: const Text("Add Food Item"),
+        content: Column(
+          children: [
+            FoodItemCard(
+              showMenu: false,
+              onEdit: () {},
+              onRemove: () {},
+              recommendedDietItem: recommendedDietItem,
+            ),
+            const SizedBox(
+              height: 12,
+            ),
+            const Align(
+              alignment: Alignment.topLeft,
+              child: Text(
+                'Updated Recommended Quantity:',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 12,
+            ),
+            TextFormField(
+              controller: qunatityController,
+              style: const TextStyle(color: Colors.black),
+              decoration: const InputDecoration(
+                hintText: 'Updated Recommended Quantity:',
+                hintStyle: TextStyle(
+                  color: Colors.black,
+                ),
+                fillColor: Colors.transparent,
+                filled: true,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10.0),
+                  ),
+                  borderSide: BorderSide(
+                    color: Colors.black,
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    width: 1,
+                    color: Colors.black,
+                  ),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10.0),
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    width: 1,
+                    color: Colors.grey,
+                  ),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10.0),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 12,
+            ),
+            const Align(
+              alignment: Alignment.topLeft,
+              child: Text(
+                'Updated Instructions:',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 12,
+            ),
+            TextFormField(
+              controller: instructionController,
+              minLines: 5,
+              maxLines: 10,
+              style: const TextStyle(color: Colors.black),
+              decoration: const InputDecoration(
+                hintText: 'Enter updated instructions',
+                hintStyle: TextStyle(
+                  color: Colors.black,
+                ),
+                fillColor: Colors.transparent,
+                filled: true,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10.0),
+                  ),
+                  borderSide: BorderSide(
+                    color: Colors.black,
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    width: 1,
+                    color: Colors.black,
+                  ),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10.0),
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    width: 1,
+                    color: Colors.grey,
+                  ),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10.0),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 12,
+            ),
+            MaterialButton(
+              onPressed: () async {
+                bool resp = await DietService.udpateRecommendedDietItem({
+                  "cooking_instruction": instructionController.text.isEmpty
+                      ? "N/A"
+                      : instructionController.text,
+                  "quantity": qunatityController.text.isEmpty
+                      ? "N/A"
+                      : qunatityController.text,
+                }, selecetedRecommendedDiet!.id);
+                if (resp) {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                  Fluttertoast.showToast(
+                    msg: "Updated Food Item for ${widget.patient.firstName}",
+                  );
+                } else {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                  Fluttertoast.showToast(
+                    msg: "Something Went Wrong Please Try Again",
+                  );
+                }
+              },
+              color: primaryColor,
+              minWidth: MediaQuery.of(context).size.width,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  "Add Item for ${widget.patient.firstName}",
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
+      );
+    });
+  }
+
+  addRoutuineDialogBoxPopup() {
+    return StatefulBuilder(builder: (context, setState) {
+      return AlertDialog(
+        scrollable: true,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        title: const Text("Add Routine"),
+        content: Column(
+          children: [
+            const Align(
+              alignment: Alignment.topLeft,
+              child: Text(
+                'Choose New Routine:',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 12,
+            ),
+            FormField<String>(
+              builder: (FormFieldState<String> state) {
+                return InputDecorator(
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.fromLTRB(12, 10, 20, 20),
+                    errorStyle: const TextStyle(
+                        color: Colors.redAccent, fontSize: 16.0),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
+                      style: const TextStyle(
+                        fontSize: 16,
+                      ),
+                      hint: const Text(
+                        "Choose New Routine",
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 16,
+                        ),
+                      ),
+                      items: typeList
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem(
+                          value: value,
+                          child: Text(typeBreif[value]!),
+                        );
+                      }).toList(),
+                      isExpanded: true,
+                      isDense: true,
+                      onChanged: (String? newSelected) {
+                        setState(() {
+                          selectedType = newSelected!;
+                        });
+                      },
+                      value: selectedType,
+                    ),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(
+              height: 12,
+            ),
+            MaterialButton(
+              onPressed: () async {
+                bool resp = await DietService.addRecommendedDietGroup({
+                  "patient": widget.patient.id,
+                  "type": selectedType,
+                });
+                if (resp) {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                  Fluttertoast.showToast(
+                    msg: "Added Routine for ${widget.patient.firstName}",
+                  );
+                } else {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                  Fluttertoast.showToast(
+                    msg: "Something Went Wrong Please Try Again",
+                  );
+                }
+              },
+              color: primaryColor,
+              minWidth: MediaQuery.of(context).size.width,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  "Add Routine for ${widget.patient.firstName}",
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            )
+          ],
         ),
       );
     });
