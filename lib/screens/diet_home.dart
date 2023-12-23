@@ -408,9 +408,10 @@ class _DietHomeState extends State<DietHome> {
                                         // if (resp) {
                                         //   await getInitData();
                                         // } else {
-                                          Fluttertoast.showToast(
-                                              msg:
-                                                  "Something Went Wrong, Please Try again",);
+                                        Fluttertoast.showToast(
+                                          msg:
+                                              "Something Went Wrong, Please Try again",
+                                        );
                                         // }
                                       },
                                       recommendedDiet: recommendedDiets[index],
