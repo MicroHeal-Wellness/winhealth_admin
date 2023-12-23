@@ -3,34 +3,32 @@ import 'package:provider/provider.dart';
 import 'package:winhealth_admin/components/side_bar_item.dart';
 import 'package:winhealth_admin/models/user_model.dart';
 import 'package:winhealth_admin/provider/sidebar_provvider.dart';
-import 'package:winhealth_admin/screens/acitvity_home.dart';
 import 'package:winhealth_admin/screens/appointment_home.dart';
-import 'package:winhealth_admin/screens/diet_home.dart';
 import 'package:winhealth_admin/screens/patient_home.dart';
 import 'package:winhealth_admin/screens/profile_home.dart';
+import 'package:winhealth_admin/screens/slots_home.dart';
 import 'package:winhealth_admin/services/base_service.dart';
 
-class NutritionistHomeLanding extends StatefulWidget {
-  const NutritionistHomeLanding({super.key});
+class LandingScreen extends StatefulWidget {
+  const LandingScreen({super.key});
 
   @override
-  State<NutritionistHomeLanding> createState() =>
-      _NutritionistHomeLandingState();
+  State<LandingScreen> createState() => _LandingScreenState();
 }
 
-class _NutritionistHomeLandingState extends State<NutritionistHomeLanding> {
+class _LandingScreenState extends State<LandingScreen> {
   UserModel? currentUser;
   bool loading = false;
   screenSwitcher(int index) {
     switch (index) {
       case 0:
-        return const PatientHome();
+        return AppointmentHome(currentUser: currentUser!);
       case 1:
-        return const DietHome();
+        return SlotsHome(currentUser: currentUser!);
       case 2:
+        return const PatientHome();
+      case 3:
         return const ProfileHome();
-      case 4:
-        return const ActivityHome();
       default:
         return AppointmentHome(currentUser: currentUser!);
     }
@@ -70,7 +68,9 @@ class _NutritionistHomeLandingState extends State<NutritionistHomeLanding> {
                         color: Colors.grey.shade400,
                       ),
                     ),
-                    padding: const EdgeInsets.all(12.0),
+                    padding: MediaQuery.of(context).size.width > 1600
+                        ? const EdgeInsets.all(12.0)
+                        : const EdgeInsets.all(2),
                     child: Container(
                       child: ListView(
                         children: [
@@ -81,39 +81,52 @@ class _NutritionistHomeLandingState extends State<NutritionistHomeLanding> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Image.asset(
-                                  "images/logo_new.png",
-                                  height: 50,
+                                  "assets/logo_new.png",
+                                  height:
+                                      MediaQuery.of(context).size.width > 1600
+                                          ? 50
+                                          : 36,
                                 ),
-                                const SizedBox(
-                                  width: 32,
-                                ),
-                                const Text(
-                                  "Winhealth",
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
-                                )
+                                MediaQuery.of(context).size.width > 1600
+                                    ? const SizedBox(
+                                        width: 32,
+                                      )
+                                    : const SizedBox(),
+                                MediaQuery.of(context).size.width > 1600
+                                    ? const Text(
+                                        "Winhealth",
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold),
+                                      )
+                                    : const SizedBox()
                               ],
                             ),
                           ),
-                          const Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 16.0, vertical: 8),
-                            child: Text(
-                              "Nutritionist's Dashboard",
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16.0, vertical: 8),
-                            child: Text(
-                              "Dr. ${currentUser!.firstName}",
-                              style: const TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
-                            ),
-                          ),
+                          MediaQuery.of(context).size.width > 1600
+                              ? const Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 16.0, vertical: 8),
+                                  child: Text(
+                                    "Doctor's Dashboard",
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                )
+                              : const SizedBox(),
+                          MediaQuery.of(context).size.width > 1600
+                              ? Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16.0, vertical: 8),
+                                  child: Text(
+                                    "Dr. ${currentUser!.firstName}",
+                                    style: const TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                )
+                              : const SizedBox(),
                           const Divider(
                             endIndent: 16,
                             indent: 16,
@@ -123,26 +136,26 @@ class _NutritionistHomeLandingState extends State<NutritionistHomeLanding> {
                           ),
                           const SideBarItem(
                             pageKey: 0,
+                            iconData: Icons.alarm,
+                            title: "Appointments",
+                          ),
+                          const SideBarItem(
+                            pageKey: 1,
+                            iconData: Icons.add_box,
+                            title: "Slots",
+                          ),
+                          const SideBarItem(
+                            pageKey: 2,
                             iconData: Icons.people_alt,
                             title: "Patients",
                           ),
                           const SideBarItem(
-                            pageKey: 1,
-                            iconData: Icons.vaccines_outlined,
-                            title: "Diet",
-                          ),
-                          const SideBarItem(
-                            pageKey: 2,
+                            pageKey: 3,
                             iconData: Icons.settings,
                             title: "Profile",
                           ),
                           const SideBarItem(
                             pageKey: 4,
-                            iconData: Icons.local_play,
-                            title: "Activity",
-                          ),
-                          const SideBarItem(
-                            pageKey: 5,
                             isDisabled: true,
                             iconData: Icons.logout,
                             title: "Logout",

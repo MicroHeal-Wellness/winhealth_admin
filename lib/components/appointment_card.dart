@@ -12,9 +12,11 @@ class AppointmentCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: isSelected ? primaryColor.withOpacity(0.2) : Colors.white,
-        borderRadius: BorderRadius.circular(16),
-      ),
+          color: isSelected ? primaryColor.withOpacity(0.2) : Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: Colors.grey.withOpacity(0.4),
+          )),
       padding: const EdgeInsets.all(16),
       margin: const EdgeInsets.only(bottom: 8.0),
       child: Column(
@@ -25,16 +27,60 @@ class AppointmentCard extends StatelessWidget {
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
           Text(
-            "Appointment for: ${appointment.user!.firstName} ${appointment.user!.lastName}",
+            "Appointment for: ${appointment.userCreated!.firstName} ${appointment.userCreated!.lastName}",
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
           Text(
-            "Time: ${appointment.slot!.startTime}",
+            "Time: ${appointment.slot!.startTime} - ${appointment.slot!.endTime}",
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
           Text(
-            "Status: ${appointment.status}",
+            "Status: ${appointment.slot!.status}",
             style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          Row(
+            children: [
+              const Text(
+                "\n**click to see patient info",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const Spacer(),
+              (appointment.slot!.status == "booked" &&
+                      DateTime(
+                        appointment.slot!.date!.year,
+                        appointment.slot!.date!.month,
+                        appointment.slot!.date!.day,
+                        int.parse(
+                            appointment.slot!.startTime!.split(":").first),
+                        int.parse(
+                          appointment.slot!.startTime!.split(":")[1],
+                        ),
+                      ).isBefore(DateTime.now()) &&
+                      DateTime(
+                        appointment.slot!.date!.year,
+                        appointment.slot!.date!.month,
+                        appointment.slot!.date!.day,
+                        int.parse(appointment.slot!.endTime!.split(":").first),
+                        int.parse(
+                          appointment.slot!.endTime!.split(":")[1],
+                        ),
+                      ).isAfter(DateTime.now()))
+                  ? MaterialButton(
+                      onPressed: () {},
+                      color: Colors.green,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Text(
+                          "Join Call",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    )
+                  : const SizedBox()
+            ],
           ),
         ],
       ),

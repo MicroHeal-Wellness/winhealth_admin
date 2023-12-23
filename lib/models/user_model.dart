@@ -9,53 +9,118 @@ UserModel userModelFromJson(String str) => UserModel.fromJson(json.decode(str));
 String userModelToJson(UserModel data) => json.encode(data.toJson());
 
 class UserModel {
-    String? id;
-    String? firstName;
-    String? lastName;
-    DateTime? dob;
-    String? gender;
-    String? emailId;
-    bool? emailVerified;
-    String? userType;
-    String? status;
-    String? phone;
+  String? firstName;
+  String? emailAddress;
+  String? lastName;
+  String? phoneNumber;
+  String? email;
+  DateTime? dob;
+  String? gender;
+  String? avatar;
+  bool? pregnant;
+  dynamic location;
+  String? diet;
+  String? height;
+  String? weight;
+  String? authType;
+  dynamic bio;
+  String? role;
+  String? id;
+  String? status;
+  dynamic title;
+  DateTime? registrationYear;
+  dynamic doctorType;
+  dynamic license;
+  bool? appFormAanswered;
+  bool? exercise;
+  String? exerciseType;
 
-    UserModel({
-        this.id,
-        this.firstName,
-        this.lastName,
-        this.dob,
-        this.gender,
-        this.emailId,
-        this.emailVerified,
-        this.userType,
-        this.status,
-        this.phone,
-    });
+  UserModel(
+      {this.firstName,
+      this.emailAddress,
+      this.lastName,
+      this.phoneNumber,
+      this.email,
+      this.dob,
+      this.gender,
+      this.avatar,
+      this.pregnant,
+      this.location,
+      this.diet,
+      this.height,
+      this.weight,
+      this.authType,
+      this.bio,
+      this.role,
+      this.id,
+      this.status,
+      this.title,
+      this.registrationYear,
+      this.doctorType,
+      this.license,
+      this.appFormAanswered,
+      this.exercise,
+      this.exerciseType});
 
-    factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
-        id: json["id"],
+  factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
         firstName: json["first_name"],
+        emailAddress: json["email_address"],
         lastName: json["last_name"],
+        phoneNumber: json["phone_number"],
+        email: json["email"],
         dob: json["dob"] == null ? null : DateTime.parse(json["dob"]),
-        gender: json["gender"] ?? "Male",
-        emailId: json["email_id"],
-        emailVerified: json["email_verified"],
-        userType: json["user_type"],
+        gender: json["gender"],
+        avatar: json["avatar"],
+        pregnant: json["pregnant"],
+        location: json["location"],
+        diet: json["diet"],
+        height: json["height"],
+        weight: json["weight"],
+        authType: json["auth_type"],
+        bio: json["bio"],
+        role: json["role"],
+        id: json["id"],
         status: json["status"],
-        phone: json["phone"],
-    );
+        title: json["title"],
+        registrationYear: json["registration_year"] == null
+            ? null
+            : DateTime.parse(json["registration_year"]),
+        doctorType: json["doctor_type"],
+        license: json["license"],
+        appFormAanswered: json['app_form_answered'] ?? false,
+        exercise: json['exercise'],
+        exerciseType: json['exercise_type'],
+      );
 
-    Map<String, dynamic> toJson() => {
-        "id": id,
+  Map<String, dynamic> toJson() => {
         "first_name": firstName,
+        "email_address": emailAddress,
         "last_name": lastName,
-        "dob": "${dob!.year.toString().padLeft(4, '0')}-${dob!.month.toString().padLeft(2, '0')}-${dob!.day.toString().padLeft(2, '0')}",
+        "phone_number": phoneNumber,
+        "email": email,
+        "dob": dob == null
+            ? null
+            : "${dob!.year.toString().padLeft(4, '0')}-${dob!.month.toString().padLeft(2, '0')}-${dob!.day.toString().padLeft(2, '0')}",
         "gender": gender,
-        "email_id": emailId,
-        "email_verified": emailVerified,
-        "user_type": userType,
+        "avatar": avatar,
+        "pregnant": pregnant,
+        "location": location,
+        "diet": diet,
+        "height": height,
+        "weight": weight,
+        "auth_type": authType,
+        "bio": bio,
+        "role": role,
+        "id": id,
         "status": status,
-        "phone": phone,
-    };
+        "title": title,
+        "registration_year": registrationYear == null
+            ? null
+            : "${registrationYear!.year.toString().padLeft(4, '0')}-${registrationYear!.month.toString().padLeft(2, '0')}-${registrationYear!.day.toString().padLeft(2, '0')}",
+        "doctor_type": doctorType,
+        "license": license,
+        "app_form_answered": appFormAanswered,
+        "exercise": exercise,
+        "exercise_type": exerciseType,
+      };
 }

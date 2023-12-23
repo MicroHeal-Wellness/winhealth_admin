@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:winhealth_admin/models/patient.dart';
+import 'package:winhealth_admin/models/user_model.dart';
 import 'package:winhealth_admin/utils/constants.dart';
 
 class PatientCard extends StatelessWidget {
-  final Patient patient;
+  final UserModel patient;
   final bool isSelected;
   const PatientCard(
       {super.key, required this.patient, required this.isSelected});
@@ -23,57 +23,57 @@ class PatientCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "ID: ${patient.user!.id}",
-                style: TextStyle(fontWeight: FontWeight.bold),
+                "ID: ${patient!.id}",
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               Text(
-                "Name: ${patient.user!.firstName} ${patient.user!.lastName}",
-                style: TextStyle(fontWeight: FontWeight.bold),
+                "Name: ${patient!.firstName} ${patient!.lastName}",
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               Text(
-                "Gender: ${patient.user!.gender}",
-                style: TextStyle(fontWeight: FontWeight.bold),
+                "Gender: ${patient!.gender}",
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
-              patient.user!.emailId.toString().contains("@winhealth.com")
+              patient!.email.toString().contains("@winhealth.com")
                   ? const SizedBox()
                   : Text(
-                      "Email: ${patient.user!.emailId}",
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      "Email: ${patient!.email}",
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
-              patient.user!.emailId.toString().contains("@winhealth.com")
+              patient!.email.toString().contains("@winhealth.com")
                   ? Text(
-                      "Phone: ${patient.user!.emailId!.split("@winhealth.com").first}",
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      "Phone: ${patient!.email!.split("@winhealth.com").first}",
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     )
                   : const SizedBox(),
             ],
           ),
-          Spacer(),
+          const Spacer(),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "DOB: ${patient.user!.dob.toString().split(' ').first}",
-                style: TextStyle(fontWeight: FontWeight.bold),
+                "DOB: ${patient!.dob.toString().split(' ').first}",
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               Text(
                 "Diet: ${patient.diet}",
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               Text(
                 "Height: ${patient.height}",
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               Text(
                 "Weight: ${patient.weight}",
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
-              patient.isPregnant!
+              patient.pregnant!
                   ? const Text(
                       "Pregnent",
                       style: TextStyle(fontWeight: FontWeight.bold),
                     )
-                  : SizedBox(),
+                  : const SizedBox(),
             ],
           ),
         ],

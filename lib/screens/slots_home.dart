@@ -24,51 +24,23 @@ class _SlotsHomeState extends State<SlotsHome> {
   bool showbtn = false;
   DateTime? currentDate = DateTime.now();
   List<Slot> slots = [];
-  List<String> timeList = [
-    "09:00:00",
-    "09:30:00",
-    "10:00:00",
-    "10:30:00",
-    "11:30:00",
-    "12:30:00",
-    "13:00:00",
-    "13:30:00",
-    "14:00:00",
-    "14:30:00",
-    "15:30:00",
-    "15:30:00",
-    "16:00:00",
-    "16:30:00",
-    "17:00:00",
-    "17:30:00",
-    "18:30:00",
-    "18:30:00",
-    "19:00:00",
-    "19:30:00",
-    "20:00:00",
-    "20:30:00",
-    "21:00:00",
-  ];
 
   bool chkClick(String time) {
     for (int i = 0; i < slots.length; i++) {
       if (slots[i].startTime == time) {
+        print("false");
         return false;
       }
     }
+    print("true");
     return true;
   }
 
-  Color genStatusColor(String time) {
-    for (int i = 0; i < slots.length; i++) {
-      if (slots[i].startTime == time) {
-        if (slots[i].status == "available") {
-          return Colors.green;
-        } else if (slots[i].status == "booked") {
-          return Colors.cyan;
-        }
-        break;
-      }
+  Color genStatusColor(String status) {
+    if (status == "available") {
+      return Colors.green;
+    } else if (status == "booked") {
+      return Colors.cyan;
     }
     return Colors.grey;
   }
@@ -267,19 +239,21 @@ class _SlotsHomeState extends State<SlotsHome> {
                             itemBuilder: (context, index) {
                               return GestureDetector(
                                 child: SlotsCard(
-                                  title: timeList[index],
-                                  color: genStatusColor(timeList[index]),
+                                  title: slots[index].startTime!,
+                                  color: genStatusColor(slots[index].status!),
                                 ),
                                 onTap: () async {
-                                  if (chkClick(timeList[index]) &&
+                                  if (slots[index].status == "unavailable" &&
                                       DateTime(
                                         currentDate!.year,
                                         currentDate!.month,
                                         currentDate!.day,
+                                        int.parse(slots[index]
+                                            .startTime!
+                                            .split(":")
+                                            .first),
                                         int.parse(
-                                            timeList[index].split(":").first),
-                                        int.parse(
-                                          timeList[index].split(":")[1],
+                                          slots[index].startTime!.split(":")[1],
                                         ),
                                       ).isAfter(DateTime.now())) {
                                     await showDialog(
@@ -293,10 +267,8 @@ class _SlotsHomeState extends State<SlotsHome> {
                                           MaterialButton(
                                             onPressed: () async {
                                               bool res = await SlotService
-                                                  .createSlotsByDocterID(
-                                                widget.currentUser!.id!,
-                                                "${currentDate!.year.toString()}-${currentDate!.month.toString().padLeft(2, "0")}-${currentDate!.day.toString().padLeft(2, "0")}",
-                                                timeList[index],
+                                                  .updateSlotById(
+                                                slots[index].id!,
                                                 "available",
                                               );
                                               if (res) {
@@ -329,7 +301,7 @@ class _SlotsHomeState extends State<SlotsHome> {
                               );
                             },
                             shrinkWrap: true,
-                            itemCount: timeList.length,
+                            itemCount: slots.length,
                           ),
                         ),
                         const SizedBox(

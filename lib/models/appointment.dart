@@ -3,56 +3,45 @@
 //     final appointment = appointmentFromJson(jsonString);
 
 import 'dart:convert';
-
-import 'package:winhealth_admin/models/notes.dart';
 import 'package:winhealth_admin/models/slot.dart';
 import 'package:winhealth_admin/models/user_model.dart';
 
-List<Appointment> appointmentFromJson(String str) => List<Appointment>.from(
-    json.decode(str).map((x) => Appointment.fromJson(x)));
+Appointment appointmentFromJson(String str) => Appointment.fromJson(json.decode(str));
 
-String appointmentToJson(List<Appointment> data) =>
-    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String appointmentToJson(Appointment data) => json.encode(data.toJson());
 
 class Appointment {
-  String? slotId;
-  String? status;
-  List<Note>? notes;
-  String? userId;
-  String? id;
-  UserModel? user;
-  Slot? slot;
+    String? id;
+    UserModel? userCreated;
+    DateTime? dateCreated;
+    String? cancelledBy;
+    bool? completed;
+    Slot? slot;
 
-  Appointment({
-    this.slotId,
-    this.status,
-    this.notes,
-    this.userId,
-    this.id,
-    this.user,
-    this.slot,
-  });
+    Appointment({
+        this.id,
+        this.userCreated,
+        this.dateCreated,
+        this.cancelledBy,
+        this.completed,
+        this.slot,
+    });
 
-  factory Appointment.fromJson(Map<String, dynamic> json) => Appointment(
-        slotId: json["slot_id"],
-        status: json["status"],
-        notes: json["notes"] == null
-            ? []
-            : List<Note>.from(
-                jsonDecode(json["notes"]).map((x) => Note.fromJson(x))),
-        userId: json["user_id"],
+    factory Appointment.fromJson(Map<String, dynamic> json) => Appointment(
         id: json["id"],
-        user: json["user"] == null ? null : UserModel.fromJson(json["user"]),
+        userCreated: UserModel.fromJson(json["user_created"]),
+        dateCreated: json["date_created"] == null ? null : DateTime.parse(json["date_created"]),
+        cancelledBy: json["cancelled_by"],
+        completed: json["completed"],
         slot: json["slot"] == null ? null : Slot.fromJson(json["slot"]),
-      );
+    );
 
-  Map<String, dynamic> toJson() => {
-        "slot_id": slotId,
-        "status": status,
-        "notes": notes,
-        "user_id": userId,
+    Map<String, dynamic> toJson() => {
         "id": id,
-        "user": user?.toJson(),
+        "user_created": userCreated?.toJson(),
+        "date_created": dateCreated?.toIso8601String(),
+        "cancelled_by": cancelledBy,
+        "completed": completed,
         "slot": slot?.toJson(),
-      };
+    };
 }

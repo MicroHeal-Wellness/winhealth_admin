@@ -1,0 +1,46 @@
+import 'package:flutter/material.dart';
+import 'package:winhealth_admin/models/recommended_diet.dart';
+import 'package:winhealth_admin/utils/constants.dart';
+
+var typeBreif = {
+  'morning': 'Mornning 8 AM - 11 AM',
+  'afternoon': 'Afternoon 12 PM - 2 PM',
+  'evening': 'Evening 5 PM - 7 PM',
+  'night': 'Night 8 PM - 11 PM',
+};
+
+class RecommendedDietCard extends StatelessWidget {
+  final RecommendedDiet recommendedDiet;
+  final bool isSelected;
+  const RecommendedDietCard({super.key, required this.recommendedDiet, required this.isSelected});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: isSelected ? primaryColor.withOpacity(0.2) : Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: Colors.grey.withOpacity(0.4),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              typeBreif[recommendedDiet.type!]!,
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            const Divider(),
+            Text(
+              "Total Items: ${recommendedDiet.items!.length.toString().padLeft(2, "0")}",
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w300),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

@@ -9,7 +9,7 @@ import 'package:winhealth_admin/models/user_model.dart';
 
 class BaseService {
   // ignore: constant_identifier_names
-  static const BASE_URL = "https://winhealth.agpro.co.in";
+  static const BASE_URL = "https://api.winhealth.agpro.co.in";
   // static const BASE_URL = "http://localhost:3001";
   static final Map<String, String> headers = {
     "Content-Type": "application/json"
@@ -99,9 +99,9 @@ class BaseService {
 
   static Future<Map<String, dynamic>> getSavedAuth() async {
     if (authDetails.isNotEmpty) {
-      if (kDebugMode) {
-        print(authDetails);
-      }
+      // if (kDebugMode) {
+      //   print(authDetails);
+      // }
       return authDetails;
     }
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -115,14 +115,14 @@ class BaseService {
   }
 
   static Future<UserModel?> getCurrentUser() async {
-    if (kDebugMode) {
-      print(
-          "------------------------------getCurrentUser called----------------------");
-    }
+    // if (kDebugMode) {
+    //   print(
+    //       "------------------------------getCurrentUser called----------------------");
+    // }
     Map<String, dynamic> auth = await getSavedAuth();
-    if (kDebugMode) {
-      print("auth['user'] -> ${auth['user']}");
-    }
+    // if (kDebugMode) {
+    //   print("auth['user'] -> ${auth['user']}");
+    // }
     return auth.isEmpty ? null : UserModel.fromJson(auth['user']);
   }
 
@@ -138,12 +138,16 @@ class BaseService {
           .toString(),
       "user": user,
     };
-    if (kDebugMode) {
-      print('saving authDetails: $authDetails');
-    }
+    // if (kDebugMode) {
+    //   print('saving authDetails: $authDetails');
+    // }
     await prefs.setString(
       "auth",
       json.encode(authDetails),
+    );
+    await prefs.setBool(
+      "isLogin",
+      true,
     );
   }
 

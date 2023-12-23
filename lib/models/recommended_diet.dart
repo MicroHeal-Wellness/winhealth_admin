@@ -4,47 +4,101 @@
 
 import 'dart:convert';
 
-import 'package:winhealth_admin/models/diet.dart';
+import 'package:winhealth_admin/models/food_item.dart';
+import 'package:winhealth_admin/models/user_model.dart';
 
-RecommendedDiet recommendedDietFromJson(String str) =>
-    RecommendedDiet.fromJson(json.decode(str));
+List<RecommendedDiet> recommendedDietFromJson(String str) =>
+    List<RecommendedDiet>.from(
+        json.decode(str).map((x) => RecommendedDiet.fromJson(x)));
 
-String recommendedDietToJson(RecommendedDiet data) =>
-    json.encode(data.toJson());
+String recommendedDietToJson(List<RecommendedDiet> data) =>
+    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class RecommendedDiet {
-  List<Diet>? breakfast;
-  List<Diet>? lunch;
-  List<Diet>? dinner;
+  String? id;
+  DateTime? dateCreated;
+  DateTime? dateUpdated;
+  String? type;
+  String? patient;
+  List<RecommendedDietItem>? items;
+  UserModel? userCreated;
+  UserModel? userUpdated;
 
   RecommendedDiet({
-    this.breakfast,
-    this.lunch,
-    this.dinner,
+    this.id,
+    this.dateCreated,
+    this.dateUpdated,
+    this.type,
+    this.patient,
+    this.items,
+    this.userCreated,
+    this.userUpdated,
   });
 
   factory RecommendedDiet.fromJson(Map<String, dynamic> json) =>
       RecommendedDiet(
-        breakfast: json["Breakfast"] == null
+        id: json["id"],
+        dateCreated: json["date_created"] == null
+            ? null
+            : DateTime.parse(json["date_created"]),
+        dateUpdated: json["date_updated"] == null
+            ? null
+            : DateTime.parse(json["date_updated"]),
+        type: json["type"],
+        patient: json["patient"],
+        items: json["items"] == null
             ? []
-            : List<Diet>.from(json["Breakfast"]!.map((x) => Diet.fromJson(x))),
-        lunch: json["Lunch"] == null
-            ? []
-            : List<Diet>.from(json["Lunch"]!.map((x) => Diet.fromJson(x))),
-        dinner: json["Dinner"] == null
-            ? []
-            : List<Diet>.from(json["Dinner"]!.map((x) => Diet.fromJson(x))),
+            : List<RecommendedDietItem>.from(json["items"]!.map((x) =>
+                RecommendedDietItem.fromJson(x["recommended_diet_item_id"]))),
+        userCreated: json["user_created"] == null
+            ? null
+            : UserModel.fromJson(json["user_created"]),
+        userUpdated: json["user_updated"] == null
+            ? null
+            : UserModel.fromJson(json["user_updated"]),
       );
 
   Map<String, dynamic> toJson() => {
-        "Breakfast": breakfast == null
+        "id": id,
+        "date_created": dateCreated?.toIso8601String(),
+        "date_updated": dateUpdated?.toIso8601String(),
+        "type": type,
+        "patient": patient,
+        "items": items == null
             ? []
-            : List<dynamic>.from(breakfast!.map((x) => x.toJson())),
-        "Lunch": lunch == null
-            ? []
-            : List<dynamic>.from(lunch!.map((x) => x.toJson())),
-        "Dinner": dinner == null
-            ? []
-            : List<dynamic>.from(dinner!.map((x) => x.toJson())),
+            : List<dynamic>.from(items!.map((x) => x.toJson())),
+        "user_created": userCreated?.toJson(),
+        "user_updated": userUpdated?.toJson(),
+      };
+}
+
+class RecommendedDietItem {
+  String? id;
+  String? quantity;
+  String? cookingInstruction;
+  FoodItem? foodItem;
+
+  RecommendedDietItem({
+    this.id,
+    this.quantity,
+    this.cookingInstruction,
+    this.foodItem,
+  });
+
+  factory RecommendedDietItem.fromJson(Map<String, dynamic> json) =>
+      RecommendedDietItem(
+        id: json["id"],
+        quantity: json["quantity"],
+        cookingInstruction: json["cooking_instruction"],
+        foodItem: json["food_item"] == null
+            ? null
+            : FoodItem.fromJson(json["food_item"]),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "quantity": quantity,
+        "cooking_instruction": cookingInstruction,
+        "food_item": foodItem?.toJson(),
       };
 }

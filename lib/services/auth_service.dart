@@ -12,7 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:winhealth_admin/models/user_model.dart';
 import 'package:winhealth_admin/screens/auth/login_screen.dart';
 import 'package:winhealth_admin/screens/auth/otp_verify_screen.dart';
-import 'package:winhealth_admin/screens/doctor_home_landing.dart';
+import 'package:winhealth_admin/screens/landing_screen.dart';
 import 'package:winhealth_admin/services/base_service.dart';
 
 class AuthService {
@@ -193,6 +193,23 @@ class AuthService {
     }
   }
 
+  static Future<UserModel?> getUserByEmail(String email) async {
+    var resp = await BaseService.makeUnauthenticatedRequest(
+      "${BaseService.BASE_URL}/users?filter[email][_eq]=$email",
+      method: 'GET',
+    );
+    if (resp.statusCode == 200) {
+      var respMap = jsonDecode(resp.body);
+      if (respMap['data'].length > 0) {
+        return UserModel.fromJson(respMap['data'][0]);
+      } else {
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
   static Future signInWithGoogle(context) async {
     showDialog(
       context: context,
@@ -260,17 +277,21 @@ class AuthService {
           print("data: $data");
         }
         SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setBool("isLogin", true);
-        BaseService.saveToken(
-          data['access_token'],
-          data['refresh_token'],
-          data['user'],
-        );
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (context) => const LandingScreen(),
-          ),
-        );
+        UserModel? user = await getUserByEmail(email);
+        if (user != null) {
+          BaseService.saveToken(
+            data['data']['access_token'],
+            data['data']['refresh_token'],
+            user.toJson(),
+          );
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => const LandingScreen(),
+            ),
+          );
+        } else {
+          Fluttertoast.showToast(msg: "Sign In Failed, Please Try again!");
+        }
       } else {
         Fluttertoast.showToast(
             msg: "Sign In Failed, User Doesn't Exists, Please Try again!");

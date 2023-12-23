@@ -5,34 +5,30 @@ import 'package:winhealth_admin/services/base_service.dart';
 
 class SlotService {
   static Future<List<Slot>> getSlotsByDocterID(
-      String userID, String date) async {
-    final response = await BaseService.makeUnauthenticatedRequest(
-      '${BaseService.BASE_URL}/slots?doctor_id=$userID&from_date=$date',
+      String doctorId, String date) async {
+    final response = await BaseService.makeAuthenticatedRequest(
+      '${BaseService.BASE_URL}/custom-api/slots?date=$date&doctorId=$doctorId',
       method: 'GET',
     );
     if (response.statusCode == 200) {
       final List<Slot> data = [];
       var responseJson = json.decode(response.body);
-      for (final appointment in responseJson) {
+      for (final appointment in responseJson['slots']) {
         data.add(Slot.fromJson(appointment));
       }
+      data.sort((a, b) => a.startTime!.compareTo(b.startTime!));
       return data;
     } else {
       return [];
     }
   }
 
-  static Future<bool> createSlotsByDocterID(
-      String userID, String date, String time, String status) async {
-    final response = await BaseService.makeUnauthenticatedRequest(
-        '${BaseService.BASE_URL}/slots',
-        method: 'POST',
+  static Future<bool> updateSlotById(String id, String status) async {
+    final response = await BaseService.makeAuthenticatedRequest(
+        '${BaseService.BASE_URL}/items/doctor_slots/$id',
+        method: 'PATCH',
         body: jsonEncode({
-          "doctor_id": int.parse(userID),
-          "start_time": time,
-          "duration": 30,
           "status": status,
-          "date": date
         }));
     if (response.statusCode == 200) {
       return true;

@@ -46,10 +46,10 @@ class GraphData {
   GraphDetails? stool;
   GraphDetails? stress;
   GraphDetails? sleep;
+  GraphDetails? constipation;
   GraphDetails? bloated;
   GraphDetails? diarrhea;
   GraphDetails? pain;
-  GraphDetails? constipation;
 
   GraphData({
     this.food,
@@ -57,28 +57,33 @@ class GraphData {
     this.stool,
     this.stress,
     this.sleep,
+    this.constipation,
     this.bloated,
     this.diarrhea,
     this.pain,
-    this.constipation,
   });
 
   factory GraphData.fromJson(Map<String, dynamic> json) => GraphData(
         food: json["food"] == null ? null : GraphDetails.fromJson(json["food"]),
-        water: json["water"] == null ? null : GraphDetails.fromJson(json["water"]),
-        stool: json["stool"] == null ? null : GraphDetails.fromJson(json["stool"]),
-        stress:
-            json["stress"] == null ? null : GraphDetails.fromJson(json["stress"]),
-        sleep: json["sleep"] == null ? null : GraphDetails.fromJson(json["sleep"]),
-        bloated:
-            json["bloated"] == null ? null : GraphDetails.fromJson(json["bloated"]),
+        water:
+            json["water"] == null ? null : GraphDetails.fromJson(json["water"]),
+        stool:
+            json["stool"] == null ? null : GraphDetails.fromJson(json["stool"]),
+        stress: json["stress"] == null
+            ? null
+            : GraphDetails.fromJson(json["stress"]),
+        sleep:
+            json["sleep"] == null ? null : GraphDetails.fromJson(json["sleep"]),
+        constipation: json["constipation"] == null
+            ? null
+            : GraphDetails.fromJson(json["constipation"]),
+        bloated: json["bloated"] == null
+            ? null
+            : GraphDetails.fromJson(json["bloated"]),
         diarrhea: json["diarrhea"] == null
             ? null
             : GraphDetails.fromJson(json["diarrhea"]),
         pain: json["pain"] == null ? null : GraphDetails.fromJson(json["pain"]),
-        constipation: json["constipation"] == null
-            ? null
-            : GraphDetails.fromJson(json["constipation"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -87,10 +92,10 @@ class GraphData {
         "stool": stool?.toJson(),
         "stress": stress?.toJson(),
         "sleep": sleep?.toJson(),
+        "constipation": constipation?.toJson(),
         "bloated": bloated?.toJson(),
         "diarrhea": diarrhea?.toJson(),
         "pain": pain?.toJson(),
-        "constipation": constipation?.toJson(),
       };
 }
 

@@ -1,16 +1,14 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:winhealth_admin/components/appointment_card.dart';
 import 'package:winhealth_admin/components/notes_card.dart';
+import 'package:winhealth_admin/components/patient_info_card.dart';
 import 'package:winhealth_admin/models/appointment.dart';
 import 'package:winhealth_admin/models/notes.dart';
-import 'package:winhealth_admin/models/question.dart';
 import 'package:winhealth_admin/models/user_model.dart';
 import 'package:winhealth_admin/services/appointment_service.dart';
-import 'package:winhealth_admin/services/questionare_service.dart';
 import 'package:winhealth_admin/utils/constants.dart';
 
 class AppointmentHome extends StatefulWidget {
@@ -26,7 +24,7 @@ class _AppointmentHomeState extends State<AppointmentHome> {
   TextEditingController notesController = TextEditingController();
   bool showbtn = false;
   bool showNotes = false;
-  DateTime? currentDate = DateTime(2023, 09, 15);
+  DateTime? currentDate = DateTime(2023, 12, 21);
   @override
   void initState() {
     scrollController.addListener(() {
@@ -186,11 +184,33 @@ class _AppointmentHomeState extends State<AppointmentHome> {
                                         appointment: appointments[index],
                                       ),
                                       onTap: () {
-                                        setState(() {
-                                          selectedAppointment =
-                                              appointments[index];
-                                          showNotes = !showNotes;
-                                        });
+                                        if (MediaQuery.of(context).size.width >
+                                            1600) {
+                                          if (selectedAppointment != null &&
+                                              selectedAppointment!.id ==
+                                                  appointments[index].id) {
+                                            setState(() {
+                                              selectedAppointment = null;
+                                              showNotes = !showNotes;
+                                            });
+                                          } else {
+                                            setState(() {
+                                              selectedAppointment =
+                                                  appointments[index];
+                                              showNotes = !showNotes;
+                                            });
+                                          }
+                                        } else {
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) => AlertDialog(
+                                              content: PatientInfoCard(
+                                                patient: appointments[index]
+                                                    .userCreated!,
+                                              ),
+                                            ),
+                                          );
+                                        }
                                       },
                                     );
                                   },
@@ -201,169 +221,49 @@ class _AppointmentHomeState extends State<AppointmentHome> {
                         const SizedBox(
                           width: 32,
                         ),
-                        appointments.isEmpty
-                            ? const SizedBox()
-                            : Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text(
-                                      "Notes for Selected Appointment",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 24),
-                                    ),
-                                    showNotes
-                                        ? Text(
-                                            "ID: ${selectedAppointment!.id}",
-                                            style: const TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          )
-                                        : const Text(
-                                            "Select an Appointment to add/show the notes",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                    !showNotes
-                                        ? const SizedBox()
-                                        : const SizedBox(
-                                            height: 16,
-                                          ),
-                                    !showNotes
-                                        ? const SizedBox()
-                                        : Row(
-                                            children: [
-                                              SizedBox(
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.35,
-                                                child: TextFormField(
-                                                  controller: notesController,
-                                                  decoration:
-                                                      const InputDecoration(
-                                                    hintText:
-                                                        'Enter your notes here',
-                                                    hintStyle: TextStyle(
-                                                        color: Colors.black),
-                                                    fillColor: Colors.white,
-                                                    filled: true,
-                                                    focusColor: Colors.white,
-                                                    hoverColor: Colors.white,
-                                                    border: OutlineInputBorder(
-                                                      borderRadius:
-                                                          BorderRadius.all(
-                                                        Radius.circular(10.0),
-                                                      ),
-                                                      borderSide: BorderSide(
-                                                        color: Colors.white,
-                                                      ),
-                                                    ),
-                                                    focusedBorder:
-                                                        OutlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                        width: 1,
-                                                        color: Colors.white,
-                                                      ),
-                                                      borderRadius:
-                                                          BorderRadius.all(
-                                                        Radius.circular(10.0),
-                                                      ),
-                                                    ),
-                                                    enabledBorder:
-                                                        OutlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                        width: 1,
-                                                        color: Colors.white,
-                                                      ),
-                                                      borderRadius:
-                                                          BorderRadius.all(
-                                                        Radius.circular(10.0),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              const Spacer(),
-                                              GestureDetector(
-                                                onTap: () async {
-                                                  selectedAppointment!.notes!
-                                                      .add(
-                                                    Note(
-                                                      title:
-                                                          notesController.text,
-                                                      dateTime: DateTime.now()
-                                                          .toString(),
-                                                    ),
-                                                  );
-                                                  bool res =
-                                                      await AppointmentService
-                                                          .updateNotes({
-                                                    "slot_id": 62,
-                                                    "notes":
-                                                        selectedAppointment!
-                                                            .notes!
-                                                            .map((e) =>
-                                                                jsonEncode(
-                                                                    e.toJson()))
-                                                            .toList()
-                                                            .toString(),
-                                                    "status": "booked"
-                                                  }, selectedAppointment!.id);
-                                                  if (res) {
-                                                    notesController.clear();
-                                                    await getAppointments();
-                                                    Fluttertoast.showToast(
-                                                        msg: "Notes added!");
-                                                  } else {
-                                                    Fluttertoast.showToast(
-                                                        msg:
-                                                            "Notes addition failed!");
-                                                  }
-                                                },
-                                                child: Container(
-                                                  decoration: BoxDecoration(
-                                                    color: primaryColor,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            12),
-                                                  ),
-                                                  width: 40,
-                                                  height: 40,
-                                                  child: const Icon(
-                                                    Icons.add,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                    !showNotes
-                                        ? const SizedBox()
-                                        : const SizedBox(
-                                            height: 16,
-                                          ),
-                                    !showNotes
-                                        ? const SizedBox()
-                                        : selectedAppointment!.notes!.isEmpty
-                                            ? const Text(
-                                                "No Notes for Selected Appointment",
-                                                style: TextStyle(
+                        MediaQuery.of(context).size.width > 1600
+                            ? appointments.isEmpty
+                                ? const SizedBox()
+                                : Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Text(
+                                          "Appointment Info",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 24),
+                                        ),
+                                        showNotes
+                                            ? Text(
+                                                "ID: ${selectedAppointment!.id}",
+                                                style: const TextStyle(
                                                     fontWeight:
                                                         FontWeight.bold),
                                               )
-                                            : ListView.builder(
-                                                itemBuilder: ((context, ind) =>
-                                                    NotesCard(
-                                                      note: selectedAppointment!
-                                                          .notes![ind],
-                                                    )),
-                                                itemCount: selectedAppointment!
-                                                    .notes!.length,
-                                                shrinkWrap: true,
+                                            : const Text(
+                                                "Select an Appointment to show notes",
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                        !showNotes
+                                            ? const SizedBox()
+                                            : const SizedBox(
+                                                height: 16,
+                                              ),
+                                        !showNotes ||
+                                                selectedAppointment == null
+                                            ? const SizedBox()
+                                            : PatientInfoCard(
+                                                patient: selectedAppointment!
+                                                    .userCreated!,
                                               )
-                                  ],
-                                ),
-                              ),
+                                      ],
+                                    ),
+                                  )
+                            : const SizedBox(),
                       ],
                     ),
                   ],

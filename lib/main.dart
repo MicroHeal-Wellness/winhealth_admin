@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
           ResponsiveBreakpoint.resize(2460, name: 'XL'),
         ],
       ),
-      home: const LoginScreen(),
+      home: const InitialRouter(),
     );
   }
 }

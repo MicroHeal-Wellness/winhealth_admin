@@ -9,8 +9,9 @@ class SlotsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: color,
+        // color: color,
         borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: color, width: 4)
       ),
       padding: const EdgeInsets.all(16),
       margin: const EdgeInsets.only(bottom: 8.0),

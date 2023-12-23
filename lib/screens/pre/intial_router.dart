@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:winhealth_admin/models/user_model.dart';
+import 'package:winhealth_admin/screens/activity_stats.dart';
 import 'package:winhealth_admin/screens/auth/login_screen.dart';
-import 'package:winhealth_admin/screens/doctor_home_landing.dart';
+import 'package:winhealth_admin/screens/diet_home.dart';
+import 'package:winhealth_admin/screens/landing_screen.dart';
 import 'package:winhealth_admin/services/auth_service.dart';
 import 'package:winhealth_admin/services/base_service.dart';
 
@@ -28,6 +30,7 @@ class _InitialRouterState extends State<InitialRouter> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       bool? isLogin = prefs.getBool('isLogin');
       if (isLogin == null || isLogin == false) {
+        print("isLogin $isLogin");
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (context) => const LoginScreen(),
@@ -35,13 +38,17 @@ class _InitialRouterState extends State<InitialRouter> {
         );
       } else {
         UserModel? currentUser = await BaseService.getCurrentUser();
-        if (currentUser!.userType == "doctor") {
+        if (currentUser != null) {
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
-              builder: (context) => const LandingScreen(),
-            ),
+                builder: (context) => 
+                DietHome(
+                      patient: currentUser,
+                    )
+                // const LandingScreen(),
+                ),
           );
-        }  else {
+        } else {
           Fluttertoast.showToast(msg: "Not a valid user type");
           await AuthService.logOut(context);
           // logout

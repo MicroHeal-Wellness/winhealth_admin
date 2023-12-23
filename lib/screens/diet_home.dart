@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:winhealth_admin/components/notes_card.dart';
-import 'package:winhealth_admin/components/pateint_card.dart';
-import 'package:winhealth_admin/components/questionare_card.dart';
-import 'package:winhealth_admin/models/answer.dart';
-import 'package:winhealth_admin/models/patient.dart';
-import 'package:winhealth_admin/models/question.dart';
-import 'package:winhealth_admin/services/patient_service.dart';
-import 'package:winhealth_admin/services/questionare_service.dart';
+import 'package:winhealth_admin/components/food_item_card.dart';
+import 'package:winhealth_admin/components/recommended_diet_card.dart';
+import 'package:winhealth_admin/models/food_item.dart';
+import 'package:winhealth_admin/models/recommended_diet.dart';
+import 'package:winhealth_admin/models/user_model.dart';
+import 'package:winhealth_admin/services/diet_service.dart';
 import 'package:winhealth_admin/utils/constants.dart';
 
 class DietHome extends StatefulWidget {
-  const DietHome({super.key});
+  final UserModel patient;
+  const DietHome({super.key, required this.patient});
 
   @override
   State<DietHome> createState() => _DietHomeState();
@@ -22,11 +20,15 @@ class _DietHomeState extends State<DietHome> {
   bool showbtn = false;
   bool showNotes = false;
   bool loading = false;
-  List<Patient> patientList = [];
-  List<Question> questions = [];
-  List<Answer> answer = [];
+  bool searchLoading = false;
 
-  Patient? selectedPatient;
+  List<RecommendedDiet> recommendedDiets = [];
+  List<FoodItem> filterdFoodItems = [];
+  RecommendedDiet? selecetedRecommendedDiet;
+  TextEditingController searchController = TextEditingController();
+  TextEditingController qunatityController = TextEditingController();
+  TextEditingController instructionController = TextEditingController();
+
   @override
   void initState() {
     scrollController.addListener(() {
@@ -54,46 +56,26 @@ class _DietHomeState extends State<DietHome> {
     setState(() {
       loading = true;
     });
-    await getPatients();
-    questions = await QuestionareService.getAllQuestion();
+    // recommendedDiets = await DietService.getRecommendedDietByPatientID(widget.patient.id!);
+    recommendedDiets = await DietService.getRecommendedDietByPatientID(
+        "dd38322a-35ed-4681-b46e-3e8a803dc17b");
+    // await getPatients();
     setState(() {
+      selecetedRecommendedDiet = recommendedDiets.first;
+      showNotes = !showNotes;
       loading = false;
     });
   }
 
-  getPatients() async {
-    patientList = await PatientService.getPatients();
-  }
-
-  genAnswer(Question question, Answer answer) {
-    if (question.type == "multi") {
-      return question.options!
-          .where((element) => element.key! == answer.response![0])
-          .first
-          .text;
-    }
-    if (question.type == "range") {
-      switch (answer.response![0]) {
-        case "0":
-          return "None";
-        case "1":
-          return "Not very sever";
-        case "2":
-          return "Tolerable Pain";
-        case "3":
-          return "In a lot of pain";
-        case "4":
-          return "Extreme Pain";
-        default:
-          return "None";
-      }
-    }
-    if (question.type == "text") {
-      return answer.response![0];
-    }
-
-    return "N/A";
-  }
+  // getPatients() async {
+  //   patientList = await PatientService.getPatients();
+  // }
+  var typeBreif = {
+    'morning': 'Mornning 8 AM - 11 AM',
+    'afternoon': 'Afternoon 12 PM - 2 PM',
+    'evening': 'Evening 5 PM - 7 PM',
+    'night': 'Night 8 PM - 11 PM',
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -124,15 +106,23 @@ class _DietHomeState extends State<DietHome> {
                 controller: scrollController,
                 child: Column(
                   children: [
-                    const Align(
-                      alignment: Alignment.topLeft,
-                      child: Text(
-                        "Patient's Diet",
-                        style: TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
+                    Row(
+                      children: [
+                        const BackButton(),
+                        const SizedBox(
+                          width: 32,
                         ),
-                      ),
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            "${widget.patient.firstName}'s Diet",
+                            style: const TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(
                       height: 16,
@@ -148,42 +138,33 @@ class _DietHomeState extends State<DietHome> {
                           child: ListView.builder(
                             itemBuilder: (context, index) {
                               return GestureDetector(
-                                child: PatientCard(
-                                  patient: patientList[index],
-                                  isSelected: selectedPatient == null
+                                child: RecommendedDietCard(
+                                  recommendedDiet: recommendedDiets[index],
+                                  isSelected: selecetedRecommendedDiet == null
                                       ? false
-                                      : (selectedPatient!.userId ==
-                                          patientList[index].userId),
+                                      : selecetedRecommendedDiet!.id ==
+                                          recommendedDiets[index].id,
                                 ),
-                                onTap: () async {
-                                  if (!showNotes &&
-                                      selectedPatient != null &&
-                                      selectedPatient!.userId !=
-                                          patientList[index].userId) {
+                                onTap: () {
+                                  if (selecetedRecommendedDiet != null &&
+                                      selecetedRecommendedDiet!.id ==
+                                          recommendedDiets[index].id) {
                                     setState(() {
-                                      showNotes = true;
-                                      selectedPatient = patientList[index];
+                                      selecetedRecommendedDiet = null;
+                                      showNotes = !showNotes;
                                     });
-                                    answer = await QuestionareService
-                                        .getAllAnswerByUserId(
-                                            selectedPatient!.userId.toString());
-                                    setState(() {});
                                   } else {
                                     setState(() {
-                                      showNotes = true;
-                                      selectedPatient = patientList[index];
+                                      selecetedRecommendedDiet =
+                                          recommendedDiets[index];
+                                      showNotes = !showNotes;
                                     });
-                                    answer = await QuestionareService
-                                        .getAllAnswerByUserId(
-                                            selectedPatient!.userId.toString());
-                                    setState(() {});
                                   }
-                                  print(answer.length);
                                 },
                               );
                             },
                             shrinkWrap: true,
-                            itemCount: patientList.length,
+                            itemCount: recommendedDiets.length,
                           ),
                         ),
                         const SizedBox(
@@ -194,18 +175,47 @@ class _DietHomeState extends State<DietHome> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Text(
-                                "Nutrient Data for Selected Patinet",
+                                "Nutrient Data for Selected Diet Group",
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 24),
                               ),
                               showNotes
-                                  ? Text(
-                                      "ID: ${selectedPatient!.user!.id}\nName: ${selectedPatient!.user!.firstName} ${selectedPatient!.user!.lastName}",
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold),
+                                  ? Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "Selected: ${typeBreif[selecetedRecommendedDiet!.type!]}",
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        MaterialButton(
+                                          onPressed: () {
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  addFoodDialogBoxPopup(),
+                                            );
+                                          },
+                                          color: primaryColor,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                          ),
+                                          child: const Padding(
+                                            padding: EdgeInsets.all(6.0),
+                                            child: Text(
+                                              "Add Food Item",
+                                              style: TextStyle(
+                                                  fontSize: 18,
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        )
+                                      ],
                                     )
                                   : const Text(
-                                      "Select Patient to add/show the Nutrient Data",
+                                      "Select a Diet Group to add/show the Nutrient Data",
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold),
                                     ),
@@ -216,164 +226,28 @@ class _DietHomeState extends State<DietHome> {
                                     ),
                               !showNotes
                                   ? const SizedBox()
-                                  : Row(
-                                      children: [
-                                        Column(
-                                          children: [
-                                            SizedBox(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.35,
-                                              child: TextFormField(
-                                                decoration:
-                                                    const InputDecoration(
-                                                  hintText:
-                                                      'Enter your question here',
-                                                  hintStyle: TextStyle(
-                                                      color: Colors.black),
-                                                  fillColor: Colors.white,
-                                                  filled: true,
-                                                  focusColor: Colors.white,
-                                                  hoverColor: Colors.white,
-                                                  border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                      Radius.circular(10.0),
-                                                    ),
-                                                    borderSide: BorderSide(
-                                                      color: Colors.white,
-                                                    ),
-                                                  ),
-                                                  focusedBorder:
-                                                      OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                      width: 1,
-                                                      color: Colors.white,
-                                                    ),
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                      Radius.circular(10.0),
-                                                    ),
-                                                  ),
-                                                  enabledBorder:
-                                                      OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                      width: 1,
-                                                      color: Colors.white,
-                                                    ),
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                      Radius.circular(10.0),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                              height: 16,
-                                            ),
-                                            SizedBox(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.35,
-                                              child: TextFormField(
-                                                decoration:
-                                                    const InputDecoration(
-                                                  hintText:
-                                                      'Enter your answer here',
-                                                  hintStyle: TextStyle(
-                                                      color: Colors.black),
-                                                  fillColor: Colors.white,
-                                                  filled: true,
-                                                  focusColor: Colors.white,
-                                                  hoverColor: Colors.white,
-                                                  border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                      Radius.circular(10.0),
-                                                    ),
-                                                    borderSide: BorderSide(
-                                                      color: Colors.white,
-                                                    ),
-                                                  ),
-                                                  focusedBorder:
-                                                      OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                      width: 1,
-                                                      color: Colors.white,
-                                                    ),
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                      Radius.circular(10.0),
-                                                    ),
-                                                  ),
-                                                  enabledBorder:
-                                                      OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                      width: 1,
-                                                      color: Colors.white,
-                                                    ),
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                      Radius.circular(10.0),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        const Spacer(),
-                                        GestureDetector(
-                                          onTap: () {
-                                            Fluttertoast.showToast(
-                                              msg: "Comming Soon",
-                                            );
-                                          },
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              color: primaryColor,
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                            ),
-                                            width: 80,
-                                            height: 130,
-                                            child: const Icon(
-                                              Icons.add,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                                  : ListView.builder(
+                                      shrinkWrap: true,
+                                      itemBuilder: (context, index) {
+                                        return FoodItemCard(
+                                          recommendedDietItem:
+                                              selecetedRecommendedDiet!
+                                                  .items![index],
+                                        );
+                                      },
+                                      itemCount: selecetedRecommendedDiet!
+                                          .items!.length,
                                     ),
                               !showNotes
                                   ? const SizedBox()
                                   : const SizedBox(
                                       height: 16,
                                     ),
-                              !showNotes && answer.isEmpty
-                                  ? const SizedBox()
-                                  : answer.isEmpty
-                                      ? const Center(
-                                          child: Text(
-                                            "* No Answer found for the selected patient",
-                                            style: TextStyle(
-                                                fontStyle: FontStyle.italic),
-                                          ),
-                                        )
-                                      : ListView.builder(
-                                          itemBuilder: (context, index) =>
-                                              QuestionareCard(
-                                            question: questions[index].text!,
-                                            answer: genAnswer(questions[index],
-                                                answer[index]),
-                                          ),
-                                          itemCount: questions.length,
-                                          shrinkWrap: true,
-                                        )
                             ],
                           ),
+                        ),
+                        const SizedBox(
+                          width: 32,
                         ),
                       ],
                     ),
@@ -382,5 +256,279 @@ class _DietHomeState extends State<DietHome> {
               ),
             ),
     );
+  }
+
+  addFoodDialogBoxPopup() {
+    return StatefulBuilder(builder: (context, setState) {
+      return AlertDialog(
+        scrollable: true,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        title: const Text("Search your food item"),
+        content: SizedBox(
+          width: MediaQuery.of(context).size.width > 300
+              ? MediaQuery.of(context).size.width * 0.4
+              : 300,
+          height: MediaQuery.of(context).size.height * 0.9,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  controller: searchController,
+                  style: const TextStyle(color: Colors.black),
+                  decoration: const InputDecoration(
+                    hintText: 'Enter Name of Food Item',
+                    hintStyle: TextStyle(
+                      color: Colors.black,
+                    ),
+                    fillColor: Colors.transparent,
+                    filled: true,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10.0),
+                      ),
+                      borderSide: BorderSide(
+                        color: Colors.black,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        width: 1,
+                        color: Colors.black,
+                      ),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10.0),
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        width: 1,
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10.0),
+                      ),
+                    ),
+                  ),
+                  onFieldSubmitted: (value) async {
+                    setState(() {
+                      searchLoading = true;
+                    });
+                    filterdFoodItems =
+                        await DietService.getFoodItemsByQuery(value);
+                    setState(() {
+                      searchLoading = false;
+                    });
+                  },
+                ),
+                const SizedBox(
+                  height: 12,
+                ),
+                const SizedBox(
+                  height: 16,
+                ),
+                searchLoading
+                    ? const CircularProgressIndicator()
+                    : filterdFoodItems.isEmpty
+                        ? const Text("No Food Items found")
+                        : Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: filterdFoodItems.length,
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 8.0),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                          title: const Text("Add Food Item"),
+                                          content: Column(
+                                            children: [
+                                              FoodItemCard(
+                                                showMenu: false,
+                                                recommendedDietItem:
+                                                    RecommendedDietItem(
+                                                  id: filterdFoodItems[index]
+                                                      .id,
+                                                  quantity:
+                                                      filterdFoodItems[index]
+                                                          .recomendedQuantity,
+                                                  foodItem:
+                                                      filterdFoodItems[index],
+                                                  cookingInstruction: filterdFoodItems[index]
+                                                          .recomendedQuantity,
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                height: 12,
+                                              ),
+                                              const Align(
+                                                alignment: Alignment.topLeft,
+                                                child: Text(
+                                                  'Updated Recommended Quantity:',
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 16,
+                                                  ),
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                height: 12,
+                                              ),
+                                              TextFormField(
+                                                initialValue: filterdFoodItems[index]
+                                                          .recomendedQuantity,
+                                                controller: qunatityController,
+                                                style: const TextStyle(
+                                                    color: Colors.black),
+                                                decoration:
+                                                    const InputDecoration(
+                                                  hintText:
+                                                      'Updated Recommended Quantity:',
+                                                  hintStyle: TextStyle(
+                                                    color: Colors.black,
+                                                  ),
+                                                  fillColor: Colors.transparent,
+                                                  filled: true,
+                                                  border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                      Radius.circular(10.0),
+                                                    ),
+                                                    borderSide: BorderSide(
+                                                      color: Colors.black,
+                                                    ),
+                                                  ),
+                                                  focusedBorder:
+                                                      OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                      width: 1,
+                                                      color: Colors.black,
+                                                    ),
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                      Radius.circular(10.0),
+                                                    ),
+                                                  ),
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                      width: 1,
+                                                      color: Colors.grey,
+                                                    ),
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                      Radius.circular(10.0),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                height: 12,
+                                              ),
+                                              const Align(
+                                                alignment: Alignment.topLeft,
+                                                child: Text(
+                                                  'Updated Instructions:',
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 16,
+                                                  ),
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                height: 12,
+                                              ),
+                                              TextFormField(
+                                                initialValue: "N/A",
+                                                controller: instructionController,
+                                                style: const TextStyle(
+                                                    color: Colors.black),
+                                                decoration:
+                                                    const InputDecoration(
+                                                  hintText:
+                                                      'Enter updated instructions',
+                                                  hintStyle: TextStyle(
+                                                    color: Colors.black,
+                                                  ),
+                                                  fillColor: Colors.transparent,
+                                                  filled: true,
+                                                  border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                      Radius.circular(10.0),
+                                                    ),
+                                                    borderSide: BorderSide(
+                                                      color: Colors.black,
+                                                    ),
+                                                  ),
+                                                  focusedBorder:
+                                                      OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                      width: 1,
+                                                      color: Colors.black,
+                                                    ),
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                      Radius.circular(10.0),
+                                                    ),
+                                                  ),
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                      width: 1,
+                                                      color: Colors.grey,
+                                                    ),
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                      Radius.circular(10.0),
+                                                    ),
+                                                  ),
+                                                ),
+                                                onFieldSubmitted:
+                                                    (value) async {
+                                                  setState(() {
+                                                    searchLoading = true;
+                                                  });
+                                                  filterdFoodItems =
+                                                      await DietService
+                                                          .getFoodItemsByQuery(
+                                                              value);
+                                                  setState(() {
+                                                    searchLoading = false;
+                                                  });
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    child: FoodItemCard(
+                                      showMenu: false,
+                                      recommendedDietItem: RecommendedDietItem(
+                                        id: filterdFoodItems[index].id,
+                                        quantity: filterdFoodItems[index]
+                                            .recomendedQuantity,
+                                        foodItem: filterdFoodItems[index],
+                                        cookingInstruction: "N/A",
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          )
+              ],
+            ),
+          ),
+        ),
+      );
+    });
   }
 }

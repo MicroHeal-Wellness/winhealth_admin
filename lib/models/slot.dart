@@ -1,49 +1,38 @@
-// To parse this JSON data, do
-//
-//     final slot = slotFromJson(jsonString);
 
-import 'dart:convert';
-
-List<Slot> slotFromJson(String str) => List<Slot>.from(json.decode(str).map((x) => Slot.fromJson(x)));
-
-String slotToJson(List<Slot> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+import 'package:winhealth_admin/models/user_model.dart';
 
 class Slot {
     String? id;
-    String? doctorId;
-    String? startTime;
-    int? duration;
     String? status;
+    String? startTime;
+    String? endTime;
     DateTime? date;
-    String? day;
+    UserModel? doctor;
 
     Slot({
         this.id,
-        this.doctorId,
-        this.startTime,
-        this.duration,
         this.status,
+        this.startTime,
+        this.endTime,
         this.date,
-        this.day,
+        this.doctor,
     });
 
     factory Slot.fromJson(Map<String, dynamic> json) => Slot(
         id: json["id"],
-        doctorId: json["doctor_id"],
-        startTime: json["start_time"],
-        duration: json["duration"],
         status: json["status"],
+        startTime: json["start_time"],
+        endTime: json["end_time"],
         date: json["date"] == null ? null : DateTime.parse(json["date"]),
-        day: json["day"],
+        doctor: json["doctor"].runtimeType == String ? null : UserModel.fromJson(json["doctor"]),
     );
 
     Map<String, dynamic> toJson() => {
         "id": id,
-        "doctor_id": doctorId,
-        "start_time": startTime,
-        "duration": duration,
         "status": status,
+        "start_time": startTime,
+        "end_time": endTime,
         "date": "${date!.year.toString().padLeft(4, '0')}-${date!.month.toString().padLeft(2, '0')}-${date!.day.toString().padLeft(2, '0')}",
-        "day": day,
+        "doctor": doctor?.toJson(),
     };
 }

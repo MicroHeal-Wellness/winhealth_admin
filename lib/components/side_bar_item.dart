@@ -41,7 +41,8 @@ class SideBarItem extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment:  MediaQuery.of(context).size.width > 1600
+                  ? MainAxisAlignment.start : MainAxisAlignment.center,
             children: [
               Icon(
                 iconData,
@@ -49,18 +50,23 @@ class SideBarItem extends StatelessWidget {
                     ? Colors.white
                     : Colors.black,
               ),
-              const SizedBox(
-                width: 32,
-              ),
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 18,
-                  color: context.watch<SideBarProvider>().currentPage == pageKey
-                      ? Colors.white
-                      : Colors.black,
-                ),
-              )
+              MediaQuery.of(context).size.width > 1600
+                  ? const SizedBox(
+                      width: 32,
+                    )
+                  : const SizedBox(),
+              MediaQuery.of(context).size.width > 1600
+                  ? Text(
+                      title,
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: context.watch<SideBarProvider>().currentPage ==
+                                pageKey
+                            ? Colors.white
+                            : Colors.black,
+                      ),
+                    )
+                  : const SizedBox(),
             ],
           ),
         ),
