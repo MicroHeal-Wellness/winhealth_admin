@@ -140,15 +140,18 @@ class _PatientHomeState extends State<PatientHome> {
                     ),
                     GridView.builder(
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount:
-                              MediaQuery.of(context).size.width > 1800
-                                  ? 3
-                                  : MediaQuery.of(context).size.width > 1200
-                                      ? 2
-                                      : 1,
-                          childAspectRatio: MediaQuery.of(context).size.width > 600 ? 1.2 : 0.9,
-                          crossAxisSpacing: 16,
-                          mainAxisSpacing: 16),
+                        crossAxisCount: MediaQuery.of(context).size.width > 1800
+                            ? 3
+                            : MediaQuery.of(context).size.width > 1200
+                                ? 2
+                                : 1,
+                        childAspectRatio:
+                            MediaQuery.of(context).size.width > 600
+                                ? 1.04
+                                : 0.8,
+                        crossAxisSpacing: 16,
+                        mainAxisSpacing: 16,
+                      ),
                       itemBuilder: (context, index) {
                         return PatientInfoCard(
                           patient: patientList[index],

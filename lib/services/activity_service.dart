@@ -24,4 +24,18 @@ class ActivityService {
       return null;
     }
   }
+
+  static Future<int> getActivityCount(String userID, String date) async {
+    final response = await BaseService.makeAuthenticatedRequest(
+      '${BaseService.BASE_URL}/items/activity_log?filter={"_and":[{"user_created":"$userID"},{"date":{"_eq":"$date"}}]}&meta=*',
+      method: 'GET',
+    );
+    var responseMap = jsonDecode(response.body);
+    print(responseMap);
+    if (response.statusCode == 200) {
+      return responseMap["meta"]["filter_count"] ?? 0;
+    } else {
+      return 0;
+    }
+  }
 }

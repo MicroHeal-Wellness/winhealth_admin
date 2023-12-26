@@ -4,10 +4,55 @@ import 'package:winhealth_admin/screens/activity_stats.dart';
 import 'package:winhealth_admin/screens/diet_home.dart';
 import 'package:winhealth_admin/screens/notes_home.dart';
 import 'package:winhealth_admin/screens/report_home.dart';
+import 'package:intl/intl.dart';
+import 'package:winhealth_admin/services/activity_service.dart';
 
-class PatientInfoCard extends StatelessWidget {
+class PatientInfoCard extends StatefulWidget {
   final UserModel patient;
   const PatientInfoCard({super.key, required this.patient});
+
+  @override
+  State<PatientInfoCard> createState() => _PatientInfoCardState();
+}
+
+class _PatientInfoCardState extends State<PatientInfoCard> {
+  List statuses = [];
+
+  @override
+  void initState() {
+    super.initState();
+    getInitData();
+  }
+
+  getInitData() async {
+    List<DateTime> days = [];
+    final now = DateTime.now();
+    final int currentDay = now.weekday;
+    final DateTime firstDayOfWeek =
+        now.subtract(Duration(days: currentDay - 1));
+    days = List.generate(7, (index) {
+      final DateTime date = firstDayOfWeek.add(Duration(days: index));
+      return date;
+    });
+    // statuses = days.map((date) => {"date": date, "status": 1}).toList();
+    for (int i = 0; i < days.length; i++) {
+      int val = await ActivityService.getActivityCount(
+        widget.patient.id!,
+        DateFormat('yyyy-MM-dd').format(days[i]),
+      );
+      print(val);
+      statuses.add({
+        "date": days[i],
+        "status": val == 0
+            ? 1
+            : val < 9
+                ? 2
+                : 3
+      });
+    }
+    print(statuses);
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +66,7 @@ class PatientInfoCard extends StatelessWidget {
         child: Column(
           children: [
             Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 const Text(
                   "Patient Info",
@@ -54,7 +100,7 @@ class PatientInfoCard extends StatelessWidget {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => ActivityStats(
-                              patient: patient,
+                              patient: widget.patient,
                             ),
                           ),
                         );
@@ -69,7 +115,7 @@ class PatientInfoCard extends StatelessWidget {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => DietHome(
-                              patient: patient,
+                              patient: widget.patient,
                             ),
                           ),
                         );
@@ -84,7 +130,7 @@ class PatientInfoCard extends StatelessWidget {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => NotesHome(
-                              patient: patient,
+                              patient: widget.patient,
                             ),
                           ),
                         );
@@ -102,13 +148,15 @@ class PatientInfoCard extends StatelessWidget {
                       style: const ButtonStyle(
                         backgroundColor: MaterialStatePropertyAll(Colors.white),
                       ),
-                      onPressed: () {Navigator.of(context).push(
+                      onPressed: () {
+                        Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => ReportHome(
-                              patient: patient,
+                              patient: widget.patient,
                             ),
                           ),
-                        );},
+                        );
+                      },
                       child: const Text('Uploads'),
                     ),
                   ],
@@ -128,7 +176,7 @@ class PatientInfoCard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  "${patient.firstName} ${patient.lastName}",
+                  "${widget.patient.firstName} ${widget.patient.lastName}",
                   style: const TextStyle(
                     fontSize: 16,
                   ),
@@ -148,9 +196,9 @@ class PatientInfoCard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  patient.authType == "phone"
-                      ? patient.emailAddress!
-                      : patient.email!,
+                  widget.patient.authType == "phone"
+                      ? widget.patient.emailAddress!
+                      : widget.patient.email!,
                   style: const TextStyle(
                     fontSize: 16,
                   ),
@@ -170,7 +218,7 @@ class PatientInfoCard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  "+91 ${patient.phoneNumber}",
+                  "+91 ${widget.patient.phoneNumber}",
                   style: const TextStyle(
                     fontSize: 16,
                   ),
@@ -190,7 +238,7 @@ class PatientInfoCard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  "${patient.dob!.toString().split(" ").firstOrNull}",
+                  "${widget.patient.dob!.toString().split(" ").firstOrNull}",
                   style: const TextStyle(
                     fontSize: 16,
                   ),
@@ -210,7 +258,7 @@ class PatientInfoCard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  "${patient.height} CM",
+                  "${widget.patient.height} CM",
                   style: const TextStyle(
                     fontSize: 16,
                   ),
@@ -230,7 +278,7 @@ class PatientInfoCard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  "${patient.weight} KG",
+                  "${widget.patient.weight} KG",
                   style: const TextStyle(
                     fontSize: 16,
                   ),
@@ -250,19 +298,19 @@ class PatientInfoCard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  "${patient.gender}",
+                  "${widget.patient.gender}",
                   style: const TextStyle(
                     fontSize: 16,
                   ),
                 ),
               ],
             ),
-            patient.gender!.toLowerCase() == "female"
+            widget.patient.gender!.toLowerCase() == "female"
                 ? const SizedBox(
                     height: 8,
                   )
                 : const SizedBox(),
-            patient.gender!.toLowerCase() == "female"
+            widget.patient.gender!.toLowerCase() == "female"
                 ? Row(
                     children: [
                       const Text(
@@ -273,7 +321,7 @@ class PatientInfoCard extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        "${patient.pregnant}",
+                        "${widget.patient.pregnant}",
                         style: const TextStyle(
                           fontSize: 16,
                         ),
@@ -294,7 +342,7 @@ class PatientInfoCard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  "${patient.diet}",
+                  "${widget.patient.diet}",
                   style: const TextStyle(
                     fontSize: 16,
                   ),
@@ -314,7 +362,9 @@ class PatientInfoCard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  patient.appFormAanswered! ? "Answered" : "Not yet answered",
+                  widget.patient.appFormAanswered!
+                      ? "Answered"
+                      : "Not yet answered",
                   style: const TextStyle(
                     fontSize: 16,
                   ),
@@ -334,12 +384,48 @@ class PatientInfoCard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  "${patient.id}",
+                  "${widget.patient.id}",
                   style: const TextStyle(
                     fontSize: 14,
                   ),
                 ),
               ],
+            ),
+            const Spacer(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: List.generate(
+                statuses.length,
+                (index) => Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    border: statuses[index]['status'] == 3
+                        ? Border.all(color: Colors.green)
+                        : statuses[index]['status'] == 2
+                            ? Border.all(color: Colors.blue)
+                            : Border.all(color: Colors.black),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        Text(
+                          DateFormat('EE').format(statuses[index]['date']),
+                        ),
+                        const SizedBox(
+                          height: 4,
+                        ),
+                        Text(
+                          DateFormat('dd/MM').format(statuses[index]['date']),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 8,
             ),
           ],
         ),

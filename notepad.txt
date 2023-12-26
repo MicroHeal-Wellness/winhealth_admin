@@ -1,0 +1,8 @@
+shwo activity fileld status -> tiles weekly on patient info card
+show activity info ine ach activity (actual responses)
+add patient history form
+add new food item add form inside diet
+add recipe module inside food item
+when we add new routine it goes back to previous page
+adding foof item in routine requries refresh to reflect
+check food summary card calculation
