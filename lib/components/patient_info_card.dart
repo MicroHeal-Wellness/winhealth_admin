@@ -343,7 +343,7 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
                   ),
                 ),
                 Text(
-                  widget.patient.exercise! ? "${widget.patient.exerciseType}" : "Never",
+                  "${widget.patient.exerciseType}",
                   style: const TextStyle(
                     fontSize: 16,
                   ),

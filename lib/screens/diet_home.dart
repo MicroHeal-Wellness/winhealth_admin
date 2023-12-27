@@ -106,8 +106,8 @@ class _DietHomeState extends State<DietHome> {
     print("weight: $height");
     print("age: $age");
     print("gender: ${widget.patient.gender}");
-    print("exercise: ${widget.patient.exercise}");
-    if (widget.patient.exercise ?? false) {
+    if (widget.patient.exerciseType == null ||
+        widget.patient.exerciseType == "never") {
       if (widget.patient.gender == "male") {
         maxKcal = ((9.99 * weight) + (6.25 * height) - (4.92 * age) + 5);
       } else {
@@ -800,7 +800,7 @@ class _DietHomeState extends State<DietHome> {
                                             const SizedBox(
                                               height: 12,
                                             ),
-                                             const SizedBox(
+                                            const SizedBox(
                                               height: 12,
                                             ),
                                             const Align(
@@ -1001,7 +1001,7 @@ class _DietHomeState extends State<DietHome> {
                                     );
                                   },
                                   child: FoodItemInfoCard(
-                                   foodItem: filterdFoodItems[index],
+                                    foodItem: filterdFoodItems[index],
                                   ),
                                 );
                               },

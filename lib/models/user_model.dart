@@ -32,7 +32,6 @@ class UserModel {
   dynamic doctorType;
   dynamic license;
   bool? appFormAanswered;
-  bool? exercise;
   String? exerciseType;
 
   UserModel(
@@ -59,7 +58,6 @@ class UserModel {
       this.doctorType,
       this.license,
       this.appFormAanswered,
-      this.exercise,
       this.exerciseType});
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
@@ -88,7 +86,6 @@ class UserModel {
         doctorType: json["doctor_type"],
         license: json["license"],
         appFormAanswered: json['app_form_answered'] ?? false,
-        exercise: json['exercise'] ?? false,
         exerciseType: json['exercise_type'] ?? "Daily",
       );
 
@@ -120,7 +117,6 @@ class UserModel {
         "doctor_type": doctorType,
         "license": license,
         "app_form_answered": appFormAanswered,
-        "exercise": exercise,
         "exercise_type": exerciseType,
       };
 }
