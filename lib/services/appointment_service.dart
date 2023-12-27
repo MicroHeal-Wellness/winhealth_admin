@@ -21,18 +21,4 @@ class AppointmentService {
       return data;
     }
   }
-
-  static Future<bool> updateNotes(payload, id) async {
-    print("payload: ");
-    print(payload);
-    final response = await BaseService.makeUnauthenticatedRequest(
-        '${BaseService.BASE_URL}/appointments/$id',
-        method: 'PATCH',
-        body: jsonEncode(payload));
-    if (response.statusCode == 200) {
-      return true;
-    } else {
-      return false;
-    }
-  }
 }
