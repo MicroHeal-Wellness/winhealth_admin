@@ -3,6 +3,7 @@ import 'package:winhealth_admin/models/user_model.dart';
 import 'package:winhealth_admin/screens/activity_info.dart';
 import 'package:winhealth_admin/screens/activity_stats.dart';
 import 'package:winhealth_admin/screens/diet_home.dart';
+import 'package:winhealth_admin/screens/foms_home.dart';
 import 'package:winhealth_admin/screens/notes_home.dart';
 import 'package:winhealth_admin/screens/report_home.dart';
 import 'package:intl/intl.dart';
@@ -157,7 +158,15 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
                       style: const ButtonStyle(
                         backgroundColor: MaterialStatePropertyAll(Colors.white),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => FormsHome(
+                              patient: widget.patient,
+                            ),
+                          ),
+                        );
+                      },
                       child: const Text('Patient Forms'),
                     ),
                     MenuItemButton(
@@ -212,7 +221,7 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
                   ),
                 ),
                 Text(
-                  widget.patient.authType == "phone"
+                  widget.patient.emailAddress == null
                       ? widget.patient.emailAddress!
                       : widget.patient.email!,
                   style: const TextStyle(
@@ -321,6 +330,26 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
                 ),
               ],
             ),
+            const SizedBox(
+              height: 8,
+            ),
+            Row(
+              children: [
+                const Text(
+                  "Exercise: ",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  widget.patient.exercise! ? "${widget.patient.exerciseType}" : "Never",
+                  style: const TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+              ],
+            ),
             widget.patient.gender!.toLowerCase() == "female"
                 ? const SizedBox(
                     height: 8,
@@ -387,27 +416,29 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
                 ),
               ],
             ),
+            // const SizedBox(
+            //   height: 8,
+            // ),
+            // Row(
+            //   children: [
+            //     const Text(
+            //       "Id: ",
+            //       style: TextStyle(
+            //         fontSize: 16,
+            //         fontWeight: FontWeight.bold,
+            //       ),
+            //     ),
+            //     Text(
+            //       "${widget.patient.id}",
+            //       style: const TextStyle(
+            //         fontSize: 14,
+            //       ),
+            //     ),
+            //   ],
+            // ),
             const SizedBox(
               height: 8,
             ),
-            Row(
-              children: [
-                const Text(
-                  "Id: ",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  "${widget.patient.id}",
-                  style: const TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-              ],
-            ),
-            const Spacer(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: List.generate(
@@ -416,10 +447,10 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
                     border: statuses[index]['status'] == 3
-                        ? Border.all(color: Colors.green)
+                        ? Border.all(color: Colors.green, width: 2)
                         : statuses[index]['status'] == 2
-                            ? Border.all(color: Colors.blue)
-                            : Border.all(color: Colors.black),
+                            ? Border.all(color: Colors.blue, width: 2)
+                            : Border.all(color: Colors.black, width: 2),
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),

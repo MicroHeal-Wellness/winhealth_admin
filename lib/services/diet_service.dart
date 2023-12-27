@@ -48,7 +48,7 @@ class DietService {
       '${BaseService.BASE_URL}/items/recommended_diet/$id',
       method: 'DELETE',
     );
-    if (response.statusCode == 200) {
+    if (response.statusCode == 204) {
       return true;
     } else {
       return false;

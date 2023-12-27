@@ -1,35 +1,50 @@
 // To parse this JSON data, do
 //
-//     final activity = activityFromJson(jsonString);
+//     final activityItem = activityItemFromJson(jsonString);
 
-// ActivityItem activityItemFromJson(String str) =>
-//     ActivityItem.fromJson(json.decode(str));
+import 'dart:convert';
 
-// String activityItemToJson(ActivityItem data) => json.encode(data.toJson());
+import 'package:winhealth_admin/models/food_item.dart';
+
+
+ActivityItem activityItemFromJson(String str) => ActivityItem.fromJson(json.decode(str));
+
+String activityItemToJson(ActivityItem data) => json.encode(data.toJson());
 
 class ActivityItem {
-  final String name;
-  final String date;
-  dynamic value;
+    String? id;
+    String? userCreated;
+    DateTime? dateCreated;
+    dynamic response;
+    String? activityType;
+    DateTime? date;
 
-  ActivityItem({
-    required this.name,
-    required this.date,
-    required this.value,
-  });
+    ActivityItem({
+        this.id,
+        this.userCreated,
+        this.dateCreated,
+        this.response,
+        this.activityType,
+        this.date,
+    });
 
-  factory ActivityItem.fromJson(
-          Map<String, dynamic>? json, String name, String date) =>
-      ActivityItem(date: date, name: name, value: mapper(name, json));
+    factory ActivityItem.fromJson(Map<String, dynamic> json) => ActivityItem(
+        id: json["id"],
+        userCreated: json["user_created"],
+        dateCreated: json["date_created"] == null ? null : DateTime.parse(json["date_created"]),
+        response: json["response"] == null ? null : mapper(json["activity_type"], json["response"]),
+        activityType: json["activity_type"],
+        date: json["date"] == null ? null : DateTime.parse(json["date"]),
+    );
 
-//   Map<String, dynamic> toJson() => {
-//         "stress": stress?.toJson(),
-//         "water": water?.toJson(),
-//         "sleep": sleep?.toJson(),
-//         "stool": stool?.toJson(),
-//         "food": food?.toJson(),
-//         "digestion": digestion?.toJson(),
-//       };
+    Map<String, dynamic> toJson() => {
+        "id": id,
+        "user_created": userCreated,
+        "date_created": dateCreated?.toIso8601String(),
+        "response": response.toJson(),
+        "activity_type": activityType,
+        "date": "${date!.year.toString().padLeft(4, '0')}-${date!.month.toString().padLeft(2, '0')}-${date!.day.toString().padLeft(2, '0')}",
+    };
 }
 
 mapper(name, json) {
@@ -81,10 +96,10 @@ class DigestionActivity {
 }
 
 class FoodActivity {
-  List<String>? breakfast;
-  dynamic lunch;
-  dynamic dinner;
-  dynamic others;
+  List<FoodItem>? breakfast;
+  List<FoodItem>? lunch;
+  List<FoodItem>? dinner;
+  List<FoodItem>? others;
 
   FoodActivity({
     this.breakfast,
@@ -96,19 +111,31 @@ class FoodActivity {
   factory FoodActivity.fromJson(Map<String, dynamic> json) => FoodActivity(
         breakfast: json["breakfast"] == null
             ? []
-            : List<String>.from(json["breakfast"]!.map((x) => x)),
-        lunch: json["lunch"],
-        dinner: json["dinner"],
-        others: json["others"],
+            : List<FoodItem>.from(json["breakfast"]!.map((x) => FoodItem.fromJson(x))),
+        lunch: json["lunch"]== null
+            ? []
+            : List<FoodItem>.from(json["lunch"]!.map((x) => FoodItem.fromJson(x))),
+        dinner: json["dinner"]== null
+            ? []
+            : List<FoodItem>.from(json["dinner"]!.map((x) => FoodItem.fromJson(x))),
+        others: json["others"]== null
+            ? []
+            : List<FoodItem>.from(json["others"]!.map((x) => FoodItem.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
         "breakfast": breakfast == null
             ? []
-            : List<dynamic>.from(breakfast!.map((x) => x)),
-        "lunch": lunch,
-        "dinner": dinner,
-        "others": others,
+            : List<dynamic>.from(breakfast!.map((x) => x.toJson())),
+        "lunch": lunch == null
+            ? []
+            : List<dynamic>.from(lunch!.map((x) => x.toJson())),
+        "dinner": dinner == null
+            ? []
+            : List<dynamic>.from(dinner!.map((x) => x.toJson())),
+        "others": others == null
+            ? []
+            : List<dynamic>.from(others!.map((x) => x.toJson())),
       };
 }
 
@@ -134,24 +161,20 @@ class SleepActivity {
 
 class StoolActivity {
   int? frequency;
-  int? form;
   dynamic formOfStoolTypes;
 
   StoolActivity({
     this.frequency,
-    this.form,
     this.formOfStoolTypes
   });
 
   factory StoolActivity.fromJson(Map<String, dynamic> json) => StoolActivity(
         frequency: json["frequency"],
-        form: json["form"],
         formOfStoolTypes:  json["formOfStoolTypes"]
       );
 
   Map<String, dynamic> toJson() => {
         "frequency": frequency,
-        "form": form,
         "formOfStoolTypes": formOfStoolTypes
       };
 }

@@ -88,8 +88,8 @@ class UserModel {
         doctorType: json["doctor_type"],
         license: json["license"],
         appFormAanswered: json['app_form_answered'] ?? false,
-        exercise: json['exercise'],
-        exerciseType: json['exercise_type'],
+        exercise: json['exercise'] ?? false,
+        exerciseType: json['exercise_type'] ?? "Daily",
       );
 
   Map<String, dynamic> toJson() => {

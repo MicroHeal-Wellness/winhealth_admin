@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:winhealth_admin/components/patient_info_card.dart';
 import 'package:winhealth_admin/models/answer.dart';
-import 'package:winhealth_admin/models/question.dart';
 import 'package:winhealth_admin/models/user_model.dart';
 import 'package:winhealth_admin/services/patient_service.dart';
-import 'package:winhealth_admin/services/questionare_service.dart';
 import 'package:winhealth_admin/utils/constants.dart';
 
 class PatientHome extends StatefulWidget {
@@ -20,7 +18,6 @@ class _PatientHomeState extends State<PatientHome> {
   bool showNotes = false;
   bool loading = false;
   List<UserModel> patientList = [];
-  List<Question> questions = [];
   List<Answer> answer = [];
 
   UserModel? selectedPatient;
@@ -51,45 +48,10 @@ class _PatientHomeState extends State<PatientHome> {
     setState(() {
       loading = true;
     });
-    await getPatients();
-    questions = await QuestionareService.getAllQuestion();
+    patientList = await PatientService.getPatients();
     setState(() {
       loading = false;
     });
-  }
-
-  getPatients() async {
-    patientList = await PatientService.getPatients();
-  }
-
-  genAnswer(Question question, Answer answer) {
-    if (question.type == "multi") {
-      return question.options!
-          .where((element) => element.key! == answer.response![0])
-          .first
-          .text;
-    }
-    if (question.type == "range") {
-      switch (answer.response![0]) {
-        case "0":
-          return "None";
-        case "1":
-          return "Not very sever";
-        case "2":
-          return "Tolerable Pain";
-        case "3":
-          return "In a lot of pain";
-        case "4":
-          return "Extreme Pain";
-        default:
-          return "None";
-      }
-    }
-    if (question.type == "text") {
-      return answer.response![0];
-    }
-
-    return "N/A";
   }
 
   @override
@@ -147,7 +109,7 @@ class _PatientHomeState extends State<PatientHome> {
                                 : 1,
                         childAspectRatio:
                             MediaQuery.of(context).size.width > 600
-                                ? 1.04
+                                ? 1
                                 : 0.8,
                         crossAxisSpacing: 16,
                         mainAxisSpacing: 16,

@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:winhealth_admin/components/activity_info_card.dart';
+import 'package:winhealth_admin/models/activity.dart';
 import 'package:winhealth_admin/models/user_model.dart';
+import 'package:winhealth_admin/services/activity_service.dart';
 import 'package:winhealth_admin/utils/constants.dart';
 
 class ActivityInfo extends StatefulWidget {
@@ -13,6 +17,10 @@ class ActivityInfo extends StatefulWidget {
 class _ActivityInfoState extends State<ActivityInfo> {
   ScrollController scrollController = ScrollController();
   bool showbtn = false;
+  DateTime? currentDate = DateTime.now();
+
+  bool isLoadingActivities = false;
+  List<ActivityItem> dayActivityList = [];
   @override
   void initState() {
     scrollController.addListener(() {
@@ -36,7 +44,17 @@ class _ActivityInfoState extends State<ActivityInfo> {
     super.initState();
   }
 
-  getInitData() {}
+  getInitData() async {
+    setState(() {
+      isLoadingActivities = true;
+    });
+    dayActivityList = await ActivityService.getActivitiesByUserIDandDate(
+        widget.patient.id!, DateFormat('yyyy-MM-dd').format(currentDate!));
+    setState(() {
+      isLoadingActivities = false;
+    });
+  }
+
   bool loading = false;
   @override
   Widget build(BuildContext context) {
@@ -85,6 +103,53 @@ class _ActivityInfoState extends State<ActivityInfo> {
                         ),
                       ],
                     ),
+                    Row(
+                      children: [
+                        const SizedBox(
+                          width: 64,
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: Colors.greenAccent,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(
+                            "Date: ${currentDate!.day.toString().padLeft(2, "0")}-${currentDate!.month.toString().padLeft(2, "0")}-${currentDate!.year.toString().padLeft(2, "0")}",
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        // const Spacer(),
+                        const SizedBox(
+                          width: 32,
+                        ),
+                        GestureDetector(
+                          onTap: () async {
+                            currentDate = await showDatePicker(
+                                  context: context,
+                                  initialDate: currentDate!,
+                                  firstDate: DateTime(2023),
+                                  lastDate: DateTime(2923),
+                                ) ??
+                                DateTime.now();
+                            setState(() {});
+                            await getInitData();
+                          },
+                          child: const CircleAvatar(
+                            radius: 24,
+                            backgroundColor: Colors.greenAccent,
+                            child: Icon(
+                              Icons.calendar_month,
+                              size: 24,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                     const SizedBox(
                       height: 16,
                     ),
@@ -92,6 +157,13 @@ class _ActivityInfoState extends State<ActivityInfo> {
                     const SizedBox(
                       height: 16,
                     ),
+                    ListView.builder(
+                      itemBuilder: (context, index) {
+                        return ActivityInfoCard(activityItem: dayActivityList[index],);
+                      },
+                      itemCount: dayActivityList.length,
+                      shrinkWrap: true,
+                    )
                   ],
                 ),
               ),

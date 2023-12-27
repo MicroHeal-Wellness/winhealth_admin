@@ -59,6 +59,8 @@ class _DietHomeState extends State<DietHome> {
   getInitData() async {
     setState(() {
       loading = true;
+      showNotes = false;
+      selecetedRecommendedDiet = null;
     });
     recommendedDiets =
         await DietService.getRecommendedDietByPatientID(widget.patient.id!);
@@ -99,6 +101,11 @@ class _DietHomeState extends State<DietHome> {
         .ceilToDouble();
     double weight = double.parse(widget.patient.weight ?? "0.0");
     double height = double.parse(widget.patient.height ?? "0.0");
+    print("weight: $weight");
+    print("weight: $height");
+    print("age: $age");
+    print("gender: ${widget.patient.gender}");
+    print("exercise: ${widget.patient.exercise}");
     if (widget.patient.exercise ?? false) {
       if (widget.patient.gender == "male") {
         maxKcal = ((9.99 * weight) + (6.25 * height) - (4.92 * age) + 5);
@@ -412,17 +419,18 @@ class _DietHomeState extends State<DietHome> {
                                         return GestureDetector(
                                           child: RecommendedDietCard(
                                             onDelete: () async {
-                                              // bool resp = await DietService
-                                              //     .removeRecommendedDietGroup(
-                                              //         recommendedDiets[index].id);
-                                              // if (resp) {
-                                              //   await getInitData();
-                                              // } else {
-                                              Fluttertoast.showToast(
-                                                msg:
-                                                    "Something Went Wrong, Please Try again",
-                                              );
-                                              // }
+                                              bool resp = await DietService
+                                                  .removeRecommendedDietGroup(
+                                                      recommendedDiets[index]
+                                                          .id);
+                                              if (resp) {
+                                                await getInitData();
+                                              } else {
+                                                Fluttertoast.showToast(
+                                                  msg:
+                                                      "Something Went Wrong, Please Try again",
+                                                );
+                                              }
                                             },
                                             recommendedDiet:
                                                 recommendedDiets[index],
@@ -566,6 +574,14 @@ class _DietHomeState extends State<DietHome> {
                                                   selecetedRecommendedDiet!
                                                       .items![index].id,
                                                 );
+                                                if (resp) {
+                                                  await getInitData();
+                                                } else {
+                                                  Fluttertoast.showToast(
+                                                    msg:
+                                                        "Something Went Wrong Please Try Again",
+                                                  );
+                                                }
                                               },
                                             );
                                           },
@@ -593,6 +609,8 @@ class _DietHomeState extends State<DietHome> {
   }
 
   addFoodDialogBoxPopup() {
+    searchController.clear();
+    filterdFoodItems.clear();
     return StatefulBuilder(builder: (context, setState) {
       return AlertDialog(
         scrollable: true,
