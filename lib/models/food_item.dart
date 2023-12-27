@@ -25,6 +25,7 @@ class FoodItem {
     String? type;
     String? fodmapType;
     String? recomendedQuantity;
+    String? recipe;
 
     FoodItem({
         this.id,
@@ -43,6 +44,7 @@ class FoodItem {
         this.type,
         this.fodmapType,
         this.recomendedQuantity,
+        this.recipe
     });
 
     factory FoodItem.fromJson(Map<String, dynamic> json) => FoodItem(
@@ -62,6 +64,7 @@ class FoodItem {
         type: json["type"],
         fodmapType: json["fodmap_type"],
         recomendedQuantity: json["recomended_quantity"],
+        recipe: json["recipe"] ?? "N/A"
     );
 
     Map<String, dynamic> toJson() => {
@@ -81,5 +84,6 @@ class FoodItem {
         "type": type,
         "fodmap_type": fodmapType,
         "recomended_quantity": recomendedQuantity,
+        "recipe": recipe
     };
 }

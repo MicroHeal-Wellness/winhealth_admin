@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:winhealth_admin/components/food_item_card.dart';
+import 'package:winhealth_admin/components/food_item_info_card.dart';
 import 'package:winhealth_admin/components/recommended_diet_card.dart';
 import 'package:winhealth_admin/models/food_item.dart';
 import 'package:winhealth_admin/models/recommended_diet.dart';
@@ -32,7 +33,7 @@ class _DietHomeState extends State<DietHome> {
   TextEditingController searchController = TextEditingController();
   TextEditingController qunatityController = TextEditingController(text: "");
   TextEditingController instructionController = TextEditingController(text: "");
-
+  TextEditingController recipeController = TextEditingController(text: "");
   @override
   void initState() {
     scrollController.addListener(() {
@@ -699,6 +700,9 @@ class _DietHomeState extends State<DietHome> {
                                                   .recomendedQuantity ??
                                               "1";
                                       instructionController.text = "N/A";
+                                      recipeController.text =
+                                          filterdFoodItems[index].recipe ??
+                                              "N/A";
                                     });
                                     showDialog(
                                       context: context,
@@ -717,16 +721,20 @@ class _DietHomeState extends State<DietHome> {
                                               onRemove: () {},
                                               recommendedDietItem:
                                                   RecommendedDietItem(
-                                                id: filterdFoodItems[index].id,
-                                                quantity:
-                                                    filterdFoodItems[index]
-                                                        .recomendedQuantity,
-                                                foodItem:
-                                                    filterdFoodItems[index],
-                                                cookingInstruction:
-                                                    filterdFoodItems[index]
-                                                        .recomendedQuantity,
-                                              ),
+                                                      id: filterdFoodItems[
+                                                              index]
+                                                          .id,
+                                                      quantity: filterdFoodItems[
+                                                              index]
+                                                          .recomendedQuantity,
+                                                      foodItem:
+                                                          filterdFoodItems[
+                                                              index],
+                                                      cookingInstruction:
+                                                          recipeController.text,
+                                                      otherInstruction:
+                                                          instructionController
+                                                              .text),
                                             ),
                                             const SizedBox(
                                               height: 12,
@@ -751,6 +759,70 @@ class _DietHomeState extends State<DietHome> {
                                               decoration: const InputDecoration(
                                                 hintText:
                                                     'Updated Recommended Quantity:',
+                                                hintStyle: TextStyle(
+                                                  color: Colors.black,
+                                                ),
+                                                fillColor: Colors.transparent,
+                                                filled: true,
+                                                border: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                    Radius.circular(10.0),
+                                                  ),
+                                                  borderSide: BorderSide(
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                                focusedBorder:
+                                                    OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                    width: 1,
+                                                    color: Colors.black,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                    Radius.circular(10.0),
+                                                  ),
+                                                ),
+                                                enabledBorder:
+                                                    OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                    width: 1,
+                                                    color: Colors.grey,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                    Radius.circular(10.0),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 12,
+                                            ),
+                                             const SizedBox(
+                                              height: 12,
+                                            ),
+                                            const Align(
+                                              alignment: Alignment.topLeft,
+                                              child: Text(
+                                                'Updated Recommended Recipe:',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 16,
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 12,
+                                            ),
+                                            TextFormField(
+                                              controller: recipeController,
+                                              style: const TextStyle(
+                                                  color: Colors.black),
+                                              decoration: const InputDecoration(
+                                                hintText:
+                                                    'Updated Recommended Recipe:',
                                                 hintStyle: TextStyle(
                                                   color: Colors.black,
                                                 ),
@@ -866,7 +938,7 @@ class _DietHomeState extends State<DietHome> {
                                                     "food_item":
                                                         filterdFoodItems[index]
                                                             .id,
-                                                    "cooking_instruction":
+                                                    "other_instruction":
                                                         instructionController
                                                                 .text.isEmpty
                                                             ? "N/A"
@@ -877,6 +949,12 @@ class _DietHomeState extends State<DietHome> {
                                                                 .text.isEmpty
                                                             ? "N/A"
                                                             : qunatityController
+                                                                .text,
+                                                    "cooking_instruction":
+                                                        recipeController
+                                                                .text.isEmpty
+                                                            ? "N/A"
+                                                            : recipeController
                                                                 .text,
                                                   }
                                                 });
@@ -922,17 +1000,8 @@ class _DietHomeState extends State<DietHome> {
                                       ),
                                     );
                                   },
-                                  child: FoodItemCard(
-                                    showMenu: false,
-                                    onEdit: () {},
-                                    onRemove: () {},
-                                    recommendedDietItem: RecommendedDietItem(
-                                      id: filterdFoodItems[index].id,
-                                      quantity: filterdFoodItems[index]
-                                          .recomendedQuantity,
-                                      foodItem: filterdFoodItems[index],
-                                      cookingInstruction: "N/A",
-                                    ),
+                                  child: FoodItemInfoCard(
+                                   foodItem: filterdFoodItems[index],
                                   ),
                                 );
                               },

@@ -14,7 +14,12 @@ class FoodItemCard extends StatelessWidget {
   final bool showMenu;
   final VoidCallback onRemove;
   final VoidCallback onEdit;
-  const FoodItemCard({super.key, required this.recommendedDietItem,required this.onEdit, required this.onRemove, this.showMenu = true});
+  const FoodItemCard(
+      {super.key,
+      required this.recommendedDietItem,
+      required this.onEdit,
+      required this.onRemove,
+      this.showMenu = true});
 
   @override
   Widget build(BuildContext context) {
@@ -28,41 +33,45 @@ class FoodItemCard extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Stack(
           children: [
-            showMenu  ? Align(
-              alignment: Alignment.topRight,
-              child: MenuAnchor(
-                builder: (BuildContext context, MenuController controller,
-                    Widget? child) {
-                  return IconButton(
-                    onPressed: () {
-                      if (controller.isOpen) {
-                        controller.close();
-                      } else {
-                        controller.open();
-                      }
-                    },
-                    icon: const Icon(Icons.more_horiz),
-                    tooltip: 'Show menu',
-                  );
-                },
-                menuChildren: [
-                  MenuItemButton(
-                    style: const ButtonStyle(
-                      backgroundColor: MaterialStatePropertyAll(Colors.white),
+            showMenu
+                ? Align(
+                    alignment: Alignment.topRight,
+                    child: MenuAnchor(
+                      builder: (BuildContext context, MenuController controller,
+                          Widget? child) {
+                        return IconButton(
+                          onPressed: () {
+                            if (controller.isOpen) {
+                              controller.close();
+                            } else {
+                              controller.open();
+                            }
+                          },
+                          icon: const Icon(Icons.more_horiz),
+                          tooltip: 'Show menu',
+                        );
+                      },
+                      menuChildren: [
+                        MenuItemButton(
+                          style: const ButtonStyle(
+                            backgroundColor:
+                                MaterialStatePropertyAll(Colors.white),
+                          ),
+                          onPressed: onRemove,
+                          child: const Text('Remove Item'),
+                        ),
+                        MenuItemButton(
+                          style: const ButtonStyle(
+                            backgroundColor:
+                                MaterialStatePropertyAll(Colors.white),
+                          ),
+                          onPressed: onEdit,
+                          child: const Text('Edit Item'),
+                        ),
+                      ],
                     ),
-                    onPressed: onRemove,
-                    child: const Text('Remove Item'),
-                  ),
-                  MenuItemButton(
-                    style: const ButtonStyle(
-                      backgroundColor: MaterialStatePropertyAll(Colors.white),
-                    ),
-                    onPressed: onEdit,
-                    child: const Text('Edit Item'),
-                  ),
-                ],
-              ),
-            ) : const SizedBox(),
+                  )
+                : const SizedBox(),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -322,7 +331,21 @@ class FoodItemCard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  recommendedDietItem.cookingInstruction! ?? "N/A",
+                  recommendedDietItem.otherInstruction!,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 18,
+                  ),
+                ),
+                const Text(
+                  "Recipe: ",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 18,
+                  ),
+                ),
+                Text(
+                  recommendedDietItem.cookingInstruction!,
                   style: const TextStyle(
                     fontWeight: FontWeight.w500,
                     fontSize: 18,

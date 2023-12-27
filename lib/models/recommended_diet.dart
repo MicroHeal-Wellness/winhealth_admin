@@ -76,12 +76,14 @@ class RecommendedDietItem {
   String? id;
   String? quantity;
   String? cookingInstruction;
+  String? otherInstruction;
   FoodItem? foodItem;
 
   RecommendedDietItem({
     this.id,
     this.quantity,
     this.cookingInstruction,
+    this.otherInstruction,
     this.foodItem,
   });
 
@@ -89,7 +91,8 @@ class RecommendedDietItem {
       RecommendedDietItem(
         id: json["id"],
         quantity: json["quantity"],
-        cookingInstruction: json["cooking_instruction"],
+        cookingInstruction: json["cooking_instruction"] ?? "N/A",
+        otherInstruction: json["other_instruction"] ?? "N/A",
         foodItem: json["food_item"] == null
             ? null
             : FoodItem.fromJson(json["food_item"]),
@@ -99,6 +102,7 @@ class RecommendedDietItem {
         "id": id,
         "quantity": quantity,
         "cooking_instruction": cookingInstruction,
+        "other_instruction": otherInstruction,
         "food_item": foodItem?.toJson(),
       };
 }
