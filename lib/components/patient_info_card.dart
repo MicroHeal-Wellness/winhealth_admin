@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:winhealth_admin/models/user_model.dart';
+import 'package:winhealth_admin/screens/activity_info.dart';
 import 'package:winhealth_admin/screens/activity_stats.dart';
 import 'package:winhealth_admin/screens/diet_home.dart';
 import 'package:winhealth_admin/screens/notes_home.dart';
@@ -45,7 +46,7 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
         "date": days[i],
         "status": val == 0
             ? 1
-            : val < 9
+            : val < 6
                 ? 2
                 : 3
       });
@@ -99,13 +100,28 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
                       onPressed: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
+                            builder: (context) => ActivityInfo(
+                              patient: widget.patient,
+                            ),
+                          ),
+                        );
+                      },
+                      child: const Text('Activity Info'),
+                    ),
+                    MenuItemButton(
+                      style: const ButtonStyle(
+                        backgroundColor: MaterialStatePropertyAll(Colors.white),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
                             builder: (context) => ActivityStats(
                               patient: widget.patient,
                             ),
                           ),
                         );
                       },
-                      child: const Text('Activity'),
+                      child: const Text('Activity Stats'),
                     ),
                     MenuItemButton(
                       style: const ButtonStyle(

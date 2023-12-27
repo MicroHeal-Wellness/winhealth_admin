@@ -79,59 +79,6 @@ class _ActivityStatsState extends State<ActivityStats>
                         ),
                       ],
                     ),
-                        // Container(
-                        //   alignment: Alignment.center,
-                        //   decoration: BoxDecoration(
-                        //     color: const Color(0xFFE0E0E0),
-                        //     borderRadius: BorderRadius.circular(32),
-                        //   ),
-                        //   // margin: const EdgeInsets.all(8),
-                        //   height: 42,
-                        //   width: MediaQuery.of(context).size.width * 0.75,
-                        //   child: TabBar(
-                        //       controller: tabController,
-                        //       padding: const EdgeInsets.all(0),
-                        //       overlayColor: MaterialStateProperty.all<Color>(
-                        //           Colors.white),
-                        //       enableFeedback: false,
-                        //       // indicator: const BubbleTabIndicator(
-                        //       //   indicatorRadius: 32,
-                        //       //   indicatorHeight: 36,
-                        //       //   indicatorColor: Color(0xFF5BC496),
-                        //       //   tabBarIndicatorSize: TabBarIndicatorSize.label,
-                        //       // ),
-                        //       indicator: BoxDecoration(
-                        //         borderRadius: BorderRadius.circular(32),
-                        //         color: const Color(0xFF5BC496),
-                        //       ),
-                        //       onTap: (val) {
-                        //         setState(() {});
-                        //       },
-                        //       labelColor: Colors.white,
-                        //       unselectedLabelColor: Colors.black,
-                        //       isScrollable: false,
-                        //       physics: const NeverScrollableScrollPhysics(),
-                        //       tabs: [
-                        //         // AutoSizeText(state),
-                        //         // AutoSizeText(compare),
-                        //         Container(
-                        //           width: double.infinity,
-                        //           height: double.infinity,
-                        //           alignment: Alignment.center,
-                        //           child: const Text(
-                        //             "Stats",
-                        //           ),
-                        //         ),
-                        //         Container(
-                        //           width: double.infinity,
-                        //           height: double.infinity,
-                        //           alignment: Alignment.center,
-                        //           child: const Text(
-                        //             "Compare",
-                        //           ),
-                        //         ),
-                        //       ]),
-                        // ),
                         const SizedBox(
                           height: 20,
                         ),
