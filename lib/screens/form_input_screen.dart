@@ -23,7 +23,6 @@ class _FormInputScreenState extends State<FormInputScreen> {
   ScrollController scrollController = ScrollController();
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getInitData();
   }

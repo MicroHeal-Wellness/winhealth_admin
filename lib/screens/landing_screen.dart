@@ -71,97 +71,95 @@ class _LandingScreenState extends State<LandingScreen> {
                     padding: MediaQuery.of(context).size.width > 1600
                         ? const EdgeInsets.all(12.0)
                         : const EdgeInsets.all(2),
-                    child: Container(
-                      child: ListView(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16.0, vertical: 8),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Image.asset(
-                                  "assets/logo_new.png",
-                                  height:
-                                      MediaQuery.of(context).size.width > 1600
-                                          ? 50
-                                          : 36,
+                    child: ListView(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0, vertical: 8),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Image.asset(
+                                "assets/logo_new.png",
+                                height:
+                                    MediaQuery.of(context).size.width > 1600
+                                        ? 50
+                                        : 36,
+                              ),
+                              MediaQuery.of(context).size.width > 1600
+                                  ? const SizedBox(
+                                      width: 32,
+                                    )
+                                  : const SizedBox(),
+                              MediaQuery.of(context).size.width > 1600
+                                  ? const Text(
+                                      "Winhealth",
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold),
+                                    )
+                                  : const SizedBox()
+                            ],
+                          ),
+                        ),
+                        MediaQuery.of(context).size.width > 1600
+                            ? const Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 16.0, vertical: 8),
+                                child: Text(
+                                  "Doctor's Dashboard",
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
                                 ),
-                                MediaQuery.of(context).size.width > 1600
-                                    ? const SizedBox(
-                                        width: 32,
-                                      )
-                                    : const SizedBox(),
-                                MediaQuery.of(context).size.width > 1600
-                                    ? const Text(
-                                        "Winhealth",
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold),
-                                      )
-                                    : const SizedBox()
-                              ],
-                            ),
-                          ),
-                          MediaQuery.of(context).size.width > 1600
-                              ? const Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 16.0, vertical: 8),
-                                  child: Text(
-                                    "Doctor's Dashboard",
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                )
-                              : const SizedBox(),
-                          MediaQuery.of(context).size.width > 1600
-                              ? Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 16.0, vertical: 8),
-                                  child: Text(
-                                    "Dr. ${currentUser!.firstName}",
-                                    style: const TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                )
-                              : const SizedBox(),
-                          const Divider(
-                            endIndent: 16,
-                            indent: 16,
-                          ),
-                          const SizedBox(
-                            height: 16,
-                          ),
-                          const SideBarItem(
-                            pageKey: 0,
-                            iconData: Icons.alarm,
-                            title: "Appointments",
-                          ),
-                          const SideBarItem(
-                            pageKey: 1,
-                            iconData: Icons.add_box,
-                            title: "Slots",
-                          ),
-                          const SideBarItem(
-                            pageKey: 2,
-                            iconData: Icons.people_alt,
-                            title: "Patients",
-                          ),
-                          const SideBarItem(
-                            pageKey: 3,
-                            iconData: Icons.settings,
-                            title: "Profile",
-                          ),
-                          const SideBarItem(
-                            pageKey: 4,
-                            isDisabled: true,
-                            iconData: Icons.logout,
-                            title: "Logout",
-                          ),
-                        ],
-                      ),
+                              )
+                            : const SizedBox(),
+                        MediaQuery.of(context).size.width > 1600
+                            ? Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16.0, vertical: 8),
+                                child: Text(
+                                  "Dr. ${currentUser!.firstName}",
+                                  style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              )
+                            : const SizedBox(),
+                        const Divider(
+                          endIndent: 16,
+                          indent: 16,
+                        ),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        const SideBarItem(
+                          pageKey: 0,
+                          iconData: Icons.alarm,
+                          title: "Appointments",
+                        ),
+                        const SideBarItem(
+                          pageKey: 1,
+                          iconData: Icons.add_box,
+                          title: "Slots",
+                        ),
+                        const SideBarItem(
+                          pageKey: 2,
+                          iconData: Icons.people_alt,
+                          title: "Patients",
+                        ),
+                        const SideBarItem(
+                          pageKey: 3,
+                          iconData: Icons.settings,
+                          title: "Profile",
+                        ),
+                        const SideBarItem(
+                          pageKey: 4,
+                          isDisabled: true,
+                          iconData: Icons.logout,
+                          title: "Logout",
+                        ),
+                      ],
                     ),
                   ),
                 ),
