@@ -10,7 +10,8 @@ import 'package:winhealth_admin/services/role_service.dart';
 import 'package:winhealth_admin/utils/constants.dart';
 
 class DoctorHome extends StatefulWidget {
-  const DoctorHome({super.key});
+  final UserModel currentUser;
+  const DoctorHome({super.key, required this.currentUser});
 
   @override
   State<DoctorHome> createState() => _DoctorHomeState();
@@ -119,6 +120,7 @@ class _DoctorHomeState extends State<DoctorHome> {
                       itemBuilder: (context, index) {
                         return DoctorInfoCard(
                           doctor: doctorsList[index],
+                          currentUser: widget.currentUser,
                           roles: roles,
                           callback: getInitData,
                         );

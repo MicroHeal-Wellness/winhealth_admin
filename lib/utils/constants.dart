@@ -7,6 +7,7 @@ const accessSpecifiers = {
   "slots": "Slots",
   "patientform": "Patient Form",
   "accessmangement": "Access Mangement",
+  "changerole": "Change Role",
   "activityinfo": "Activity Info",
   "activitystats": "Activity Stats",
   "dietplan": "Diet Plan",

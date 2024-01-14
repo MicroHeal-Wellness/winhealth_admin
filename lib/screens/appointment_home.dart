@@ -206,6 +206,8 @@ class _AppointmentHomeState extends State<AppointmentHome> {
                                               content: PatientInfoCard(
                                                 patient: appointments[index]
                                                     .userCreated!,
+                                                currentUser:
+                                                    widget.currentUser!,
                                               ),
                                             ),
                                           );
@@ -258,6 +260,8 @@ class _AppointmentHomeState extends State<AppointmentHome> {
                                             : PatientInfoCard(
                                                 patient: selectedAppointment!
                                                     .userCreated!,
+                                                currentUser:
+                                                    widget.currentUser!,
                                               )
                                       ],
                                     ),

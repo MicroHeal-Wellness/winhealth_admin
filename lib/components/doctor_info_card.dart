@@ -8,11 +8,13 @@ import 'package:winhealth_admin/services/doctor_service.dart';
 
 class DoctorInfoCard extends StatefulWidget {
   final UserModel doctor;
+  final UserModel currentUser;
   final List<Roles> roles;
   final Function callback;
   const DoctorInfoCard(
       {super.key,
       required this.doctor,
+      required this.currentUser,
       required this.roles,
       required this.callback});
 
@@ -70,47 +72,56 @@ class _DoctorInfoCardState extends State<DoctorInfoCard> {
                       style: const ButtonStyle(
                         backgroundColor: MaterialStatePropertyAll(Colors.white),
                       ),
-                      onPressed: () async {
-                        await showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            title: const Text("Add Role"),
-                            content: DropdownMenu<Roles>(
-                              initialSelection: selecetedRole,
-                              onSelected: (Roles? value) {
-                                // This is called when the user selects an item.
-                                setState(() {
-                                  selecetedRole = value!;
-                                });
-                              },
-                              dropdownMenuEntries: widget.roles
-                                  .map<DropdownMenuEntry<Roles>>((Roles value) {
-                                return DropdownMenuEntry<Roles>(
-                                    value: value, label: value.title!);
-                              }).toList(),
-                            ),
-                            actions: [
-                              MaterialButton(
-                                onPressed: () async {
-                                  bool resp = await DoctorService.udpateDoctor(
-                                      widget.doctor.id!,
-                                      {"access": selecetedRole!.id});
-                                  Navigator.of(context).pop();
-                                  if (resp) {
-                                    Fluttertoast.showToast(
-                                        msg: "New Role Udpated Successfully");
-                                  } else {
-                                    Fluttertoast.showToast(
-                                        msg: "New Role Updation Failed");
-                                  }
-                                },
-                                child: const Text("Assign"),
-                              ),
-                            ],
-                          ),
-                        );
-                        await widget.callback();
-                      },
+                      onPressed: (widget.currentUser.access != null &&
+                              widget.currentUser.access!.permission!
+                                  .contains("changerole"))
+                          ? () async {
+                              await showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  title: const Text("Add Role"),
+                                  content: DropdownMenu<Roles>(
+                                    initialSelection: selecetedRole,
+                                    onSelected: (Roles? value) {
+                                      // This is called when the user selects an item.
+                                      setState(() {
+                                        selecetedRole = value!;
+                                      });
+                                    },
+                                    dropdownMenuEntries: widget.roles
+                                        .map<DropdownMenuEntry<Roles>>(
+                                            (Roles value) {
+                                      return DropdownMenuEntry<Roles>(
+                                          value: value, label: value.title!);
+                                    }).toList(),
+                                  ),
+                                  actions: [
+                                    MaterialButton(
+                                      onPressed: () async {
+                                        bool resp =
+                                            await DoctorService.udpateDoctor(
+                                                widget.doctor.id!,
+                                                {"access": selecetedRole!.id});
+                                        Navigator.of(context).pop();
+                                        if (resp) {
+                                          Fluttertoast.showToast(
+                                              msg:
+                                                  "New Role Udpated Successfully");
+                                        } else {
+                                          Fluttertoast.showToast(
+                                              msg: "New Role Updation Failed");
+                                        }
+                                      },
+                                      child: const Text("Assign"),
+                                    ),
+                                  ],
+                                ),
+                              );
+                              await widget.callback();
+                            }
+                          : () {
+                              Fluttertoast.showToast(msg: "Access Denied");
+                            },
                       child: const Text('Change Role'),
                     ),
                   ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:winhealth_admin/models/user_model.dart';
 import 'package:winhealth_admin/screens/activity_info.dart';
 import 'package:winhealth_admin/screens/activity_stats.dart';
@@ -11,7 +12,9 @@ import 'package:winhealth_admin/services/activity_service.dart';
 
 class PatientInfoCard extends StatefulWidget {
   final UserModel patient;
-  const PatientInfoCard({super.key, required this.patient});
+  final UserModel currentUser;
+  const PatientInfoCard(
+      {super.key, required this.patient, required this.currentUser});
 
   @override
   State<PatientInfoCard> createState() => _PatientInfoCardState();
@@ -42,7 +45,6 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
         widget.patient.id!,
         DateFormat('yyyy-MM-dd').format(days[i]),
       );
-      print(val);
       statuses.add({
         "date": days[i],
         "status": val == 0
@@ -52,7 +54,6 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
                 : 3
       });
     }
-    print(statuses);
     setState(() {});
   }
 
@@ -98,90 +99,126 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
                       style: const ButtonStyle(
                         backgroundColor: MaterialStatePropertyAll(Colors.white),
                       ),
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => ActivityInfo(
-                              patient: widget.patient,
-                            ),
-                          ),
-                        );
-                      },
+                      onPressed: (widget.currentUser.access != null &&
+                              widget.currentUser.access!.permission!
+                                  .contains("activityinfo"))
+                          ? () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => ActivityInfo(
+                                    patient: widget.patient,
+                                  ),
+                                ),
+                              );
+                            }
+                          : () {
+                              Fluttertoast.showToast(msg: "Access Denied");
+                            },
                       child: const Text('Activity Info'),
                     ),
                     MenuItemButton(
                       style: const ButtonStyle(
                         backgroundColor: MaterialStatePropertyAll(Colors.white),
                       ),
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => ActivityStats(
-                              patient: widget.patient,
-                            ),
-                          ),
-                        );
-                      },
+                      onPressed: (widget.currentUser.access != null &&
+                              widget.currentUser.access!.permission!
+                                  .contains("activitystats"))
+                          ? () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => ActivityStats(
+                                    patient: widget.patient,
+                                  ),
+                                ),
+                              );
+                            }
+                          : () {
+                              Fluttertoast.showToast(msg: "Access Denied");
+                            },
                       child: const Text('Activity Stats'),
                     ),
                     MenuItemButton(
                       style: const ButtonStyle(
                         backgroundColor: MaterialStatePropertyAll(Colors.white),
                       ),
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => DietHome(
-                              patient: widget.patient,
-                            ),
-                          ),
-                        );
-                      },
+                      onPressed: (widget.currentUser.access != null &&
+                              widget.currentUser.access!.permission!
+                                  .contains("dietplan"))
+                          ? () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => DietHome(
+                                    patient: widget.patient,
+                                  ),
+                                ),
+                              );
+                            }
+                          : () {
+                              Fluttertoast.showToast(msg: "Access Denied");
+                            },
                       child: const Text('Diet Plan'),
                     ),
                     MenuItemButton(
                       style: const ButtonStyle(
                         backgroundColor: MaterialStatePropertyAll(Colors.white),
                       ),
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => NotesHome(
-                              patient: widget.patient,
-                            ),
-                          ),
-                        );
-                      },
+                      onPressed: (widget.currentUser.access != null &&
+                              widget.currentUser.access!.permission!
+                                  .contains("notes"))
+                          ? () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => NotesHome(
+                                    patient: widget.patient,
+                                  ),
+                                ),
+                              );
+                            }
+                          : () {
+                              Fluttertoast.showToast(msg: "Access Denied");
+                            },
                       child: const Text('Notes'),
                     ),
                     MenuItemButton(
                       style: const ButtonStyle(
                         backgroundColor: MaterialStatePropertyAll(Colors.white),
                       ),
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => FormsHome(
-                              patient: widget.patient,
-                            ),
-                          ),
-                        );
-                      },
+                      onPressed: (widget.currentUser.access != null &&
+                              widget.currentUser.access!.permission!
+                                  .contains("patientform"))
+                          ? () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => FormsHome(
+                                    patient: widget.patient,
+                                  ),
+                                ),
+                              );
+                            }
+                          : () {
+                              Fluttertoast.showToast(msg: "Access Denied");
+                            },
                       child: const Text('Patient Forms'),
                     ),
                     MenuItemButton(
                       style: const ButtonStyle(
                         backgroundColor: MaterialStatePropertyAll(Colors.white),
                       ),
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => ReportHome(
-                              patient: widget.patient,
-                            ),
-                          ),
-                        );
-                      },
+                      onPressed: (widget.currentUser.access != null &&
+                              widget.currentUser.access!.permission!
+                                  .contains("Uploads"))
+                          ? () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => ReportHome(
+                                    patient: widget.patient,
+                                  ),
+                                ),
+                              );
+                            }
+                          : () {
+                              Fluttertoast.showToast(msg: "Access Denied");
+                            },
                       child: const Text('Uploads'),
                     ),
                   ],

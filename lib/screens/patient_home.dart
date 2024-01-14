@@ -6,7 +6,8 @@ import 'package:winhealth_admin/services/patient_service.dart';
 import 'package:winhealth_admin/utils/constants.dart';
 
 class PatientHome extends StatefulWidget {
-  const PatientHome({super.key});
+  final UserModel currentUser;
+  const PatientHome({super.key, required this.currentUser});
 
   @override
   State<PatientHome> createState() => _PatientHomeState();
@@ -108,15 +109,14 @@ class _PatientHomeState extends State<PatientHome> {
                                 ? 2
                                 : 1,
                         childAspectRatio:
-                            MediaQuery.of(context).size.width > 600
-                                ? 1
-                                : 0.8,
+                            MediaQuery.of(context).size.width > 600 ? 1 : 0.8,
                         crossAxisSpacing: 16,
                         mainAxisSpacing: 16,
                       ),
                       itemBuilder: (context, index) {
                         return PatientInfoCard(
                           patient: patientList[index],
+                          currentUser: widget.currentUser,
                         );
                       },
                       shrinkWrap: true,

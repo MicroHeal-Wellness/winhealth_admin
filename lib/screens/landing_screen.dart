@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:winhealth_admin/components/side_bar_item.dart';
 import 'package:winhealth_admin/models/user_model.dart';
@@ -37,12 +36,12 @@ class _LandingScreenState extends State<LandingScreen> {
       case 2:
         return currentUser!.access != null &&
                 currentUser!.access!.permission!.contains("patients")
-            ? const PatientHome()
+            ? PatientHome(currentUser: currentUser!)
             : const NotAllowed();
       case 3:
         return currentUser!.access != null &&
                 currentUser!.access!.permission!.contains("doctors")
-            ? const DoctorHome()
+            ? DoctorHome(currentUser: currentUser!)
             : const NotAllowed();
       case 4:
         return currentUser!.access != null &&
