@@ -21,6 +21,7 @@ class UserModel {
   dynamic location;
   String? diet;
   String? height;
+  String? access;
   String? weight;
   String? authType;
   dynamic bio;
@@ -47,6 +48,7 @@ class UserModel {
       this.location,
       this.diet,
       this.height,
+      this.access,
       this.weight,
       this.authType,
       this.bio,
@@ -69,6 +71,7 @@ class UserModel {
         dob: json["dob"] == null ? null : DateTime.parse(json["dob"]),
         gender: json["gender"],
         avatar: json["avatar"],
+        access: json["access"],
         pregnant: json["pregnant"],
         location: json["location"],
         diet: json["diet"],
@@ -100,6 +103,7 @@ class UserModel {
             : "${dob!.year.toString().padLeft(4, '0')}-${dob!.month.toString().padLeft(2, '0')}-${dob!.day.toString().padLeft(2, '0')}",
         "gender": gender,
         "avatar": avatar,
+        "access": access,
         "pregnant": pregnant,
         "location": location,
         "diet": diet,

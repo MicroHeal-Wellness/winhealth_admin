@@ -4,8 +4,9 @@ import 'package:winhealth_admin/components/side_bar_item.dart';
 import 'package:winhealth_admin/models/user_model.dart';
 import 'package:winhealth_admin/provider/sidebar_provvider.dart';
 import 'package:winhealth_admin/screens/appointment_home.dart';
+import 'package:winhealth_admin/screens/doctor_home.dart';
 import 'package:winhealth_admin/screens/patient_home.dart';
-import 'package:winhealth_admin/screens/profile_home.dart';
+import 'package:winhealth_admin/screens/access_management_home.dart';
 import 'package:winhealth_admin/screens/slots_home.dart';
 import 'package:winhealth_admin/services/base_service.dart';
 
@@ -28,7 +29,9 @@ class _LandingScreenState extends State<LandingScreen> {
       case 2:
         return const PatientHome();
       case 3:
-        return const ProfileHome();
+        return const DoctorHome();
+      case 4:
+        return const AccessMangementHome();
       default:
         return AppointmentHome(currentUser: currentUser!);
     }
@@ -81,10 +84,9 @@ class _LandingScreenState extends State<LandingScreen> {
                             children: [
                               Image.asset(
                                 "assets/logo_new.png",
-                                height:
-                                    MediaQuery.of(context).size.width > 1600
-                                        ? 50
-                                        : 36,
+                                height: MediaQuery.of(context).size.width > 1600
+                                    ? 50
+                                    : 36,
                               ),
                               MediaQuery.of(context).size.width > 1600
                                   ? const SizedBox(
@@ -150,11 +152,16 @@ class _LandingScreenState extends State<LandingScreen> {
                         ),
                         const SideBarItem(
                           pageKey: 3,
-                          iconData: Icons.settings,
-                          title: "Profile",
+                          iconData: Icons.people_alt,
+                          title: "Doctors",
                         ),
                         const SideBarItem(
                           pageKey: 4,
+                          iconData: Icons.settings,
+                          title: "Access",
+                        ),
+                        const SideBarItem(
+                          pageKey: 5,
                           isDisabled: true,
                           iconData: Icons.logout,
                           title: "Logout",
