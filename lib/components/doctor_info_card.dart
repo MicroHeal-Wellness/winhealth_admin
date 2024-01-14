@@ -94,7 +94,7 @@ class _DoctorInfoCardState extends State<DoctorInfoCard> {
                                 onPressed: () async {
                                   bool resp = await DoctorService.udpateDoctor(
                                       widget.doctor.id!,
-                                      {"access": selecetedRole});
+                                      {"access": selecetedRole!.id});
                                   Navigator.of(context).pop();
                                   if (resp) {
                                     Fluttertoast.showToast(
@@ -216,7 +216,7 @@ class _DoctorInfoCardState extends State<DoctorInfoCard> {
                       ? "Not yet signed"
                       : widget.roles
                           .firstWhere(
-                            (element) => element.id == widget.doctor.access,
+                            (element) => element.id == widget.doctor.access!.id,
                           )
                           .title!,
                   style: const TextStyle(

@@ -195,7 +195,7 @@ class AuthService {
 
   static Future<UserModel?> getUserByEmail(String email) async {
     var resp = await BaseService.makeUnauthenticatedRequest(
-      "${BaseService.BASE_URL}/users?filter[email][_eq]=$email",
+      "${BaseService.BASE_URL}/users?filter[email][_eq]=$email&fields=*,access.*",
       method: 'GET',
     );
     if (resp.statusCode == 200) {

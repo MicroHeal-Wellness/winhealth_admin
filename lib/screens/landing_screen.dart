@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:winhealth_admin/components/side_bar_item.dart';
 import 'package:winhealth_admin/models/user_model.dart';
 import 'package:winhealth_admin/provider/sidebar_provvider.dart';
 import 'package:winhealth_admin/screens/appointment_home.dart';
 import 'package:winhealth_admin/screens/doctor_home.dart';
+import 'package:winhealth_admin/screens/not_allowed.dart';
 import 'package:winhealth_admin/screens/patient_home.dart';
 import 'package:winhealth_admin/screens/access_management_home.dart';
 import 'package:winhealth_admin/screens/slots_home.dart';
@@ -23,15 +25,30 @@ class _LandingScreenState extends State<LandingScreen> {
   screenSwitcher(int index) {
     switch (index) {
       case 0:
-        return AppointmentHome(currentUser: currentUser!);
+        return currentUser!.access != null &&
+                currentUser!.access!.permission!.contains("appointment")
+            ? AppointmentHome(currentUser: currentUser!)
+            : const NotAllowed();
       case 1:
-        return SlotsHome(currentUser: currentUser!);
+        return currentUser!.access != null &&
+                currentUser!.access!.permission!.contains("slots")
+            ? SlotsHome(currentUser: currentUser!)
+            : const NotAllowed();
       case 2:
-        return const PatientHome();
+        return currentUser!.access != null &&
+                currentUser!.access!.permission!.contains("patients")
+            ? const PatientHome()
+            : const NotAllowed();
       case 3:
-        return const DoctorHome();
+        return currentUser!.access != null &&
+                currentUser!.access!.permission!.contains("doctors")
+            ? const DoctorHome()
+            : const NotAllowed();
       case 4:
-        return const AccessMangementHome();
+        return currentUser!.access != null &&
+                currentUser!.access!.permission!.contains("accessmangement")
+            ? const AccessMangementHome()
+            : const NotAllowed();
       default:
         return AppointmentHome(currentUser: currentUser!);
     }

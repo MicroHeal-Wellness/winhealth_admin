@@ -2,7 +2,11 @@
 //
 //     final userModel = userModelFromJson(jsonString);
 
+// ignore_for_file: prefer_null_aware_operators
+
 import 'dart:convert';
+
+import 'package:winhealth_admin/models/role.dart';
 
 UserModel userModelFromJson(String str) => UserModel.fromJson(json.decode(str));
 
@@ -21,7 +25,7 @@ class UserModel {
   dynamic location;
   String? diet;
   String? height;
-  String? access;
+  Roles? access;
   String? weight;
   String? authType;
   dynamic bio;
@@ -71,7 +75,7 @@ class UserModel {
         dob: json["dob"] == null ? null : DateTime.parse(json["dob"]),
         gender: json["gender"],
         avatar: json["avatar"],
-        access: json["access"],
+        access: json["access"] == null ? null : Roles.fromJson(json['access']),
         pregnant: json["pregnant"],
         location: json["location"],
         diet: json["diet"],
@@ -103,7 +107,9 @@ class UserModel {
             : "${dob!.year.toString().padLeft(4, '0')}-${dob!.month.toString().padLeft(2, '0')}-${dob!.day.toString().padLeft(2, '0')}",
         "gender": gender,
         "avatar": avatar,
-        "access": access,
+        "access": access == null
+            ? null
+            : access!.toJson(),
         "pregnant": pregnant,
         "location": location,
         "diet": diet,

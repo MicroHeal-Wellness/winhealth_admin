@@ -172,7 +172,8 @@ class _AccessMangementHomeState extends State<AccessMangementHome> {
                                     color: (selectedRole != null &&
                                             selectedRole!.id == e.id)
                                         ? primaryColor
-                                        : Colors.grey.withOpacity(0.2),
+                                        : Colors.white,
+                                        border: Border.all(color: Colors.grey),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Column(

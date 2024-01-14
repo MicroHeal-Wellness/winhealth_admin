@@ -5,7 +5,7 @@ import 'package:winhealth_admin/services/base_service.dart';
 class DoctorService {
   static Future<List<UserModel>> getDoctors() async {
     final response = await BaseService.makeUnauthenticatedRequest(
-      '${BaseService.BASE_URL}/users?filter[role][_eq]=881dbecd-f779-4c65-927d-b07d39b336cb&limit=-1',
+      '${BaseService.BASE_URL}/users?filter[role][_eq]=881dbecd-f779-4c65-927d-b07d39b336cb&limit=-1&fields=*,access.*',
       method: 'GET',
     );
     if (response.statusCode == 200) {
