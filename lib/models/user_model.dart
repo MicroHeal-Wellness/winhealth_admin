@@ -66,35 +66,40 @@ class UserModel {
       this.appFormAanswered,
       this.exerciseType});
 
-  factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
-        firstName: json["first_name"],
-        emailAddress: json["email_address"],
-        lastName: json["last_name"],
-        phoneNumber: json["phone_number"],
-        email: json["email"],
-        dob: json["dob"] == null ? null : DateTime.parse(json["dob"]),
-        gender: json["gender"],
-        avatar: json["avatar"],
-        access: json["access"] == null ? null : Roles.fromJson(json['access']),
-        pregnant: json["pregnant"],
-        location: json["location"],
-        diet: json["diet"],
-        height: json["height"],
-        weight: json["weight"],
-        authType: json["auth_type"],
-        bio: json["bio"],
-        role: json["role"],
-        id: json["id"],
-        status: json["status"],
-        title: json["title"],
-        registrationYear: json["registration_year"] == null
-            ? null
-            : DateTime.parse(json["registration_year"]),
-        doctorType: json["doctor_type"],
-        license: json["license"],
-        appFormAanswered: json['app_form_answered'] ?? false,
-        exerciseType: json['exercise_type'] ?? "Daily",
-      );
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+    print(json["access"]);
+    return UserModel(
+      firstName: json["first_name"],
+      emailAddress: json["email_address"],
+      lastName: json["last_name"],
+      phoneNumber: json["phone_number"],
+      email: json["email"],
+      dob: json["dob"] == null ? null : DateTime.parse(json["dob"]),
+      gender: json["gender"],
+      avatar: json["avatar"],
+      access: json["access"].runtimeType == String || json["access"] == null
+          ? null
+          : Roles.fromJson(json['access']),
+      pregnant: json["pregnant"],
+      location: json["location"],
+      diet: json["diet"],
+      height: json["height"],
+      weight: json["weight"],
+      authType: json["auth_type"],
+      bio: json["bio"],
+      role: json["role"],
+      id: json["id"],
+      status: json["status"],
+      title: json["title"],
+      registrationYear: json["registration_year"] == null
+          ? null
+          : DateTime.parse(json["registration_year"]),
+      doctorType: json["doctor_type"],
+      license: json["license"],
+      appFormAanswered: json['app_form_answered'] ?? false,
+      exerciseType: json['exercise_type'] ?? "Daily",
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         "first_name": firstName,
@@ -107,9 +112,7 @@ class UserModel {
             : "${dob!.year.toString().padLeft(4, '0')}-${dob!.month.toString().padLeft(2, '0')}-${dob!.day.toString().padLeft(2, '0')}",
         "gender": gender,
         "avatar": avatar,
-        "access": access == null
-            ? null
-            : access!.toJson(),
+        "access": access == null ? null : access!.toJson(),
         "pregnant": pregnant,
         "location": location,
         "diet": diet,
