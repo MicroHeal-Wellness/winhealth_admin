@@ -67,20 +67,23 @@ class _AccessMangementHomeState extends State<AccessMangementHome> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
+                    Wrap(
+                      alignment: WrapAlignment.start,
+                      crossAxisAlignment: WrapCrossAlignment.start,
                       children: [
-                        const Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            "Role & Access management",
-                            style: TextStyle(
-                              fontSize: 32,
-                              fontWeight: FontWeight.bold,
-                            ),
+                        const Text(
+                          "Role & Access management",
+                          softWrap: true,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                         const SizedBox(
                           width: 32,
+                          height:
+                              32, // Add height for vertical spacing when wrapped
                         ),
                         GestureDetector(
                           onTap: () async {
@@ -173,7 +176,7 @@ class _AccessMangementHomeState extends State<AccessMangementHome> {
                                             selectedRole!.id == e.id)
                                         ? primaryColor
                                         : Colors.white,
-                                        border: Border.all(color: Colors.grey),
+                                    border: Border.all(color: Colors.grey),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Column(

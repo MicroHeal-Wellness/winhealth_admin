@@ -225,82 +225,99 @@ class _SlotsHomeState extends State<SlotsHome> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Expanded(
-                          child: GridView.builder(
-                            gridDelegate:
-                                const SliverGridDelegateWithMaxCrossAxisExtent(
-                              maxCrossAxisExtent: 170,
-                              childAspectRatio: 7 / 3,
-                              crossAxisSpacing: 20,
-                              mainAxisSpacing: 20,
-                            ),
-                            itemBuilder: (context, index) {
-                              return GestureDetector(
-                                child: SlotsCard(
-                                  title: slots[index].startTime!,
-                                  color: genStatusColor(slots[index].status!),
-                                ),
-                                onTap: () async {
-                                  if (slots[index].status == "unavailable" &&
-                                      DateTime(
-                                        currentDate!.year,
-                                        currentDate!.month,
-                                        currentDate!.day,
-                                        int.parse(slots[index]
-                                            .startTime!
-                                            .split(":")
-                                            .first),
-                                        int.parse(
-                                          slots[index].startTime!.split(":")[1],
-                                        ),
-                                      ).isAfter(DateTime.now())) {
-                                    await showDialog(
-                                      context: context,
-                                      builder: (context) => AlertDialog(
-                                        title: const Text("Slot Update"),
-                                        content: const Text(
-                                          "Are you sure you want to mark the slot as available?",
-                                        ),
-                                        actions: [
-                                          MaterialButton(
-                                            onPressed: () async {
-                                              bool res = await SlotService
-                                                  .updateSlotById(
-                                                slots[index].id!,
-                                                "available",
-                                              );
-                                              if (res) {
-                                                Fluttertoast.showToast(
-                                                    msg: "Slot Updated");
-                                              } else {
-                                                Fluttertoast.showToast(
-                                                    msg: "Slot Update Failed");
-                                              }
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: const Text("Ok"),
-                                          ),
-                                          MaterialButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: const Text("Cancel"),
-                                          )
-                                        ],
+                          child: Wrap(
+                            spacing: 20,
+                            runSpacing: 20,
+                            children: slots
+                                .map(
+                                  (slot) => GestureDetector(
+                                    child: SizedBox(
+                                      width: 170,
+                                      child: SlotsCard(
+                                        title: slot.startTime!,
+                                        color: genStatusColor(slot.status!),
                                       ),
-                                    );
-                                    await getInitData();
-                                  } else {
-                                    Fluttertoast.showToast(
-                                        msg:
-                                            "You cannot update an invalid slot");
-                                  }
-                                },
-                              );
-                            },
-                            shrinkWrap: true,
-                            itemCount: slots.length,
+                                    ),
+                                    onTap: () async {
+                                      if (slot.status == "unavailable" &&
+                                          DateTime(
+                                            currentDate!.year,
+                                            currentDate!.month,
+                                            currentDate!.day,
+                                            int.parse(slot.startTime!
+                                                .split(":")
+                                                .first),
+                                            int.parse(
+                                              slot.startTime!.split(":")[1],
+                                            ),
+                                          ).isAfter(DateTime.now())) {
+                                        await showDialog(
+                                          context: context,
+                                          builder: (context) => AlertDialog(
+                                            title: const Text("Slot Update"),
+                                            content: const Text(
+                                              "Are you sure you want to mark the slot as available?",
+                                            ),
+                                            actions: [
+                                              MaterialButton(
+                                                onPressed: () async {
+                                                  bool res = await SlotService
+                                                      .updateSlotById(
+                                                    slot.id!,
+                                                    "available",
+                                                  );
+                                                  if (res) {
+                                                    Fluttertoast.showToast(
+                                                        msg: "Slot Updated");
+                                                  } else {
+                                                    Fluttertoast.showToast(
+                                                        msg:
+                                                            "Slot Update Failed");
+                                                  }
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: const Text("Ok"),
+                                              ),
+                                              MaterialButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: const Text("Cancel"),
+                                              )
+                                            ],
+                                          ),
+                                        );
+                                        await getInitData();
+                                      } else {
+                                        Fluttertoast.showToast(
+                                            msg:
+                                                "You cannot update an invalid slot");
+                                      }
+                                    },
+                                  ),
+                                )
+                                .toList(),
                           ),
                         ),
+                        // GridView.builder(
+                        //   gridDelegate:
+                        //       const SliverGridDelegateWithMaxCrossAxisExtent(
+                        //     maxCrossAxisExtent: 170,
+                        //     childAspectRatio: 7 / 3,
+                        //     crossAxisSpacing: 20,
+                        //     mainAxisSpacing: 20,
+                        //   ),
+                        //   itemBuilder: (context, index) {
+                        //     return GestureDetector(
+                        //         child: SlotsCard(
+                        //           title: slots[index].startTime!,
+                        //           color: genStatusColor(slots[index].status!),
+                        //         ),
+                        //         onTap: () async {});
+                        //   },
+                        //   shrinkWrap: true,
+                        //   itemCount: slots.length,
+                        // ),
                         const SizedBox(
                           width: 32,
                         ),

@@ -101,27 +101,46 @@ class _PatientHomeState extends State<PatientHome> {
                     const SizedBox(
                       height: 16,
                     ),
-                    GridView.builder(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: MediaQuery.of(context).size.width > 1800
-                            ? 3
-                            : MediaQuery.of(context).size.width > 1200
-                                ? 2
-                                : 1,
-                        childAspectRatio:
-                            MediaQuery.of(context).size.width > 600 ? 1 : 0.8,
-                        crossAxisSpacing: 16,
-                        mainAxisSpacing: 16,
-                      ),
-                      itemBuilder: (context, index) {
-                        return PatientInfoCard(
-                          patient: patientList[index],
-                          currentUser: widget.currentUser,
-                        );
-                      },
-                      shrinkWrap: true,
-                      itemCount: patientList.length,
-                    ),
+
+                    Wrap(
+                      direction: Axis.horizontal,
+                      runSpacing: 16,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      spacing: 16,
+                      children: patientList
+                          .map((patient) => SizedBox(
+                                width: MediaQuery.of(context).size.width > 1800
+                                    ? 300
+                                    : MediaQuery.of(context).size.width > 1200
+                                        ? 400
+                                        : 600,
+                                child: PatientInfoCard(
+                                    patient: patient,
+                                    currentUser: widget.currentUser),
+                              ))
+                          .toList(),
+                    )
+                    // GridView.builder(
+                    //   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    //     crossAxisCount: MediaQuery.of(context).size.width > 1800
+                    //         ? 3
+                    //         : MediaQuery.of(context).size.width > 1200
+                    //             ? 2
+                    //             : 1,
+                    //     childAspectRatio:
+                    //         MediaQuery.of(context).size.width > 600 ? 1 : 0.8,
+                    //     crossAxisSpacing: 16,
+                    //     mainAxisSpacing: 16,
+                    //   ),
+                    //   itemBuilder: (context, index) {
+                    //     return PatientInfoCard(
+                    //       patient: patientList[index],
+                    //       currentUser: widget.currentUser,
+                    //     );
+                    //   },
+                    //   shrinkWrap: true,
+                    //   itemCount: patientList.length,
+                    // ),
                   ],
                 ),
               ),

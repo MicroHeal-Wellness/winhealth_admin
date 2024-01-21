@@ -1,11 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:winhealth_admin/components/appointment_card.dart';
-import 'package:winhealth_admin/components/notes_card.dart';
 import 'package:winhealth_admin/components/patient_info_card.dart';
 import 'package:winhealth_admin/models/appointment.dart';
-import 'package:winhealth_admin/models/notes.dart';
 import 'package:winhealth_admin/models/user_model.dart';
 import 'package:winhealth_admin/services/appointment_service.dart';
 import 'package:winhealth_admin/utils/constants.dart';
@@ -168,6 +164,7 @@ class _AppointmentHomeState extends State<AppointmentHome> {
                                 alignment: Alignment.topCenter,
                                 child: Text(
                                   "* No Appointments found for the selected date",
+                                  softWrap: true,
                                   style: TextStyle(fontStyle: FontStyle.italic),
                                 ),
                               )
