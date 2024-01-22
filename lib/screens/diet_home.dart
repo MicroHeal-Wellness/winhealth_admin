@@ -98,10 +98,11 @@ class _DietHomeState extends State<DietHome> {
   double eatenFat = 0;
 
   void genNutrientLimits() {
-    double age = (DateTime.now().difference(widget.patient.dob!).inDays / 365)
-        .ceilToDouble();
+    double age =
+        (DateTime.now().difference(widget.patient.dob!).inDays / 365)
+            .ceilToDouble();
     double weight = double.parse(widget.patient.weight ?? "0.0");
-    double height = double.parse(widget.patient.height ?? "0.0");
+    double height = double.parse(widget.patient.height ?? "0.0") * 30.48;
    
     if (widget.patient.gender == "male") {
       maxKcal = (10 * weight) + (6.25 * height) - (5 * age) + 5;
