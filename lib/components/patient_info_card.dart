@@ -476,8 +476,9 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
             const SizedBox(
               height: 8,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+            Wrap(
+              spacing: 8,
+              runAlignment: WrapAlignment.start,
               children: List.generate(
                 statuses.length,
                 (index) => Container(
