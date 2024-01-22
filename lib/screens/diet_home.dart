@@ -1268,7 +1268,6 @@ class _DietHomeState extends State<DietHome> {
                 });
                 if (resp) {
                   Navigator.of(context).pop();
-                  Navigator.of(context).pop();
                   Fluttertoast.showToast(
                     msg: "Added Routine for ${widget.patient.firstName}",
                   );
