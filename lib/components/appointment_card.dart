@@ -10,6 +10,7 @@ class AppointmentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Container(
       decoration: BoxDecoration(
           color: isSelected ? primaryColor.withOpacity(0.2) : Colors.white,
@@ -17,7 +18,7 @@ class AppointmentCard extends StatelessWidget {
           border: Border.all(
             color: Colors.grey.withOpacity(0.4),
           )),
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16-size.width*0.001),
       margin: const EdgeInsets.only(bottom: 8.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,13 +39,21 @@ class AppointmentCard extends StatelessWidget {
             "Status: ${appointment.slot!.status}",
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
-          Row(
-            children: [
-              const Text(
+                        const Text(
                 "\n**click to see patient info",
+                softWrap: true,
+                // overflow: TextOverflow.ellipsis,
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              const Spacer(),
+          Row(
+            children: [
+              // const Text(
+              //   "\n**click to see patient info",
+              //   softWrap: true,
+              //   overflow: TextOverflow.ellipsis,
+              //   style: TextStyle(fontWeight: FontWeight.bold),
+              // ),
+              // const Spacer(),
               (appointment.slot!.status == "booked" &&
                       DateTime(
                         appointment.slot!.date!.year,

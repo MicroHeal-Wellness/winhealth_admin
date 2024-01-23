@@ -91,21 +91,25 @@ class _AppointmentHomeState extends State<AppointmentHome> {
               child: SingleChildScrollView(
                 controller: scrollController,
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Align(
+                    Align(
                       alignment: Alignment.topLeft,
                       child: Text(
                         "Your Appointments",
-                        style: TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineLarge
+                            ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                     ),
                     const SizedBox(
                       height: 16,
                     ),
-                    Row(
+                    Wrap(
+                      alignment: WrapAlignment.spaceBetween,
+                      runAlignment: WrapAlignment.start,
+                      runSpacing: 16,
                       children: [
                         Container(
                           padding: const EdgeInsets.symmetric(

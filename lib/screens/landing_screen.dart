@@ -71,6 +71,7 @@ class _LandingScreenState extends State<LandingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       body: loading
           ? const Center(
@@ -93,16 +94,17 @@ class _LandingScreenState extends State<LandingScreen> {
                     child: ListView(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0, vertical: 8),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: size.width * 0.004,
+                              vertical: size.width * 0.002),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Image.asset(
                                 "assets/logo_new.png",
                                 height: MediaQuery.of(context).size.width > 1600
-                                    ? 50
-                                    : 36,
+                                    ? 50-size.width*0.001
+                                    : 36-size.width*0.005,
                               ),
                               MediaQuery.of(context).size.width > 1600
                                   ? const SizedBox(
@@ -144,9 +146,9 @@ class _LandingScreenState extends State<LandingScreen> {
                                 ),
                               )
                             : const SizedBox(),
-                        const Divider(
-                          endIndent: 16,
-                          indent: 16,
+                         Divider(
+                          endIndent: size.width*0.01,
+                          indent:size.width*0.01,
                         ),
                         const SizedBox(
                           height: 16,

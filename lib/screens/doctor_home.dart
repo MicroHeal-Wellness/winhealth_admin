@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:winhealth_admin/components/doctor_info_card.dart';
-import 'package:winhealth_admin/components/patient_info_card.dart';
-import 'package:winhealth_admin/models/answer.dart';
+
 import 'package:winhealth_admin/models/role.dart';
 import 'package:winhealth_admin/models/user_model.dart';
 import 'package:winhealth_admin/services/doctor_service.dart';
-import 'package:winhealth_admin/services/patient_service.dart';
 import 'package:winhealth_admin/services/role_service.dart';
 import 'package:winhealth_admin/utils/constants.dart';
 
@@ -105,29 +103,51 @@ class _DoctorHomeState extends State<DoctorHome> {
                     const SizedBox(
                       height: 16,
                     ),
-                    GridView.builder(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: MediaQuery.of(context).size.width > 1800
-                            ? 3
-                            : MediaQuery.of(context).size.width > 1200
-                                ? 2
-                                : 1,
-                        childAspectRatio:
-                            MediaQuery.of(context).size.width > 600 ? 2 : 1.5,
-                        crossAxisSpacing: 16,
-                        mainAxisSpacing: 16,
-                      ),
-                      itemBuilder: (context, index) {
-                        return DoctorInfoCard(
-                          doctor: doctorsList[index],
-                          currentUser: widget.currentUser,
-                          roles: roles,
-                          callback: getInitData,
-                        );
-                      },
-                      shrinkWrap: true,
-                      itemCount: doctorsList.length,
-                    ),
+
+                    Wrap(
+                      direction: Axis.horizontal,
+                      runSpacing: 16,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      spacing: 16,
+                      children: doctorsList
+                          .map((doctor) => SizedBox(
+                                width: MediaQuery.of(context).size.width > 1800
+                                    ? 300
+                                    : MediaQuery.of(context).size.width > 1200
+                                        ? 400
+                                        : 600,
+                                child: DoctorInfoCard(
+                                  doctor: doctor,
+                                  currentUser: widget.currentUser,
+                                  roles: roles,
+                                  callback: getInitData,
+                                ),
+                              ))
+                          .toList(),
+                    )
+                    // GridView.builder(
+                    //   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    //     crossAxisCount: MediaQuery.of(context).size.width > 1800
+                    //         ? 3
+                    //         : MediaQuery.of(context).size.width > 1200
+                    //             ? 2
+                    //             : 1,
+                    //     childAspectRatio:
+                    //         MediaQuery.of(context).size.width > 600 ? 2 : 1.5,
+                    //     crossAxisSpacing: 16,
+                    //     mainAxisSpacing: 16,
+                    //   ),
+                    //   itemBuilder: (context, index) {
+                    //     return DoctorInfoCard(
+                    //       doctor: doctorsList[index],
+                    //       currentUser: widget.currentUser,
+                    //       roles: roles,
+                    //       callback: getInitData,
+                    //     );
+                    //   },
+                    //   shrinkWrap: true,
+                    //   itemCount: doctorsList.length,
+                    // ),
                   ],
                 ),
               ),

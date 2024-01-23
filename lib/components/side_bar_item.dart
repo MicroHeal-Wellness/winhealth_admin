@@ -19,6 +19,7 @@ class SideBarItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return GestureDetector(
       onTap: () async {
         if (isDisabled) {
@@ -39,10 +40,11 @@ class SideBarItem extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16),
+          padding: EdgeInsets.symmetric(horizontal: size.width*0.01, vertical:size.width*0.01),
           child: Row(
-            mainAxisAlignment:  MediaQuery.of(context).size.width > 1600
-                  ? MainAxisAlignment.start : MainAxisAlignment.center,
+            mainAxisAlignment: MediaQuery.of(context).size.width > 1600
+                ? MainAxisAlignment.start
+                : MainAxisAlignment.center,
             children: [
               Icon(
                 iconData,
