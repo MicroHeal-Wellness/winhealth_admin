@@ -98,32 +98,33 @@ class _DietHomeState extends State<DietHome> {
   double eatenFat = 0;
 
   void genNutrientLimits() {
-    double age = (DateTime.now().difference(widget.patient.dob!).inDays / 365)
-        .ceilToDouble();
+    double age =
+        (DateTime.now().difference(widget.patient.dob!).inDays / 365)
+            .ceilToDouble();
     double weight = double.parse(widget.patient.weight ?? "0.0");
-    double height = double.parse(widget.patient.height ?? "0.0");
-    print("weight: $weight");
-    print("weight: $height");
-    print("age: $age");
-    print("gender: ${widget.patient.gender}");
+    double height = double.parse(widget.patient.height ?? "0.0") * 30.48;
+   
+    if (widget.patient.gender == "male") {
+      maxKcal = (10 * weight) + (6.25 * height) - (5 * age) + 5;
+    } else {
+      maxKcal = (10 * weight) + (6.25 * height) - (5 * age) - 161;
+    }
     if (widget.patient.exerciseType == null ||
         widget.patient.exerciseType == "never") {
-      if (widget.patient.gender == "male") {
-        maxKcal = ((9.99 * weight) + (6.25 * height) - (4.92 * age) + 5);
-      } else {
-        maxKcal = ((9.99 * weight) + (6.25 * height) - (4.92 * age) - 161);
-      }
-    } else {
-      if (widget.patient.gender == "male") {
-        maxKcal = 66.47 + (13.75 * weight) + (5.003 * height) - (6.755 * age);
-      } else {
-        maxKcal = 65.1 + (9.563 * weight) + (1.85 * height) - (4.676 * age);
-      }
+      maxKcal = maxKcal * 1.2;
+    } else if (widget.patient.exerciseType == "light") {
+      maxKcal = maxKcal * 1.375;
+    } else if (widget.patient.exerciseType == "moderate") {
+      maxKcal = maxKcal * 1.55;
+    } else if (widget.patient.exerciseType == "active") {
+      maxKcal = maxKcal * 1.725;
+    } else if (widget.patient.exerciseType == "highlyactive") {
+      maxKcal = maxKcal * 1.9;
     }
     setState(() {
-      maxcarbs = double.parse((maxKcal / 4).toStringAsFixed(2));
-      maxProtien = double.parse((maxKcal / 4).toStringAsFixed(2));
-      maxFat = double.parse((maxKcal / 9).toStringAsFixed(2));
+      maxcarbs = double.parse(((maxKcal / 4) * 0.45).toStringAsFixed(2));
+      maxProtien = double.parse(((maxKcal / 4) * 0.25).toStringAsFixed(2));
+      maxFat = double.parse(((maxKcal / 9) * 0.3).toStringAsFixed(2));
 
       maxKcal = double.parse(maxKcal.toStringAsFixed(2));
     });
@@ -1267,7 +1268,6 @@ class _DietHomeState extends State<DietHome> {
                   "type": selectedType,
                 });
                 if (resp) {
-                  Navigator.of(context).pop();
                   Navigator.of(context).pop();
                   Fluttertoast.showToast(
                     msg: "Added Routine for ${widget.patient.firstName}",
