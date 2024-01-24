@@ -206,7 +206,7 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
                       ),
                       onPressed: (widget.currentUser.access != null &&
                               widget.currentUser.access!.permission!
-                                  .contains("Uploads"))
+                                  .contains("uploads"))
                           ? () {
                               Navigator.of(context).push(
                                 MaterialPageRoute(

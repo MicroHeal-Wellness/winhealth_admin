@@ -12,14 +12,14 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  TextEditingController emailController =
-      TextEditingController(text: 'doctor1@gmail.com');
-  TextEditingController passwordController =
-      TextEditingController(text: 'doctor1password');
   // TextEditingController emailController =
-  //     TextEditingController();
+  //     TextEditingController(text: 'doctor1@gmail.com');
   // TextEditingController passwordController =
-  //     TextEditingController();
+  //     TextEditingController(text: 'doctor1password');
+  TextEditingController emailController =
+      TextEditingController();
+  TextEditingController passwordController =
+      TextEditingController();
   bool rememberMe = false;
   bool showPassword = false;
   bool loading = false;

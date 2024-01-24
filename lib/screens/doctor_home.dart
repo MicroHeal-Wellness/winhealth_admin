@@ -112,7 +112,7 @@ class _DoctorHomeState extends State<DoctorHome> {
                       children: doctorsList
                           .map((doctor) => SizedBox(
                                 width: MediaQuery.of(context).size.width > 1800
-                                    ? 300
+                                    ? 350
                                     : MediaQuery.of(context).size.width > 1200
                                         ? 400
                                         : 600,

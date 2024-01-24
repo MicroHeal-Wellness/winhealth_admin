@@ -162,8 +162,8 @@ class _DoctorInfoCardState extends State<DoctorInfoCard> {
                 ),
                 Text(
                   widget.doctor.emailAddress == null
-                      ? widget.doctor.emailAddress!
-                      : widget.doctor.email!,
+                      ? widget.doctor.email!
+                      : widget.doctor.emailAddress!,
                   style: const TextStyle(
                     fontSize: 16,
                   ),
@@ -173,46 +173,46 @@ class _DoctorInfoCardState extends State<DoctorInfoCard> {
             const SizedBox(
               height: 8,
             ),
-            Row(
-              children: [
-                const Text(
-                  "Phone: ",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  "+91 ${widget.doctor.phoneNumber}",
-                  style: const TextStyle(
-                    fontSize: 16,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 8,
-            ),
-            Row(
-              children: [
-                const Text(
-                  "DOB: ",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  "${widget.doctor.dob!.toString().split(" ").firstOrNull}",
-                  style: const TextStyle(
-                    fontSize: 16,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 8,
-            ),
+            // Row(
+            //   children: [
+            //     const Text(
+            //       "Phone: ",
+            //       style: TextStyle(
+            //         fontSize: 16,
+            //         fontWeight: FontWeight.bold,
+            //       ),
+            //     ),
+            //     Text(
+            //       "+91 ${widget.doctor.phoneNumber}",
+            //       style: const TextStyle(
+            //         fontSize: 16,
+            //       ),
+            //     ),
+            //   ],
+            // ),
+            // const SizedBox(
+            //   height: 8,
+            // ),
+            // Row(
+            //   children: [
+            //     const Text(
+            //       "DOB: ",
+            //       style: TextStyle(
+            //         fontSize: 16,
+            //         fontWeight: FontWeight.bold,
+            //       ),
+            //     ),
+            //     Text(
+            //       "${widget.doctor.dob!.toString().split(" ").firstOrNull}",
+            //       style: const TextStyle(
+            //         fontSize: 16,
+            //       ),
+            //     ),
+            //   ],
+            // ),
+            // const SizedBox(
+            //   height: 8,
+            // ),
             Row(
               children: [
                 const Text(
