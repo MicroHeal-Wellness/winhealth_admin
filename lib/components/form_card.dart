@@ -26,16 +26,25 @@ class FormCard extends StatelessWidget {
           children: [
             Text(
               formResponse.form!.name!,
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: isSelected ? Colors.white : Colors.black),
             ),
             Text(
               "Last Filled/Update: ${formResponse.dateUpdated == null ? formResponse.dateCreated.toString().split(".").first.split("T").join(" ") : formResponse.dateUpdated.toString().split(".").first.split("T").join(" ")}",
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
+              style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w400,
+                  color: isSelected ? Colors.white : Colors.black),
             ),
 
             Text(
               "No of Questions: ${formResponse.answers!.length.toString().padLeft(2, "0")}",
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
+              style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w400,
+                  color: isSelected ? Colors.white : Colors.black),
             ),
             // const SizedBox(
             //   height: 16,

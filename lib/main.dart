@@ -1,9 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:winhealth_admin/firebase_options.dart';
+import 'package:winhealth_admin/utils/drag.dart';
 import 'provider/sidebar_provvider.dart';
 import 'screens/pre/intial_router.dart';
 
@@ -29,6 +31,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Winhealth Admin',
+      scrollBehavior: const MaterialScrollBehavior().copyWith(
+        dragDevices: {
+          PointerDeviceKind.mouse,
+          PointerDeviceKind.touch,
+          PointerDeviceKind.stylus,
+          PointerDeviceKind.unknown
+        },
+      ),
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
@@ -37,8 +47,6 @@ class MyApp extends StatelessWidget {
       // home: const InitialRouter(),
       builder: (context, widget) => ResponsiveWrapper.builder(
         ClampingScrollWrapper.builder(context, widget!),
-        maxWidth: 1600,
-        minWidth: 480,
         defaultScale: true,
         breakpoints: const [
           ResponsiveBreakpoint.resize(480, name: MOBILE),

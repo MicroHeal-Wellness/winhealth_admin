@@ -169,8 +169,7 @@ class _FormsHomeState extends State<FormsHome> {
                         const SizedBox(
                           width: 8,
                         ),
-                        MediaQuery.of(context).size.width > 1600
-                            ? Expanded(
+                       Expanded(
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -205,7 +204,6 @@ class _FormsHomeState extends State<FormsHome> {
                                   ],
                                 ),
                               )
-                            : const SizedBox(),
                       ],
                     )
                   ],

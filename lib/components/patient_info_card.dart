@@ -476,34 +476,38 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
             const SizedBox(
               height: 8,
             ),
-            Wrap(
-              spacing: 8,
-              runAlignment: WrapAlignment.start,
-              children: List.generate(
-                statuses.length,
-                (index) => Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    border: statuses[index]['status'] == 3
-                        ? Border.all(color: Colors.green, width: 2)
-                        : statuses[index]['status'] == 2
-                            ? Border.all(color: Colors.blue, width: 2)
-                            : Border.all(color: Colors.black, width: 2),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: [
-                        Text(
-                          DateFormat('EE').format(statuses[index]['date']),
-                        ),
-                        const SizedBox(
-                          height: 4,
-                        ),
-                        Text(
-                          DateFormat('dd/MM').format(statuses[index]['date']),
-                        )
-                      ],
+            Align(
+              alignment: Alignment.topLeft,
+              child: Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                runAlignment: WrapAlignment.start,
+                children: List.generate(
+                  statuses.length,
+                  (index) => Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      border: statuses[index]['status'] == 3
+                          ? Border.all(color: Colors.green, width: 2)
+                          : statuses[index]['status'] == 2
+                              ? Border.all(color: Colors.blue, width: 2)
+                              : Border.all(color: Colors.black, width: 2),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          Text(
+                            DateFormat('EE').format(statuses[index]['date']),
+                          ),
+                          const SizedBox(
+                            height: 4,
+                          ),
+                          Text(
+                            DateFormat('dd/MM').format(statuses[index]['date']),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),

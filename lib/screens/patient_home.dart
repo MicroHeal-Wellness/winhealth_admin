@@ -4,6 +4,7 @@ import 'package:winhealth_admin/models/answer.dart';
 import 'package:winhealth_admin/models/user_model.dart';
 import 'package:winhealth_admin/services/patient_service.dart';
 import 'package:winhealth_admin/utils/constants.dart';
+import 'package:winhealth_admin/utils/drag.dart';
 
 class PatientHome extends StatefulWidget {
   final UserModel currentUser;
@@ -101,7 +102,7 @@ class _PatientHomeState extends State<PatientHome> {
                     const SizedBox(
                       height: 16,
                     ),
-
+              
                     Wrap(
                       direction: Axis.horizontal,
                       runSpacing: 16,
@@ -109,8 +110,9 @@ class _PatientHomeState extends State<PatientHome> {
                       spacing: 16,
                       children: patientList
                           .map((patient) => SizedBox(
-                                width: MediaQuery.of(context).size.width > 1800
-                                    ? 300
+                                width: MediaQuery.of(context).size.width >
+                                        1800
+                                    ? 350
                                     : MediaQuery.of(context).size.width > 1200
                                         ? 400
                                         : 600,
