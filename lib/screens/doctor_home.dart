@@ -89,7 +89,7 @@ class _DoctorHomeState extends State<DoctorHome> {
                     const Align(
                       alignment: Alignment.topLeft,
                       child: Text(
-                        "All Doctors",
+                        "User Directory",
                         style: TextStyle(
                           fontSize: 32,
                           fontWeight: FontWeight.bold,

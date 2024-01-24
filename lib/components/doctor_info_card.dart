@@ -45,7 +45,7 @@ class _DoctorInfoCardState extends State<DoctorInfoCard> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 const Text(
-                  "Doctor Info",
+                  "",
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
