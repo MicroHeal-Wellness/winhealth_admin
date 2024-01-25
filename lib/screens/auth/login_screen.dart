@@ -132,6 +132,14 @@ class _LoginScreenState extends State<LoginScreen> {
                       controller: passwordController,
                       style: const TextStyle(color: Colors.white),
                       decoration: InputDecoration(
+                        suffix: IconButton(
+                          icon: const Icon(Icons.remove_red_eye),
+                          onPressed: () {
+                            setState(() {
+                              showPassword = !showPassword;
+                            });
+                          },
+                        ),
                         hintText: 'Enter your password',
                         hintStyle: const TextStyle(color: Colors.white),
                         fillColor: Colors.transparent,
@@ -181,8 +189,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   formKey.currentState!.validate();
                   if (!emailController.text
                       .contains(RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$'))) {
-                    Fluttertoast.showToast(
-                        msg: 'Please enter valid email');
+                    Fluttertoast.showToast(msg: 'Please enter valid email');
                   } else {
                     if (emailController.text.isEmpty) {
                       Fluttertoast.showToast(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:winhealth_admin/components/directory_user_info_Card.dart';
 import 'package:winhealth_admin/components/doctor_info_card.dart';
 
 import 'package:winhealth_admin/models/role.dart';
@@ -7,19 +8,20 @@ import 'package:winhealth_admin/services/doctor_service.dart';
 import 'package:winhealth_admin/services/role_service.dart';
 import 'package:winhealth_admin/utils/constants.dart';
 
-class DoctorHome extends StatefulWidget {
+class UserDirectory extends StatefulWidget {
   final UserModel currentUser;
-  const DoctorHome({super.key, required this.currentUser});
+  const UserDirectory({super.key, required this.currentUser});
 
   @override
-  State<DoctorHome> createState() => _DoctorHomeState();
+  State<UserDirectory> createState() => _UserDirectoryState();
 }
 
-class _DoctorHomeState extends State<DoctorHome> {
+class _UserDirectoryState extends State<UserDirectory> {
   ScrollController scrollController = ScrollController();
   bool loading = false;
   bool showbtn = false;
   List<UserModel> doctorsList = [];
+  List<Roles> roles = [];
 
   UserModel? selectedPatient;
   @override
@@ -49,7 +51,8 @@ class _DoctorHomeState extends State<DoctorHome> {
     setState(() {
       loading = true;
     });
-    doctorsList = await DoctorService.getDTXDoctors();
+    roles = await RoleService.fetchAllRolls();
+    doctorsList = await DoctorService.getDirectoryUsers();
     setState(() {
       loading = false;
     });
@@ -87,7 +90,7 @@ class _DoctorHomeState extends State<DoctorHome> {
                     const Align(
                       alignment: Alignment.topLeft,
                       child: Text(
-                        "Doctors",
+                        "User Directory",
                         style: TextStyle(
                           fontSize: 32,
                           fontWeight: FontWeight.bold,
@@ -114,9 +117,10 @@ class _DoctorHomeState extends State<DoctorHome> {
                                     : MediaQuery.of(context).size.width > 1200
                                         ? 400
                                         : 600,
-                                child: DoctorInfoCard(
+                                child: DirectoryUserInfoCard(
                                   doctor: doctor,
                                   currentUser: widget.currentUser,
+                                  roles: roles,
                                   callback: getInitData,
                                 ),
                               ))

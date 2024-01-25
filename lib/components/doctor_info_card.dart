@@ -9,13 +9,11 @@ import 'package:winhealth_admin/services/doctor_service.dart';
 class DoctorInfoCard extends StatefulWidget {
   final UserModel doctor;
   final UserModel currentUser;
-  final List<Roles> roles;
   final Function callback;
   const DoctorInfoCard(
       {super.key,
       required this.doctor,
       required this.currentUser,
-      required this.roles,
       required this.callback});
 
   @override
@@ -23,13 +21,6 @@ class DoctorInfoCard extends StatefulWidget {
 }
 
 class _DoctorInfoCardState extends State<DoctorInfoCard> {
-  Roles? selecetedRole;
-  @override
-  void initState() {
-    super.initState();
-    selecetedRole = widget.roles.first;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -39,208 +30,121 @@ class _DoctorInfoCardState extends State<DoctorInfoCard> {
       ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text(
-                  "",
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const Spacer(),
-                MenuAnchor(
-                  builder: (BuildContext context, MenuController controller,
-                      Widget? child) {
-                    return IconButton(
-                      onPressed: () {
-                        if (controller.isOpen) {
-                          controller.close();
-                        } else {
-                          controller.open();
-                        }
-                      },
-                      icon: const Icon(Icons.more_horiz),
-                      tooltip: 'Show menu',
-                    );
-                  },
-                  menuChildren: [
-                    MenuItemButton(
-                      style: const ButtonStyle(
-                        backgroundColor: MaterialStatePropertyAll(Colors.white),
-                      ),
-                      onPressed: (widget.currentUser.access != null &&
-                              widget.currentUser.access!.permission!
-                                  .contains("changerole"))
-                          ? () async {
-                              await showDialog(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                  title: const Text("Add Role"),
-                                  content: DropdownMenu<Roles>(
-                                    initialSelection: selecetedRole,
-                                    onSelected: (Roles? value) {
-                                      // This is called when the user selects an item.
-                                      setState(() {
-                                        selecetedRole = value!;
-                                      });
-                                    },
-                                    dropdownMenuEntries: widget.roles
-                                        .map<DropdownMenuEntry<Roles>>(
-                                            (Roles value) {
-                                      return DropdownMenuEntry<Roles>(
-                                          value: value, label: value.title!);
-                                    }).toList(),
-                                  ),
-                                  actions: [
-                                    MaterialButton(
-                                      onPressed: () async {
-                                        bool resp =
-                                            await DoctorService.udpateDoctor(
-                                                widget.doctor.id!,
-                                                {"access": selecetedRole!.id});
-                                        Navigator.of(context).pop();
-                                        if (resp) {
-                                          Fluttertoast.showToast(
-                                              msg:
-                                                  "New Role Udpated Successfully");
-                                        } else {
-                                          Fluttertoast.showToast(
-                                              msg: "New Role Updation Failed");
-                                        }
-                                      },
-                                      child: const Text("Assign"),
-                                    ),
-                                  ],
-                                ),
-                              );
-                              await widget.callback();
-                            }
-                          : () {
-                              Fluttertoast.showToast(msg: "Access Denied");
-                            },
-                      child: const Text('Change Role'),
-                    ),
-                  ],
-                ),
-              ],
+        // ignore: prefer_const_constructors
+        child: Column(children:  [
+          Text(
+            "",
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
             ),
-            const SizedBox(
-              height: 8,
-            ),
-            Row(
-              children: [
-                const Text(
-                  "Name: ",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+          ),
+          const SizedBox(
+            height: 8,
+          ),
+          Row(
+            children: [
+              const Text(
+                "Name: ",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
                 ),
-                Text(
-                  "${widget.doctor.firstName} ${widget.doctor.lastName}",
-                  style: const TextStyle(
-                    fontSize: 16,
-                  ),
+              ),
+              Text(
+                "${widget.doctor.firstName} ${widget.doctor.lastName}",
+                style: const TextStyle(
+                  fontSize: 16,
                 ),
-              ],
-            ),
-            const SizedBox(
-              height: 8,
-            ),
-            Row(
-              children: [
-                const Text(
-                  "Email: ",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 8,
+          ),
+          Row(
+            children: [
+              const Text(
+                "Email: ",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
                 ),
-                Text(
-                  widget.doctor.emailAddress == null
-                      ? widget.doctor.email!
-                      : widget.doctor.emailAddress!,
-                  style: const TextStyle(
-                    fontSize: 16,
-                  ),
+              ),
+              Text(
+                widget.doctor.emailAddress == null
+                    ? widget.doctor.email!
+                    : widget.doctor.emailAddress!,
+                style: const TextStyle(
+                  fontSize: 16,
                 ),
-              ],
-            ),
-            const SizedBox(
-              height: 8,
-            ),
-            // Row(
-            //   children: [
-            //     const Text(
-            //       "Phone: ",
-            //       style: TextStyle(
-            //         fontSize: 16,
-            //         fontWeight: FontWeight.bold,
-            //       ),
-            //     ),
-            //     Text(
-            //       "+91 ${widget.doctor.phoneNumber}",
-            //       style: const TextStyle(
-            //         fontSize: 16,
-            //       ),
-            //     ),
-            //   ],
-            // ),
-            // const SizedBox(
-            //   height: 8,
-            // ),
-            // Row(
-            //   children: [
-            //     const Text(
-            //       "DOB: ",
-            //       style: TextStyle(
-            //         fontSize: 16,
-            //         fontWeight: FontWeight.bold,
-            //       ),
-            //     ),
-            //     Text(
-            //       "${widget.doctor.dob!.toString().split(" ").firstOrNull}",
-            //       style: const TextStyle(
-            //         fontSize: 16,
-            //       ),
-            //     ),
-            //   ],
-            // ),
-            // const SizedBox(
-            //   height: 8,
-            // ),
-            Row(
-              children: [
-                const Text(
-                  "Role: ",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 8,
+          ),
+          // Row(
+          //   children: [
+          //     const Text(
+          //       "Phone: ",
+          //       style: TextStyle(
+          //         fontSize: 16,
+          //         fontWeight: FontWeight.bold,
+          //       ),
+          //     ),
+          //     Text(
+          //       "+91 ${widget.doctor.phoneNumber}",
+          //       style: const TextStyle(
+          //         fontSize: 16,
+          //       ),
+          //     ),
+          //   ],
+          // ),
+          // const SizedBox(
+          //   height: 8,
+          // ),
+          // Row(
+          //   children: [
+          //     const Text(
+          //       "DOB: ",
+          //       style: TextStyle(
+          //         fontSize: 16,
+          //         fontWeight: FontWeight.bold,
+          //       ),
+          //     ),
+          //     Text(
+          //       "${widget.doctor.dob!.toString().split(" ").firstOrNull}",
+          //       style: const TextStyle(
+          //         fontSize: 16,
+          //       ),
+          //     ),
+          //   ],
+          // ),
+          // const SizedBox(
+          //   height: 8,
+          // ),
+          Row(
+            children: [
+              const Text(
+                "Role: ",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
                 ),
-                Text(
-                  widget.doctor.access == null
-                      ? "Not yet signed"
-                      : widget.roles
-                          .firstWhere(
-                            (element) => element.id == widget.doctor.access!.id,
-                          )
-                          .title!,
-                  style: const TextStyle(
-                    fontSize: 16,
-                  ),
+              ),
+              Text(
+                widget.doctor.access == null ? "Not yet signed" : "DTx",
+                style: const TextStyle(
+                  fontSize: 16,
                 ),
-              ],
-            ),
-            const SizedBox(
-              height: 8,
-            ),
-          ],
-        ),
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 8,
+          ),
+        ]),
       ),
     );
   }

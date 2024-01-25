@@ -9,6 +9,7 @@ import 'package:winhealth_admin/screens/not_allowed.dart';
 import 'package:winhealth_admin/screens/patient_home.dart';
 import 'package:winhealth_admin/screens/access_management_home.dart';
 import 'package:winhealth_admin/screens/slots_home.dart';
+import 'package:winhealth_admin/screens/user_directory_home.dart';
 import 'package:winhealth_admin/services/base_service.dart';
 
 class LandingScreen extends StatefulWidget {
@@ -44,6 +45,11 @@ class _LandingScreenState extends State<LandingScreen> {
             ? DoctorHome(currentUser: currentUser!)
             : const NotAllowed();
       case 4:
+        return currentUser!.access != null &&
+                currentUser!.access!.permission!.contains("user_directory")
+            ? UserDirectory(currentUser: currentUser!)
+            : const NotAllowed();
+      case 5:
         return currentUser!.access != null &&
                 currentUser!.access!.permission!.contains("accessmangement")
             ? const AccessMangementHome()
@@ -165,7 +171,7 @@ class _LandingScreenState extends State<LandingScreen> {
                         ),
                         const SideBarItem(
                           pageKey: 2,
-                          iconData: Icons.people_alt,
+                          iconData: Icons.personal_injury,
                           title: "Patients",
                         ),
                         const SideBarItem(
@@ -175,11 +181,16 @@ class _LandingScreenState extends State<LandingScreen> {
                         ),
                         const SideBarItem(
                           pageKey: 4,
+                          iconData: Icons.vaccines,
+                          title: "User Directory",
+                        ),
+                        const SideBarItem(
+                          pageKey: 5,
                           iconData: Icons.settings,
                           title: "Access",
                         ),
                         const SideBarItem(
-                          pageKey: 5,
+                          pageKey: 6,
                           isDisabled: true,
                           iconData: Icons.logout,
                           title: "Logout",

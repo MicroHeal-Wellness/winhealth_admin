@@ -14,7 +14,8 @@ const accessSpecifiers = {
   "notes": "Notes",
   "uploads": "Uploads",
   "patients": "Patients",
-  "doctors": "Doctors"
+  "doctors": "Doctors",
+  "user_directory": "User Directory"
 };
 
 // data.forEach((element: { user: any; }) => {
