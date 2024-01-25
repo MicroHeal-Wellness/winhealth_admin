@@ -320,7 +320,7 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
                   ),
                 ),
                 Text(
-                  "${widget.patient.height} FT",
+                  "${widget.patient.height} CM",
                   style: const TextStyle(
                     fontSize: 16,
                   ),
