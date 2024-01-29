@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:winhealth_admin/models/user_model.dart';
-import 'package:winhealth_admin/screens/activity_info.dart';
+import 'package:winhealth_admin/screens/activity/activity_info.dart';
 import 'package:winhealth_admin/screens/activity_stats.dart';
 import 'package:winhealth_admin/screens/diet_home.dart';
 import 'package:winhealth_admin/screens/foms_home.dart';

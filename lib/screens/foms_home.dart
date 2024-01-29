@@ -6,6 +6,7 @@ import 'package:winhealth_admin/components/form_response.dart';
 import 'package:winhealth_admin/models/form_response.dart';
 import 'package:winhealth_admin/models/user_model.dart';
 import 'package:winhealth_admin/screens/form_input_screen.dart';
+import 'package:winhealth_admin/screens/patient_forms/add_response_screen.dart';
 import 'package:winhealth_admin/services/questionare_service.dart';
 import 'package:winhealth_admin/utils/constants.dart';
 
@@ -96,10 +97,11 @@ class _FormsHomeState extends State<FormsHome> {
                         const Spacer(),
                         MaterialButton(
                           onPressed: () async {
-                            await showDialog(
-                              context: context,
-                              builder: (context) => addResponseDialogBoxPopup(),
-                            );
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => AddResponsePage(
+                                        patient: widget.patient)));
                             await getInitData();
                           },
                           color: primaryColor,
@@ -169,41 +171,40 @@ class _FormsHomeState extends State<FormsHome> {
                         const SizedBox(
                           width: 8,
                         ),
-                       Expanded(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text(
-                                      "Form Response Info",
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "Form Response Info",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 24),
+                              ),
+                              selectedFormResponse != null
+                                  ? Text(
+                                      "Form: ${selectedFormResponse!.form!.name}",
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    )
+                                  : const Text(
+                                      "Select a form to show responses",
                                       style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 24),
+                                          fontWeight: FontWeight.bold),
                                     ),
-                                    selectedFormResponse != null
-                                        ? Text(
-                                            "Form: ${selectedFormResponse!.form!.name}",
-                                            style: const TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          )
-                                        : const Text(
-                                            "Select a form to show responses",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                    selectedFormResponse == null
-                                        ? const SizedBox()
-                                        : const SizedBox(
-                                            height: 16,
-                                          ),
-                                    selectedFormResponse == null
-                                        ? const SizedBox()
-                                        : FormResponseCard(
-                                            formResponse: selectedFormResponse!,
-                                          )
-                                  ],
-                                ),
-                              )
+                              selectedFormResponse == null
+                                  ? const SizedBox()
+                                  : const SizedBox(
+                                      height: 16,
+                                    ),
+                              selectedFormResponse == null
+                                  ? const SizedBox()
+                                  : FormResponseCard(
+                                      formResponse: selectedFormResponse!,
+                                    )
+                            ],
+                          ),
+                        )
                       ],
                     )
                   ],
@@ -270,3 +271,6 @@ class _FormsHomeState extends State<FormsHome> {
     });
   }
 }
+
+
+

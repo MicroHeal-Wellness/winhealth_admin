@@ -5,7 +5,25 @@ import 'package:winhealth_admin/models/activity.dart';
 import 'package:winhealth_admin/models/activity_stat.dart';
 import 'package:winhealth_admin/services/base_service.dart';
 
+import '../models/food_item.dart';
+
 class ActivityService {
+  static Future<bool> addActivityUpdate(Map<String, dynamic> params) async {
+    final response = await BaseService.makeAuthenticatedRequest(
+      '${BaseService.BASE_URL}/items/activity_log',
+      body: jsonEncode(params),
+      method: 'POST',
+    );
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      if (kDebugMode) {
+        print(response.reasonPhrase);
+      }
+      return false;
+    }
+  }
+
   static Future<List<ActivityItem>> getActivitiesByUserIDandDate(
       String userID, String date) async {
     final response = await BaseService.makeAuthenticatedRequest(
@@ -71,6 +89,32 @@ class ActivityService {
       }
     } else {
       return activityItemList;
+    }
+  }
+
+  
+  static Future<List<FoodItem>> searchNutrients(String query) async {
+    final response = await BaseService.makeAuthenticatedRequest(
+      '${BaseService.BASE_URL}/items/food_items?search=$query',
+      method: 'GET',
+    );
+    List<FoodItem> nutrients = [];
+    if (response.statusCode == 200) {
+      var responseMap = jsonDecode(response.body);
+      try {
+        for (var element in responseMap['data']) {
+          FoodItem activityItem = FoodItem.fromJson(element);
+          nutrients.add(activityItem);
+        }
+        return nutrients;
+      } catch (e) {
+        if (kDebugMode) {
+          print("Error: $e");
+        }
+        return [];
+      }
+    } else {
+      return nutrients;
     }
   }
 
