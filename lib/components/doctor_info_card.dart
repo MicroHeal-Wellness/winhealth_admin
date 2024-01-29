@@ -1,10 +1,9 @@
 // ignore_for_file: must_be_immutable, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:winhealth_admin/models/role.dart';
+
 import 'package:winhealth_admin/models/user_model.dart';
-import 'package:winhealth_admin/services/doctor_service.dart';
+
 
 class DoctorInfoCard extends StatefulWidget {
   final UserModel doctor;
@@ -32,7 +31,7 @@ class _DoctorInfoCardState extends State<DoctorInfoCard> {
         padding: const EdgeInsets.all(16.0),
         // ignore: prefer_const_constructors
         child: Column(children:  [
-          Text(
+          const Text(
             "",
             style: TextStyle(
               fontSize: 24,

@@ -1,9 +1,7 @@
 import 'package:file_saver/file_saver.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:winhealth_admin/models/notes.dart';
 import 'package:winhealth_admin/services/base_service.dart';
-import 'package:winhealth_admin/services/note_service.dart';
 import 'package:winhealth_admin/utils/constants.dart';
 
 class NotesCard extends StatelessWidget {
