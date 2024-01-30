@@ -9,7 +9,6 @@ import '../../services/activity_service.dart';
 import '../../utils/activity_utils.dart';
 import 'acitivity_item_form.dart';
 
-
 class ActivityItemScreen extends StatefulWidget {
   final UserModel currentUser;
   final ActivityItem activityItem;
@@ -18,7 +17,7 @@ class ActivityItemScreen extends StatefulWidget {
       {super.key,
       required this.currentUser,
       required this.activityItem,
-      this.allowUpdate = false});
+      this.allowUpdate = true});
 
   @override
   State<ActivityItemScreen> createState() => _ActivityItemScreenState();
@@ -53,6 +52,7 @@ class _ActivityItemScreenState extends State<ActivityItemScreen> {
     Map<String, dynamic> params = {
       "activity_type": widget.activityItem.activityType!,
       "response": widget.activityItem.response.toJson(),
+      "user_created": widget.currentUser.id,
       "date":
           "${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}"
     };
@@ -102,12 +102,12 @@ class _ActivityItemScreenState extends State<ActivityItemScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
                     ActivityItemForm(
-                        activityItem: widget.activityItem,
-                        allowUpdate: widget.allowUpdate,
-                        currentUser: widget.currentUser,
-                        onChange: (value) {
-                          {
-                            setState(() {
+                      activityItem: widget.activityItem,
+                      currentUser: widget.currentUser,
+                      onChange: (value) {
+                        {
+                          setState(
+                            () {
                               if (widget.activityItem.activityType! == 'food') {
                                 widget.activityItem.response =
                                     FoodActivity.fromJson(value);
@@ -137,9 +137,11 @@ class _ActivityItemScreenState extends State<ActivityItemScreen> {
                                 widget.activityItem.response =
                                     DigestionActivity.fromJson(value);
                               }
-                            });
-                          }
-                        }),
+                            },
+                          );
+                        }
+                      },
+                    ),
                     widget.allowUpdate
                         ? widget.activityItem.activityType! != 'food'
                             ? ElevatedButton(

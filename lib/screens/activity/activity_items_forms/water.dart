@@ -30,9 +30,13 @@ class ActivityItemWater extends StatelessWidget {
         width: 150.0,
         height: 180.0,
         decoration: const BoxDecoration(
-            image: DecorationImage(
-                fit: BoxFit.fill,
-                image: AssetImage('assets/images/activity-water.png'))),
+          image: DecorationImage(
+            fit: BoxFit.fill,
+            image: AssetImage(
+              'images/activity-water.png',
+            ),
+          ),
+        ),
       )),
       Container(
         margin: const EdgeInsets.only(top: 16),
@@ -52,7 +56,8 @@ class ActivityItemWater extends StatelessWidget {
                     style: TextStyle(
                         fontSize: 16.0,
                         fontWeight: FontWeight.w600,
-                        color: getActivityItemColor(activityItem!.activityType!)),
+                        color:
+                            getActivityItemColor(activityItem!.activityType!)),
                   )
                 : const Text(""),
           ],
@@ -64,7 +69,9 @@ class ActivityItemWater extends StatelessWidget {
             activeColor: getActivityItemColor(activityItem!.activityType!),
             divisions: divisionWaterQuantity,
             max: maxWaterQuality.toDouble(),
-            value: activityItem?.response == null ? 0:  activityItem?.response.quantity.toDouble(),
+            value: activityItem?.response == null
+                ? 0
+                : activityItem?.response.quantity.toDouble(),
             onChanged: (value) => onChangeHandler(value),
           )),
       Container(

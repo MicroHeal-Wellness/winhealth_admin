@@ -27,8 +27,8 @@ class ActivityItemFoodForm extends StatefulWidget {
   const ActivityItemFoodForm(
       {Key? key,
       this.activityItem,
-      required this.onChange,
-      required this.currentUser})
+      required this.currentUser,
+      required this.onChange,})
       : super(key: key);
 
   @override
@@ -129,7 +129,7 @@ class _ActivityItemFoodFormState extends State<ActivityItemFoodForm> {
         (DateTime.now().difference(widget.currentUser!.dob!).inDays / 365)
             .ceilToDouble();
     double weight = double.parse(widget.currentUser!.weight ?? "0.0");
-    double height = double.parse(widget.currentUser!.height ?? "0.0") * 30.48;
+    double height = double.parse(widget.currentUser!.height ?? "0.0");
     Map<String, String> exerciseListEng = {
       "never": "Never",
       "light": "Light",
@@ -155,9 +155,9 @@ class _ActivityItemFoodFormState extends State<ActivityItemFoodForm> {
       maxKcal = maxKcal * 1.9;
     }
     setState(() {
-      maxcarbs = double.parse(((maxKcal / 4) * 0.45).toStringAsFixed(2));
-      maxProtien = double.parse(((maxKcal / 4) * 0.25).toStringAsFixed(2));
-      maxFat = double.parse(((maxKcal / 9) * 0.3).toStringAsFixed(2));
+       maxcarbs = double.parse(((maxKcal * 0.45) / 4).toStringAsFixed(2));
+      maxProtien = double.parse(((maxKcal * 0.25) / 4).toStringAsFixed(2));
+      maxFat = double.parse(((maxKcal * 0.3) / 9).toStringAsFixed(2));
 
       maxKcal = double.parse(maxKcal.toStringAsFixed(2));
     });

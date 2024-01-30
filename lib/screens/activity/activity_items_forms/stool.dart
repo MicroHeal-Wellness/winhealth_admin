@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -189,8 +187,12 @@ class _ActivityItemStoolState extends State<ActivityItemStool> {
               ),
               Flexible(
                 child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: size.width > 1600
+                        ? 7
+                        : size.width > 1000
+                            ? 5
+                            : 2,
                     crossAxisSpacing: 16,
                     mainAxisSpacing: 16,
                     childAspectRatio: 1.1,

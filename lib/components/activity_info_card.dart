@@ -1,8 +1,14 @@
-
 import 'package:flutter/material.dart';
 import 'package:winhealth_admin/components/food_item_info_card.dart';
 import 'package:winhealth_admin/models/activity.dart';
-
+import 'package:winhealth_admin/models/user_model.dart';
+import 'package:winhealth_admin/screens/activity/activity_item.dart';
+import 'package:winhealth_admin/screens/activity/activity_items_forms/digestion.dart';
+import 'package:winhealth_admin/screens/activity/activity_items_forms/food.dart';
+import 'package:winhealth_admin/screens/activity/activity_items_forms/sleep.dart';
+import 'package:winhealth_admin/screens/activity/activity_items_forms/stool.dart';
+import 'package:winhealth_admin/screens/activity/activity_items_forms/stress.dart';
+import 'package:winhealth_admin/screens/activity/activity_items_forms/water.dart';
 
 List<String> moodTypes = [
   "Happy, relaxed, calm, content",
@@ -52,10 +58,21 @@ List<String> painTypes = [
   "Extreme pain",
 ];
 
-class ActivityInfoCard extends StatelessWidget {
+class ActivityInfoCard extends StatefulWidget {
   final ActivityItem activityItem;
-  const ActivityInfoCard({super.key, required this.activityItem});
+  final UserModel patient;
+  final bool isEditable;
+  const ActivityInfoCard(
+      {super.key,
+      required this.activityItem,
+      required this.patient,
+      required this.isEditable});
 
+  @override
+  State<ActivityInfoCard> createState() => _ActivityInfoCardState();
+}
+
+class _ActivityInfoCardState extends State<ActivityInfoCard> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -67,15 +84,35 @@ class ActivityInfoCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              "Activity: ${activityItem.activityType}",
-              style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.w600,
-              ),
+            Row(
+              children: [
+                Text(
+                  "Activity: ${widget.activityItem.activityType} ${widget.isEditable}",
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                // const Spacer(),
+                widget.isEditable
+                    ? MaterialButton(
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => ActivityItemScreen(
+                                currentUser: widget.patient,
+                                activityItem: widget.activityItem,
+                              ),
+                            ),
+                          );
+                        },
+                        child: const Text("Edit"),
+                      )
+                    : const SizedBox()
+              ],
             ),
             mapper(
-              activityItem.activityType,
+              widget.activityItem.activityType,
             )
           ],
         ),
@@ -83,37 +120,107 @@ class ActivityInfoCard extends StatelessWidget {
     );
   }
 
+  callMapper(name) {
+    switch (name) {
+      case "stress":
+        return Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => ActivityItemStress(
+              activityItem: widget.activityItem,
+              onChange: (s) {},
+            ),
+          ),
+        );
+      case "water":
+        return Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => ActivityItemWater(
+              activityItem: widget.activityItem,
+              onChange: (s) {},
+            ),
+          ),
+        );
+      case "sleep":
+        return Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => ActivityItemSleep(
+              activityItem: widget.activityItem,
+              onChange: (s) {},
+            ),
+          ),
+        );
+      case "stool":
+        return Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => ActivityItemStool(
+              activityItem: widget.activityItem,
+              allowUpdate: true,
+              onChange: (s) {},
+            ),
+          ),
+        );
+      case "food":
+        return Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => ActivityItemFoodForm(
+              activityItem: widget.activityItem,
+              onChange: (s) {},
+              currentUser: widget.patient,
+            ),
+          ),
+        );
+      case "digestion":
+        return Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => ActivityItemDigestion(
+              activityItem: widget.activityItem,
+              onChange: (s) {},
+            ),
+          ),
+        );
+      default:
+        return Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => ActivityItemStress(
+              activityItem: widget.activityItem,
+              onChange: (s) {},
+            ),
+          ),
+        );
+    }
+  }
+
   mapper(name) {
     switch (name) {
       case "stress":
-        return activityItem.response == null
+        return widget.activityItem.response == null
             ? const Text("No Data")
             : Text(
-                "Mood: ${moodTypes[activityItem.response.mood]}",
+                "Mood: ${moodTypes[widget.activityItem.response.mood]}",
                 style: const TextStyle(fontSize: 18),
               );
       case "water":
-        return activityItem.response == null
+        return widget.activityItem.response == null
             ? const Text("No Data")
             : Text(
-                "Amount: ${activityItem.response.quantity} L",
+                "Amount: ${widget.activityItem.response.quantity} L",
                 style: const TextStyle(fontSize: 18),
               );
       case "sleep":
-        return activityItem.response == null
+        return widget.activityItem.response == null
             ? const Text("No Data")
             : Text(
-                "Duration: ${activityItem.response.duration} Hrs, Quality: ${sleepQualityTypes[activityItem.response.quality]}",
+                "Duration: ${widget.activityItem.response.duration} Hrs, Quality: ${sleepQualityTypes[widget.activityItem.response.quality]}",
                 style: const TextStyle(fontSize: 18),
               );
       case "stool":
-        return activityItem.response == null
+        return widget.activityItem.response == null
             ? const Text("No Data")
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                       Text(
-                        "Frequency: ${activityItem.response.frequency}",
+                        "Frequency: ${widget.activityItem.response.frequency}",
                         style: const TextStyle(fontSize: 18),
                       ),
                       const Text(
@@ -121,7 +228,7 @@ class ActivityInfoCard extends StatelessWidget {
                         style: TextStyle(fontSize: 18),
                       ),
                     ] +
-                    activityItem.response.formOfStoolTypes
+                    widget.activityItem.response.formOfStoolTypes
                         .map<Text>((e) => Text(
                               "${e['name']}: ${e['count']}",
                               style: const TextStyle(fontSize: 18),
@@ -129,53 +236,53 @@ class ActivityInfoCard extends StatelessWidget {
                         .toList(),
               );
       case "food":
-        return activityItem.response == null
+        return widget.activityItem.response == null
             ? const Text("No Data")
             :
             // Text(activityItem.response.breakfast);
             Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-                children: activityItem.response.breakfast
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: widget.activityItem.response.breakfast
                         .map<Widget>((food) => FoodItemInfoCard(
                               foodItem: food,
                             ))
                         .toList() +
-                    activityItem.response.lunch
+                    widget.activityItem.response.lunch
                         .map<Widget>((food) => FoodItemInfoCard(
                               foodItem: food,
                             ))
                         .toList() +
-                    activityItem.response.dinner
+                    widget.activityItem.response.dinner
                         .map<Widget>((food) => FoodItemInfoCard(
                               foodItem: food,
                             ))
                         .toList() +
-                    activityItem.response.others
+                    widget.activityItem.response.others
                         .map<Widget>((food) => FoodItemInfoCard(
                               foodItem: food,
                             ))
                         .toList(),
               );
       case "digestion":
-        return activityItem.response == null
+        return widget.activityItem.response == null
             ? const Text("No Data")
             : Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Constipation: ${constipationTypes[activityItem.response.constipation]}",
+                    "Constipation: ${constipationTypes[widget.activityItem.response.constipation]}",
                     style: const TextStyle(fontSize: 18),
                   ),
                   Text(
-                    "Bloated: ${bloatedTypes[activityItem.response.bloated]}",
+                    "Bloated: ${bloatedTypes[widget.activityItem.response.bloated]}",
                     style: const TextStyle(fontSize: 18),
                   ),
                   Text(
-                    "Diarrhea: ${diarrheaTypes[activityItem.response.diarrhea]}",
+                    "Diarrhea: ${diarrheaTypes[widget.activityItem.response.diarrhea]}",
                     style: const TextStyle(fontSize: 18),
                   ),
                   Text(
-                    "Pain: ${painTypes[activityItem.response.pain]}",
+                    "Pain: ${painTypes[widget.activityItem.response.pain]}",
                     style: const TextStyle(fontSize: 18),
                   )
                 ],

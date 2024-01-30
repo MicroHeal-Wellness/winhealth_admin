@@ -22,7 +22,6 @@ class UserModel {
   String? gender;
   String? avatar;
   bool? pregnant;
-  dynamic location;
   String? diet;
   String? height;
   Roles? access;
@@ -49,7 +48,6 @@ class UserModel {
       this.gender,
       this.avatar,
       this.pregnant,
-      this.location,
       this.diet,
       this.height,
       this.access,
@@ -67,7 +65,6 @@ class UserModel {
       this.exerciseType});
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
-    print(json["access"]);
     return UserModel(
       firstName: json["first_name"] ?? "",
       emailAddress: json["email_address"],
@@ -81,7 +78,6 @@ class UserModel {
           ? null
           : Roles.fromJson(json['access']),
       pregnant: json["pregnant"],
-      location: json["location"],
       diet: json["diet"],
       height: json["height"],
       weight: json["weight"],
@@ -114,7 +110,6 @@ class UserModel {
         "avatar": avatar,
         "access": access == null ? null : access!.toJson(),
         "pregnant": pregnant,
-        "location": location,
         "diet": diet,
         "height": height,
         "weight": weight,

@@ -18,6 +18,8 @@ class _ActivityInfoState extends State<ActivityInfo> {
   ScrollController scrollController = ScrollController();
   bool showbtn = false;
   DateTime? currentDate = DateTime.now();
+  DateTime today =
+      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
 
   bool isLoadingActivities = false;
   List<ActivityItem> dayActivityList = [];
@@ -159,7 +161,13 @@ class _ActivityInfoState extends State<ActivityInfo> {
                     ),
                     ListView.builder(
                       itemBuilder: (context, index) {
-                        return ActivityInfoCard(activityItem: dayActivityList[index],);
+                        return ActivityInfoCard(
+                          activityItem: dayActivityList[index],
+                          patient: widget.patient,
+                          isEditable:
+                              DateFormat('yyyy-MM-dd').format(currentDate!) ==
+                                  DateFormat('yyyy-MM-dd').format(today!),
+                        );
                       },
                       itemCount: dayActivityList.length,
                       shrinkWrap: true,
