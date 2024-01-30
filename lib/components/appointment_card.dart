@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:winhealth_admin/models/appointment.dart';
+import 'package:winhealth_admin/services/video_call_service.dart';
 import 'package:winhealth_admin/utils/constants.dart';
 
 class AppointmentCard extends StatelessWidget {
@@ -18,7 +21,7 @@ class AppointmentCard extends StatelessWidget {
           border: Border.all(
             color: Colors.grey.withOpacity(0.4),
           )),
-      padding: EdgeInsets.all(16-size.width*0.001),
+      padding: EdgeInsets.all(16 - size.width * 0.001),
       margin: const EdgeInsets.only(bottom: 8.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -39,12 +42,12 @@ class AppointmentCard extends StatelessWidget {
             "Status: ${appointment.slot!.status}",
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
-                        const Text(
-                "\n**click to see patient info",
-                softWrap: true,
-                // overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
+          const Text(
+            "\n**click to see patient info",
+            softWrap: true,
+            // overflow: TextOverflow.ellipsis,
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
           Row(
             children: [
               // const Text(
@@ -54,28 +57,48 @@ class AppointmentCard extends StatelessWidget {
               //   style: TextStyle(fontWeight: FontWeight.bold),
               // ),
               // const Spacer(),
-              (appointment.slot!.status == "booked" &&
-                      DateTime(
-                        appointment.slot!.date!.year,
-                        appointment.slot!.date!.month,
-                        appointment.slot!.date!.day,
-                        int.parse(
-                            appointment.slot!.startTime!.split(":").first),
-                        int.parse(
-                          appointment.slot!.startTime!.split(":")[1],
-                        ),
-                      ).isBefore(DateTime.now()) &&
-                      DateTime(
-                        appointment.slot!.date!.year,
-                        appointment.slot!.date!.month,
-                        appointment.slot!.date!.day,
-                        int.parse(appointment.slot!.endTime!.split(":").first),
-                        int.parse(
-                          appointment.slot!.endTime!.split(":")[1],
-                        ),
-                      ).isAfter(DateTime.now()))
+              (appointment.slot!.status == "booked"
+              //  &&
+              //         DateTime(
+              //           appointment.slot!.date!.year,
+              //           appointment.slot!.date!.month,
+              //           appointment.slot!.date!.day,
+              //           int.parse(
+              //               appointment.slot!.startTime!.split(":").first),
+              //           int.parse(
+              //             appointment.slot!.startTime!.split(":")[1],
+              //           ),
+              //         ).isBefore(DateTime.now()) &&
+              //         DateTime(
+              //           appointment.slot!.date!.year,
+              //           appointment.slot!.date!.month,
+              //           appointment.slot!.date!.day,
+              //           int.parse(appointment.slot!.endTime!.split(":").first),
+              //           int.parse(
+              //             appointment.slot!.endTime!.split(":")[1],
+              //           ),
+              //         ).isAfter(DateTime.now())
+                      )
                   ? MaterialButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        if (appointment.roomId != null) {
+                          String? roomCode = await VideoCallService.getRoomCode(
+                              appointment.roomId!);
+                          if (roomCode != null) {
+                            await launchUrl(
+                              Uri.parse(
+                                  'https://winhealth.app.100ms.live/meeting/$roomCode'),
+                              webOnlyWindowName: '_blank',
+                            );
+                          } else {
+                            Fluttertoast.showToast(
+                                msg: "Room Access Not Available");
+                          }
+                        } else {
+                          Fluttertoast.showToast(
+                              msg: "Virtual Room Not Assigned");
+                        }
+                      },
                       color: Colors.green,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),

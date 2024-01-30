@@ -46,6 +46,7 @@ dependencies:
   provider: ^6.1.1
   responsive_framework: ^0.1.4
   shared_preferences: ^2.2.2
+  url_launcher: ^6.2.4
 
 dev_dependencies:
   flutter_lints: ^2.0.0
