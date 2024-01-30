@@ -61,11 +61,13 @@ List<String> painTypes = [
 class ActivityInfoCard extends StatefulWidget {
   final ActivityItem activityItem;
   final UserModel patient;
+  final UserModel currentUser;
   final bool isEditable;
   const ActivityInfoCard(
       {super.key,
       required this.activityItem,
       required this.patient,
+      required this.currentUser,
       required this.isEditable});
 
   @override
@@ -87,14 +89,17 @@ class _ActivityInfoCardState extends State<ActivityInfoCard> {
             Row(
               children: [
                 Text(
-                  "Activity: ${widget.activityItem.activityType} ${widget.isEditable}",
+                  "Activity: ${widget.activityItem.activityType}",
                   style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
                 // const Spacer(),
-                widget.isEditable
+                widget.isEditable &&
+                        (widget.currentUser.access != null &&
+                            widget.currentUser.access!.permission!
+                                .contains("editactivityinfo"))
                     ? MaterialButton(
                         onPressed: () {
                           Navigator.of(context).push(

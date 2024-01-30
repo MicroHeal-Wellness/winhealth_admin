@@ -107,6 +107,7 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
                                 MaterialPageRoute(
                                   builder: (context) => ActivityInfo(
                                     patient: widget.patient,
+                                    currentUser: widget.currentUser,
                                   ),
                                 ),
                               );

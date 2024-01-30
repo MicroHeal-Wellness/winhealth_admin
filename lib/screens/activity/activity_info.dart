@@ -8,7 +8,8 @@ import 'package:winhealth_admin/utils/constants.dart';
 
 class ActivityInfo extends StatefulWidget {
   final UserModel patient;
-  const ActivityInfo({super.key, required this.patient});
+  final UserModel currentUser;
+  const ActivityInfo({super.key, required this.patient, required this.currentUser});
 
   @override
   State<ActivityInfo> createState() => _ActivityInfoState();
@@ -164,6 +165,7 @@ class _ActivityInfoState extends State<ActivityInfo> {
                         return ActivityInfoCard(
                           activityItem: dayActivityList[index],
                           patient: widget.patient,
+                          currentUser: widget.currentUser,
                           isEditable:
                               DateFormat('yyyy-MM-dd').format(currentDate!) ==
                                   DateFormat('yyyy-MM-dd').format(today!),
