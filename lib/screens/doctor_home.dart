@@ -101,7 +101,6 @@ class _DoctorHomeState extends State<DoctorHome> {
                     const SizedBox(
                       height: 16,
                     ),
-
                     Wrap(
                       direction: Axis.horizontal,
                       runSpacing: 16,
@@ -116,7 +115,6 @@ class _DoctorHomeState extends State<DoctorHome> {
                                         : 600,
                                 child: DoctorInfoCard(
                                   doctor: doctor,
-                                  currentUser: widget.currentUser,
                                   callback: getInitData,
                                 ),
                               ))

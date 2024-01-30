@@ -113,6 +113,7 @@ class _AccessMangementHomeState extends State<AccessMangementHome> {
                                             "control_access",
                                             "accessmangement",
                                             "activityinfo",
+                                            "editactivityinfo"
                                             "activitystats",
                                             "dietplan",
                                             "notes",

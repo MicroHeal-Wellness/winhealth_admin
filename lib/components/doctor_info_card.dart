@@ -4,15 +4,12 @@ import 'package:flutter/material.dart';
 
 import 'package:winhealth_admin/models/user_model.dart';
 
-
 class DoctorInfoCard extends StatefulWidget {
   final UserModel doctor;
-  final UserModel currentUser;
   final Function callback;
   const DoctorInfoCard(
       {super.key,
       required this.doctor,
-      required this.currentUser,
       required this.callback});
 
   @override
@@ -30,17 +27,17 @@ class _DoctorInfoCardState extends State<DoctorInfoCard> {
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         // ignore: prefer_const_constructors
-        child: Column(children:  [
-          const Text(
-            "",
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(
-            height: 8,
-          ),
+        child: Column(children: [
+          // const Text(
+          //   "",
+          //   style: TextStyle(
+          //     fontSize: 24,
+          //     fontWeight: FontWeight.bold,
+          //   ),
+          // ),
+          // const SizedBox(
+          //   height: 8,
+          // ),
           Row(
             children: [
               const Text(
@@ -83,59 +80,62 @@ class _DoctorInfoCardState extends State<DoctorInfoCard> {
           const SizedBox(
             height: 8,
           ),
-          // Row(
-          //   children: [
-          //     const Text(
-          //       "Phone: ",
-          //       style: TextStyle(
-          //         fontSize: 16,
-          //         fontWeight: FontWeight.bold,
-          //       ),
-          //     ),
-          //     Text(
-          //       "+91 ${widget.doctor.phoneNumber}",
-          //       style: const TextStyle(
-          //         fontSize: 16,
-          //       ),
-          //     ),
-          //   ],
-          // ),
-          // const SizedBox(
-          //   height: 8,
-          // ),
-          // Row(
-          //   children: [
-          //     const Text(
-          //       "DOB: ",
-          //       style: TextStyle(
-          //         fontSize: 16,
-          //         fontWeight: FontWeight.bold,
-          //       ),
-          //     ),
-          //     Text(
-          //       "${widget.doctor.dob!.toString().split(" ").firstOrNull}",
-          //       style: const TextStyle(
-          //         fontSize: 16,
-          //       ),
-          //     ),
-          //   ],
-          // ),
-          // const SizedBox(
-          //   height: 8,
-          // ),
           Row(
             children: [
               const Text(
-                "Role: ",
+                "Specialization: ",
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               Text(
-                widget.doctor.access == null ? "Not yet signed" : "DTx",
+                "${widget.doctor.doctorType ?? "N/A"}",
                 style: const TextStyle(
                   fontSize: 16,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 8,
+          ),
+          Row(
+            children: [
+              const Text(
+                "License: ",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                "${widget.doctor.license ?? "N/A"}",
+                style: const TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 8,
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                "Bio: ",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Flexible(
+                child: Text(
+                  widget.doctor.bio ?? "N/A",
+                  style: const TextStyle(
+                    fontSize: 16,
+                  ),
                 ),
               ),
             ],
