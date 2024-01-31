@@ -108,19 +108,7 @@ class _AccessMangementHomeState extends State<AccessMangementHome> {
                                       if (formKey.currentState!.validate()) {
                                         bool resp = await RoleService.addRole({
                                           "title": namesController.text,
-                                          "permission": [
-                                            "appointment",
-                                            "control_access",
-                                            "accessmangement",
-                                            "activityinfo",
-                                            "editactivityinfo"
-                                            "activitystats",
-                                            "dietplan",
-                                            "notes",
-                                            "patientform",
-                                            "uploads",
-                                            "patients"
-                                          ]
+                                          "permission": []
                                         });
                                         Navigator.of(context).pop();
                                         if (resp) {
