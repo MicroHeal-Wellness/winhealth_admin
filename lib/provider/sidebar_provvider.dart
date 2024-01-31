@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class SideBarProvider with ChangeNotifier {
-  int _page = 2;
+  int _page = 4;
 
   int get currentPage => _page;
 

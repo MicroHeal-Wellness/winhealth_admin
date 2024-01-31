@@ -36,10 +36,14 @@ class _AddResponsePageState extends State<AddResponsePage> {
     });
     forms = await QuestionareService.getAllNonAppForms();
 
+    forms.forEach((element) {
+      debugPrint(element.name ?? "");
+    });
     debugPrint(
         "----------------Length of forms list:  ${forms.length.toString()}-------------");
 
-    _selectedForm = forms.isNotEmpty ? forms[0] : null;
+    int intitialIndex = forms.length > 1 ? 1 : 0;
+    _selectedForm = forms.isNotEmpty ? forms[intitialIndex] : null;
     setState(() {
       isLoading = false;
     });
@@ -58,7 +62,7 @@ class _AddResponsePageState extends State<AddResponsePage> {
           "Add ${widget.patient.firstName}'s response for Form",
           softWrap: true,
           style: const TextStyle(
-            // fontSize: 24,
+            fontSize: 24,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -77,7 +81,7 @@ class _AddResponsePageState extends State<AddResponsePage> {
                     child: ListView.builder(
                       itemCount: forms.length,
                       itemBuilder: (context, index) {
-                        debugPrint(forms[index].name ?? "");
+                        // debugPrint(forms[index].name ?? "");
                         return ListTile(
                           title: Text(forms[index].name ?? ""),
                           onTap: () async {
@@ -165,7 +169,7 @@ class _FormInputScreenState extends State<FormInputScreen> {
           ? const Center(
               child: CircularProgressIndicator(),
             )
-          : Padding(
+          :  Padding(
               padding: const EdgeInsets.all(32.0),
               child: SingleChildScrollView(
                 controller: scrollController,

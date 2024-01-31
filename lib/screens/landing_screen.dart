@@ -6,6 +6,7 @@ import 'package:winhealth_admin/provider/sidebar_provvider.dart';
 import 'package:winhealth_admin/screens/appointment_home.dart';
 import 'package:winhealth_admin/screens/doctor_home.dart';
 import 'package:winhealth_admin/screens/not_allowed.dart';
+import 'package:winhealth_admin/screens/form_builder/patient_form_builder.dart';
 import 'package:winhealth_admin/screens/patient_home.dart';
 import 'package:winhealth_admin/screens/access_management_home.dart';
 import 'package:winhealth_admin/screens/slots_home.dart';
@@ -47,9 +48,14 @@ class _LandingScreenState extends State<LandingScreen> {
       case 4:
         return currentUser!.access != null &&
                 currentUser!.access!.permission!.contains("user_directory")
-            ? UserDirectory(currentUser: currentUser!)
+            ?  PatientFormBuilder()
             : const NotAllowed();
       case 5:
+        return currentUser!.access != null &&
+                currentUser!.access!.permission!.contains("user_directory")
+            ? UserDirectory(currentUser: currentUser!)
+            : const NotAllowed();
+      case 6:
         return currentUser!.access != null &&
                 currentUser!.access!.permission!.contains("accessmangement")
             ? const AccessMangementHome()
@@ -109,8 +115,8 @@ class _LandingScreenState extends State<LandingScreen> {
                               Image.asset(
                                 "assets/logo_new.png",
                                 height: MediaQuery.of(context).size.width > 1600
-                                    ? 50-size.width*0.001
-                                    : 36-size.width*0.005,
+                                    ? 50 - size.width * 0.001
+                                    : 36 - size.width * 0.005,
                               ),
                               MediaQuery.of(context).size.width > 1600
                                   ? const SizedBox(
@@ -152,9 +158,9 @@ class _LandingScreenState extends State<LandingScreen> {
                                 ),
                               )
                             : const SizedBox(),
-                         Divider(
-                          endIndent: size.width*0.01,
-                          indent:size.width*0.01,
+                        Divider(
+                          endIndent: size.width * 0.01,
+                          indent: size.width * 0.01,
                         ),
                         const SizedBox(
                           height: 16,
@@ -179,18 +185,23 @@ class _LandingScreenState extends State<LandingScreen> {
                           iconData: Icons.people_alt,
                           title: "Doctors",
                         ),
+                        //form builder
                         const SideBarItem(
-                          pageKey: 4,
+                            pageKey: 4,
+                            iconData: Icons.document_scanner_sharp,
+                            title: "Form Builder"),
+                        const SideBarItem(
+                          pageKey: 5,
                           iconData: Icons.vaccines,
                           title: "User Directory",
                         ),
                         const SideBarItem(
-                          pageKey: 5,
+                          pageKey: 6,
                           iconData: Icons.settings,
                           title: "Access",
                         ),
                         const SideBarItem(
-                          pageKey: 6,
+                          pageKey: 7,
                           isDisabled: true,
                           iconData: Icons.logout,
                           title: "Logout",
