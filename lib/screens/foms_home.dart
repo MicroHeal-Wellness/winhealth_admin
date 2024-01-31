@@ -96,11 +96,14 @@ class _FormsHomeState extends State<FormsHome> {
                         const Spacer(),
                         MaterialButton(
                           onPressed: () async {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => AddResponsePage(
-                                        patient: widget.patient)));
+                            await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => AddResponsePage(
+                                  patient: widget.patient,
+                                ),
+                              ),
+                            );
                             await getInitData();
                           },
                           color: primaryColor,
@@ -270,6 +273,3 @@ class _FormsHomeState extends State<FormsHome> {
     });
   }
 }
-
-
-

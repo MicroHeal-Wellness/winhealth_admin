@@ -34,10 +34,10 @@ class BaseService {
       switch (method) {
         case 'POST':
           body ??= {};
-          return http.post(Uri.parse(url), headers: headers, body: body);
+          return http.post(Uri.parse(url), headers: sentHeaders, body: body);
 
         case 'GET':
-          return http.get(Uri.parse(url), headers: headers);
+          return http.get(Uri.parse(url), headers: sentHeaders);
 
         case 'PUT':
           return http.put(Uri.parse(url), headers: sentHeaders, body: body);

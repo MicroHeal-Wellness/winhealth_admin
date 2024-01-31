@@ -5,16 +5,17 @@ const primaryColor = Color(0xFFFF8692);
 const accessSpecifiers = {
   "appointment": "Appointment",
   "slots": "Slots",
-  "patientform": "Patient Form",
-  "accessmangement": "Access Mangement",
+  "doctors": "Doctors",
   "changerole": "Change Role",
+  "patients": "Patients",
   "activityinfo": "Activity Info",
+  "editactivityinfo": "Edit Activity Info",
   "activitystats": "Activity Stats",
   "dietplan": "Diet Plan",
   "notes": "Notes",
+  "patientform": "Patient Form",
   "uploads": "Uploads",
-  "patients": "Patients",
-  "doctors": "Doctors",
+  "accessmangement": "Access Mangement",
   "user_directory": "User Directory"
 };
 

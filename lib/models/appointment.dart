@@ -17,6 +17,7 @@ class Appointment {
     String? cancelledBy;
     bool? completed;
     Slot? slot;
+    String? roomId;
 
     Appointment({
         this.id,
@@ -25,6 +26,7 @@ class Appointment {
         this.cancelledBy,
         this.completed,
         this.slot,
+        this.roomId
     });
 
     factory Appointment.fromJson(Map<String, dynamic> json) => Appointment(
@@ -34,6 +36,7 @@ class Appointment {
         cancelledBy: json["cancelled_by"],
         completed: json["completed"],
         slot: json["slot"] == null ? null : Slot.fromJson(json["slot"]),
+        roomId: json["room_id"],
     );
 
     Map<String, dynamic> toJson() => {
@@ -42,6 +45,7 @@ class Appointment {
         "date_created": dateCreated?.toIso8601String(),
         "cancelled_by": cancelledBy,
         "completed": completed,
+        "room_id": roomId,
         "slot": slot?.toJson(),
     };
 }
