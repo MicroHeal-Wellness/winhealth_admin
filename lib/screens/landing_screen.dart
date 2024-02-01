@@ -26,40 +26,24 @@ class _LandingScreenState extends State<LandingScreen> {
   screenSwitcher(int index) {
     switch (index) {
       case 0:
-        return currentUser!.access != null &&
-                currentUser!.access!.permission!.contains("appointment")
-            ? AppointmentHome(currentUser: currentUser!)
-            : const NotAllowed();
+        return
+            // currentUser!.access != null &&
+            //         currentUser!.access!.permission!.contains("appointment")
+            //     ?
+            AppointmentHome(currentUser: currentUser!);
+      // : const NotAllowed();
       case 1:
-        return currentUser!.access != null &&
-                currentUser!.access!.permission!.contains("slots")
-            ? SlotsHome(currentUser: currentUser!)
-            : const NotAllowed();
+        return SlotsHome(currentUser: currentUser!);
       case 2:
-        return currentUser!.access != null &&
-                currentUser!.access!.permission!.contains("patients")
-            ? PatientHome(currentUser: currentUser!)
-            : const NotAllowed();
+        return PatientHome(currentUser: currentUser!);
       case 3:
-        return currentUser!.access != null &&
-                currentUser!.access!.permission!.contains("doctors")
-            ? DoctorHome(currentUser: currentUser!)
-            : const NotAllowed();
+        return DoctorHome(currentUser: currentUser!);
       case 4:
-        return currentUser!.access != null &&
-                currentUser!.access!.permission!.contains("user_directory")
-            ?  PatientFormBuilder()
-            : const NotAllowed();
+        return PatientFormBuilder();
       case 5:
-        return currentUser!.access != null &&
-                currentUser!.access!.permission!.contains("user_directory")
-            ? UserDirectory(currentUser: currentUser!)
-            : const NotAllowed();
+        return UserDirectory(currentUser: currentUser!);
       case 6:
-        return currentUser!.access != null &&
-                currentUser!.access!.permission!.contains("accessmangement")
-            ? const AccessMangementHome()
-            : const NotAllowed();
+        return const AccessMangementHome();
       default:
         return AppointmentHome(currentUser: currentUser!);
     }
@@ -110,7 +94,7 @@ class _LandingScreenState extends State<LandingScreen> {
                               horizontal: size.width * 0.004,
                               vertical: size.width * 0.002),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Image.asset(
                                 "assets/logo_new.png",
@@ -139,7 +123,8 @@ class _LandingScreenState extends State<LandingScreen> {
                                 padding: EdgeInsets.symmetric(
                                     horizontal: 16.0, vertical: 8),
                                 child: Text(
-                                  "Doctor's Dashboard",
+                                  // "Doctor's Dashboard",
+                                  "Dashboard",
                                   style: TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold),
@@ -151,7 +136,7 @@ class _LandingScreenState extends State<LandingScreen> {
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 16.0, vertical: 8),
                                 child: Text(
-                                  "Dr. ${currentUser!.firstName}",
+                                  "${currentUser!.firstName}",
                                   style: const TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold),
@@ -165,41 +150,69 @@ class _LandingScreenState extends State<LandingScreen> {
                         const SizedBox(
                           height: 16,
                         ),
-                        const SideBarItem(
-                          pageKey: 0,
-                          iconData: Icons.alarm,
-                          title: "Appointments",
-                        ),
-                        const SideBarItem(
-                          pageKey: 1,
-                          iconData: Icons.add_box,
-                          title: "Slots",
-                        ),
-                        const SideBarItem(
-                          pageKey: 2,
-                          iconData: Icons.personal_injury,
-                          title: "Patients",
-                        ),
-                        const SideBarItem(
-                          pageKey: 3,
-                          iconData: Icons.people_alt,
-                          title: "Doctors",
-                        ),
-                        //form builder
-                        // const SideBarItem(
-                        //     pageKey: 4,
-                        //     iconData: Icons.document_scanner_sharp,
-                        //     title: "Form Builder"),
-                        const SideBarItem(
-                          pageKey: 5,
-                          iconData: Icons.vaccines,
-                          title: "User Directory",
-                        ),
-                        const SideBarItem(
-                          pageKey: 6,
-                          iconData: Icons.settings,
-                          title: "Access",
-                        ),
+                        currentUser!.access != null &&
+                                currentUser!.access!.permission!
+                                    .contains("appointment")
+                            ? const SideBarItem(
+                                pageKey: 0,
+                                iconData: Icons.alarm,
+                                title: "Appointments",
+                              )
+                            : const SizedBox(),
+                        currentUser!.access != null &&
+                                currentUser!.access!.permission!
+                                    .contains("slots")
+                            ? const SideBarItem(
+                                pageKey: 1,
+                                iconData: Icons.add_box,
+                                title: "Slots",
+                              )
+                            : const SizedBox(),
+                        currentUser!.access != null &&
+                                currentUser!.access!.permission!
+                                    .contains("patients")
+                            ? const SideBarItem(
+                                pageKey: 2,
+                                iconData: Icons.personal_injury,
+                                title: "Patients",
+                              )
+                            : const SizedBox(),
+                        currentUser!.access != null &&
+                                currentUser!.access!.permission!
+                                    .contains("doctors")
+                            ? const SideBarItem(
+                                pageKey: 3,
+                                iconData: Icons.people_alt,
+                                title: "Doctors",
+                              )
+                            : const SizedBox(),
+                        currentUser!.access != null &&
+                                currentUser!.access!.permission!
+                                    .contains("formbuilder")
+                            ? const SideBarItem(
+                                pageKey: 4,
+                                iconData: Icons.question_mark,
+                                title: "Forms",
+                              )
+                            : const SizedBox(),
+                        currentUser!.access != null &&
+                                currentUser!.access!.permission!
+                                    .contains("user_directory")
+                            ? const SideBarItem(
+                                pageKey: 5,
+                                iconData: Icons.vaccines,
+                                title: "User Directory",
+                              )
+                            : const SizedBox(),
+                        currentUser!.access != null &&
+                                currentUser!.access!.permission!
+                                    .contains("accessmangement")
+                            ? const SideBarItem(
+                                pageKey: 6,
+                                iconData: Icons.settings,
+                                title: "Access",
+                              )
+                            : const SizedBox(),
                         const SideBarItem(
                           pageKey: 7,
                           isDisabled: true,

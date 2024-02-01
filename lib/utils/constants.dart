@@ -13,6 +13,7 @@ const accessSpecifiers = {
   "activitystats": "Activity Stats",
   "dietplan": "Diet Plan",
   "notes": "Notes",
+  "formbuilder": "Forms",
   "patientform": "Patient Form",
   "uploads": "Uploads",
   "accessmangement": "Access Mangement",
