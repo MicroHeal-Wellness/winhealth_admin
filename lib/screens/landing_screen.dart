@@ -186,10 +186,10 @@ class _LandingScreenState extends State<LandingScreen> {
                           title: "Doctors",
                         ),
                         //form builder
-                        const SideBarItem(
-                            pageKey: 4,
-                            iconData: Icons.document_scanner_sharp,
-                            title: "Form Builder"),
+                        // const SideBarItem(
+                        //     pageKey: 4,
+                        //     iconData: Icons.document_scanner_sharp,
+                        //     title: "Form Builder"),
                         const SideBarItem(
                           pageKey: 5,
                           iconData: Icons.vaccines,

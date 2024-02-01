@@ -5,7 +5,7 @@ import 'package:winhealth_admin/components/form_card.dart';
 import 'package:winhealth_admin/components/form_response.dart';
 import 'package:winhealth_admin/models/form_response.dart';
 import 'package:winhealth_admin/models/user_model.dart';
-import 'package:winhealth_admin/screens/patient_forms/add_response_screen.dart';
+import 'package:winhealth_admin/screens/patient_screens/add_response_screen.dart';
 import 'package:winhealth_admin/services/questionare_service.dart';
 import 'package:winhealth_admin/utils/constants.dart';
 
