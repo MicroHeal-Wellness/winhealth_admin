@@ -45,7 +45,7 @@ class ActivityItemStress extends StatelessWidget {
               image: DecorationImage(
                 fit: BoxFit.fill,
                 image: AssetImage(
-                  'assets/images/activity-mood.png',
+                  'images/activity-mood.png',
                 ),
               ),
             ),

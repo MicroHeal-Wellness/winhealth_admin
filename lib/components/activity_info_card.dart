@@ -63,10 +63,12 @@ class ActivityInfoCard extends StatefulWidget {
   final UserModel patient;
   final UserModel currentUser;
   final bool isEditable;
+  final Function func;
   const ActivityInfoCard(
       {super.key,
       required this.activityItem,
       required this.patient,
+      required this.func,
       required this.currentUser,
       required this.isEditable});
 
@@ -101,8 +103,8 @@ class _ActivityInfoCardState extends State<ActivityInfoCard> {
                             widget.currentUser.access!.permission!
                                 .contains("editactivityinfo"))
                     ? MaterialButton(
-                        onPressed: () {
-                          Navigator.of(context).push(
+                        onPressed: () async {
+                          await Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) => ActivityItemScreen(
                                 currentUser: widget.patient,
@@ -110,6 +112,7 @@ class _ActivityInfoCardState extends State<ActivityInfoCard> {
                               ),
                             ),
                           );
+                          await widget.func();
                         },
                         child: const Text("Edit"),
                       )

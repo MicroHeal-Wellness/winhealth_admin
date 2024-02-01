@@ -166,6 +166,7 @@ class _ActivityInfoState extends State<ActivityInfo> {
                           activityItem: dayActivityList[index],
                           patient: widget.patient,
                           currentUser: widget.currentUser,
+                          func: getInitData,
                           isEditable:
                               DateFormat('yyyy-MM-dd').format(currentDate!) ==
                                   DateFormat('yyyy-MM-dd').format(today!),
