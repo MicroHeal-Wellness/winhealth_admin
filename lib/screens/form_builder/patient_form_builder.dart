@@ -73,49 +73,67 @@ class PatientFormBuilder extends StatelessWidget {
               ));
   }
 
-  AppBar appBar(BuildContext context) {
-    return AppBar(
-      
-      title: const Text(
-        "Patient Form Builder",
-        softWrap: true,
-        style: TextStyle(
-          fontSize: 32,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      bottom: const PreferredSize(
-        preferredSize: Size.fromHeight(2),
-        child: Divider(
-          color: Colors.grey,
-          thickness: 2,
-        ),
-      ),
-      actions: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: primaryColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            onPressed: () {
-              // Add Form
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const AddForm()));
-            },
-            child: const Text(
-              "Add Form",
+  PreferredSize appBar(BuildContext context) {
+    return PreferredSize(
+      preferredSize: const Size.fromHeight(120),
+      child: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        title: const Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SizedBox(height: 32, width: double.infinity), // Add some padding
+            Text(
+              "Patient Form Builder",
+              softWrap: true,
               style: TextStyle(
-                color: Colors.white,
+                fontSize: 32,
                 fontWeight: FontWeight.bold,
               ),
             ),
+          ],
+        ),
+        bottom: const PreferredSize(
+          preferredSize: Size.fromHeight(2),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Divider(
+              color: Colors.grey,
+              thickness: 1,
+            ),
           ),
-        )
-      ],
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 8),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: primaryColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              onPressed: () {
+                // Add Form
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const AddForm(),
+                  ),
+                );
+              },
+              child: const Text(
+                "Add Form",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 

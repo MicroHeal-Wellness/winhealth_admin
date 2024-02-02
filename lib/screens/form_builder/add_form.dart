@@ -24,7 +24,7 @@ class _AddFormState extends State<AddForm> {
   File? choicedIcon;
 
   void addChoice(Choice choice, QuestionProvider questionProvider) {
-    questionProvider.choices.add(choice);
+    questionProvider.choices.insert(0, choice);
     setState(() {});
   }
 
@@ -132,172 +132,173 @@ class _AddFormState extends State<AddForm> {
                 thickness: 2,
               ),
               //to get data from new question or existing question
-              Expanded(
-                child: Consumer<QuestionProvider>(
-                    builder: (context, questionProvider, child) {
-                  return Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            "New Question",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          //key of question
-                          const Text("key*",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              )),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          TextFormField(
-                            controller: keyController,
-                            decoration: InputDecoration(
-                              hintText: "Enter Key",
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return "Please enter key";
-                              }
-                              return null;
-                            },
-                          ),
-
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          //question
-                          const Text(
-                            "Question*",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          TextFormField(
-                            maxLines: 5,
-                            controller: questionController,
-                            decoration: InputDecoration(
-                              hintText: "Enter Question",
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return "Please enter question";
-                              }
-                              return null;
-                            },
-                          ),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          //question type
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                "Type",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 8,
-                              ),
-                              DropdownButton<String>(
-                                value: questionProvider.tempFormQuestion.type,
-                                onChanged: (String? newValue) {
-                                  setState(() {
-                                    questionProvider
-                                        .changeTypeOfTempFormQuesiton(
-                                            newValue!);
-                                    debugPrint(
-                                        "Question Type: ${questionProvider.tempFormQuestion.type}");
-                                  });
-                                },
-                                items: <String>[
-                                  'text',
-                                  'slider',
-                                  'singleChoice',
-                                  'multiChoice'
-                                ].map<DropdownMenuItem<String>>((String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(value.toUpperCase()),
-                                  );
-                                }).toList(),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          //choices
-                          questionProvider.tempFormQuestion.type ==
-                                      "singleChoice" ||
-                                  questionProvider.tempFormQuestion.type ==
-                                      "multiChoice"
-                              ? singleChoiceQuesitonChoiceBuilder(
-                                  questionProvider)
-                              : const SizedBox(),
-
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: primaryColor,
-                                  foregroundColor: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                ),
-                                onPressed: () {
-                                  if (_formKey.currentState!.validate()) {
-                                    //add question
-                                    if ((keyController.text.isNotEmpty &&
-                                        questionController.text.isNotEmpty)) {
-                                      addQuestion(questionProvider);
-                                    } else {
-                                      HelperFunctions.showToast(
-                                          "Please fill all the fields");
-                                    }
-                                  }
-                                },
-                                child: const Text("Add Question"),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                }),
-              ),
+              questionAddView(),
             ],
           );
         }));
   }
 
+  Expanded questionAddView() {
+    return Expanded(
+      child: Consumer<QuestionProvider>(
+          builder: (context, questionProvider, child) {
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: primaryColor,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        //add question
+                        if ((keyController.text.isNotEmpty &&
+                            questionController.text.isNotEmpty)) {
+                          addQuestion(questionProvider);
+                        } else {
+                          HelperFunctions.showToast(
+                              "Please fill all the fields");
+                        }
+                      }
+                    },
+                    child: const Text("Add Question"),
+                  ),
+                ),
+                const Text(
+                  "New Question",
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(
+                  height: 8,
+                ),
+                //key of question
+                const Text("key*",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    )),
+                const SizedBox(
+                  height: 8,
+                ),
+                TextFormField(
+                  controller: keyController,
+                  decoration: InputDecoration(
+                    hintText: "Enter Key",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Please enter key";
+                    }
+                    return null;
+                  },
+                ),
+
+                const SizedBox(
+                  height: 8,
+                ),
+                //question
+                const Text(
+                  "Question*",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(
+                  height: 8,
+                ),
+                TextFormField(
+                  maxLines: 5,
+                  controller: questionController,
+                  decoration: InputDecoration(
+                    hintText: "Enter Question",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Please enter question";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(
+                  height: 8,
+                ),
+                //question type
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Type",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 8,
+                    ),
+                    DropdownButton<String>(
+                      value: questionProvider.tempFormQuestion.type,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          questionProvider
+                              .changeTypeOfTempFormQuesiton(newValue!);
+                          debugPrint(
+                              "Question Type: ${questionProvider.tempFormQuestion.type}");
+                        });
+                      },
+                      items: <String>[
+                        'text',
+                        'slider',
+                        'singleChoice',
+                        'multiChoice'
+                      ].map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value.toUpperCase()),
+                        );
+                      }).toList(),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 8,
+                ),
+                //choices
+                questionProvider.tempFormQuestion.type == "singleChoice" ||
+                        questionProvider.tempFormQuestion.type ==
+                            "multiChoice" ||
+                        questionProvider.tempFormQuestion.type == "slider"
+                    ? singleChoiceQuesitonChoiceBuilder(questionProvider)
+                    : const SizedBox(),
+              ],
+            ),
+          ),
+        );
+      }),
+    );
+  }
+
   Column singleChoiceQuesitonChoiceBuilder(QuestionProvider questionProvider) {
+    final size = MediaQuery.of(context).size;
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -312,233 +313,129 @@ class _AddFormState extends State<AddForm> {
           height: 8,
         ),
         questionProvider.choices.isNotEmpty
-            ? Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: questionProvider.choices.map((choice) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey.shade400,
+            ? SizedBox(
+                height: size.height / 4.8,
+                child: ListView.builder(
+                  itemCount: questionProvider.choices.length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey.shade400,
+                        ),
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Chip(
-                      label: Text("${choice.label}"),
-                      deleteIcon: const Icon(Icons.close),
-                      onDeleted: () {
-                        setState(
-                          () {
-                            questionProvider.choices.remove(choice);
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
+                      child: ListTile(
+                        leading: questionProvider.choices[index].icon != null
+                            ? Icon(questionProvider.choices[index].icon)
+                            : null,
+                        title: Text("${questionProvider.choices[index].label}"),
+                        trailing: IconButton(
+                          icon: const Icon(Icons.close),
+                          onPressed: () {
+                            setState(() {
+                              questionProvider.choices.removeAt(index);
+                            });
                           },
-                        );
-                      },
-                    ),
-                  );
-                }).toList())
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              )
             : const Text("No Choices Added"),
         //add choice
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: primaryColor,
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
+        Align(
+          alignment: Alignment.centerRight,
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: primaryColor,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
               ),
-              onPressed: () {
-                //add choice
-                //open dialog box to take choice input
-                showAdaptiveDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        backgroundColor: Colors.white,
-                        title: const Text("Add Choice Item"),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text("Label*"),
-                            const SizedBox(
-                              height: 8,
-                            ),
-                            TextFormField(
-                              controller: choiceController,
-                              decoration: const InputDecoration(
-                                hintText: "Enter Label",
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(12),
-                                  ),
+            ),
+            onPressed: () {
+              //add choice
+              //open dialog box to take choice input
+              showAdaptiveDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      backgroundColor: Colors.white,
+                      title: const Text("Add Choice Item"),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text("Label*"),
+                          const SizedBox(
+                            height: 8,
+                          ),
+                          TextFormField(
+                            controller: choiceController,
+                            decoration: const InputDecoration(
+                              hintText: "Enter Label",
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(12),
                                 ),
                               ),
                             ),
-                            const SizedBox(
-                              height: 8,
-                            ),
-                            //icon picker
-                            SizedBox(
-                              width: double.infinity,
-                              child: ElevatedButton(
-                                  onPressed: () async {
-                                    //pick icon
-                                    choicedIcon =
-                                        await HelperFunctions.pickFile();
-                                    setState(() {});
-                                  },
-                                  child: const Text("Pick Icon")),
-                            ),
-                          ],
-                        ),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: const Text("Cancel"),
                           ),
-                          TextButton(
-                            onPressed: () {
-                              choiceController.text.isNotEmpty
-                                  ? addChoice(
-                                      Choice(
-                                        label: choiceController.text,
-                                      ),
-                                      questionProvider,
-                                    )
-                                  : null;
-                              choiceController.clear();
-                              Navigator.pop(context);
-                            },
-                            child: const Text("Add"),
+                          const SizedBox(
+                            height: 8,
+                          ),
+                          //icon picker
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                                onPressed: () async {
+                                  //pick icon
+                                  choicedIcon =
+                                      await HelperFunctions.pickFile();
+                                  setState(() {});
+                                },
+                                child: const Text("Pick Icon")),
                           ),
                         ],
-                      );
-                    });
-              },
-              child: const Text("Add Choice"),
-            ),
-          ],
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text("Cancel"),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            choiceController.text.isNotEmpty
+                                ? addChoice(
+                                    Choice(
+                                      label: choiceController.text,
+                                    ),
+                                    questionProvider,
+                                  )
+                                : null;
+                            choiceController.clear();
+                            Navigator.pop(context);
+                          },
+                          child: const Text("Add"),
+                        ),
+                      ],
+                    );
+                  });
+            },
+            child: const Text("Add Choice"),
+          ),
         ),
         const SizedBox(
           height: 8,
         ),
       ],
-    );
-  }
-
-  Container silderQuestionBuilder(QuestionProvider questionProvider) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            "New Question",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(
-            height: 8,
-          ),
-          //key of question
-          const Text("key*",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-              )),
-          const SizedBox(
-            height: 8,
-          ),
-          TextFormField(
-            decoration: InputDecoration(
-              hintText: "Enter Key",
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 8,
-          ),
-          //question type
-          Row(
-            children: [
-              const Text(
-                "Type",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(
-                width: 8,
-              ),
-              DropdownButton<String>(
-                value: "text",
-                onChanged: (String? newValue) {
-                  setState(() {});
-                },
-                items: <String>['text', 'slider', 'singlechoice', 'multiChoice']
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value.toUpperCase()),
-                  );
-                }).toList(),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 8,
-          ),
-          //question
-          const Text(
-            "Question",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(
-            height: 8,
-          ),
-          TextFormField(
-            maxLines: 5,
-            decoration: InputDecoration(
-              hintText: "Enter Question",
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 8,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: primaryColor,
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                onPressed: () {
-                  //add question
-                },
-                child: const Text("Add Question"),
-              ),
-            ],
-          ),
-        ],
-      ),
     );
   }
 
@@ -579,7 +476,7 @@ class _AddFormState extends State<AddForm> {
     final questionProvider =
         Provider.of<QuestionProvider>(context, listen: true);
     return SizedBox(
-      height: size.height / 2,
+      height: size.height / 2.2,
       child: ListView.builder(
         itemCount: questionProvider.formQuestions.length,
         itemBuilder: (context, index) {
@@ -636,19 +533,36 @@ class _AddFormState extends State<AddForm> {
     );
   }
 
-  AppBar appBar(BuildContext context, String title) {
-    return AppBar(
-      title: Text(
-        title,
-        style: const TextStyle(
-          fontWeight: FontWeight.bold,
+  PreferredSize appBar(BuildContext context, String title) {
+    return PreferredSize(
+      preferredSize: const Size.fromHeight(100),
+      child: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.white,
+        title: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(
+              height: 32,),
+            Text(
+              title,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 32,
+              ),
+            ),
+          ],
         ),
-      ),
-      bottom: const PreferredSize(
-        preferredSize: Size.fromHeight(2),
-        child: Divider(
-          color: Colors.grey,
-          thickness: 2,
+        bottom: const PreferredSize(
+          preferredSize: Size.fromHeight(2),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 32, vertical: 8),
+            child: Divider(
+              color: Colors.grey,
+              thickness: 1,
+            ),
+          ),
         ),
       ),
     );
