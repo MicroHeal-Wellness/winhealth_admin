@@ -75,91 +75,88 @@ class PatientFormBuilder extends StatelessWidget {
 
   AppBar appBar(BuildContext context) {
     return AppBar(
-        title: const Text(
-          "Patient Form Builder",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
+      
+      title: const Text(
+        "Patient Form Builder",
+        softWrap: true,
+        style: TextStyle(
+          fontSize: 32,
+          fontWeight: FontWeight.bold,
         ),
-        bottom: const PreferredSize(
-          preferredSize: Size.fromHeight(2),
-          child: Divider(
-            color: Colors.grey,
-            thickness: 2,
-          ),
+      ),
+      bottom: const PreferredSize(
+        preferredSize: Size.fromHeight(2),
+        child: Divider(
+          color: Colors.grey,
+          thickness: 2,
         ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: primaryColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              onPressed: () {
-                // Add Form
-                Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>const AddForm() ));
-              },
-              child: const Text(
-                "Add Form",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
+      ),
+      actions: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: primaryColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
               ),
             ),
-          )
-        ],
-      );
+            onPressed: () {
+              // Add Form
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const AddForm()));
+            },
+            child: const Text(
+              "Add Form",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        )
+      ],
+    );
   }
 
   Container availableForm(int index) {
     return Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.black.withOpacity(0.4),
-                    ),
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                  child: ListTile(
-                  
-                    title: Text(
-                        dummyFormResponses[index].form?.name ?? "Form Name",
-                        style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,)
-                        ),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      
-                      children: [
-                        Text(
-                            "Last Updated: ${dummyFormResponses[index].dateUpdated?.toString().split(".").first.split("T").join(" ")}",
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w400, )
-                            ),
-                        Text(
-                            "No of Questions: ${dummyFormResponses[index].answers?.length.toString().padLeft(2, "0")}",
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w400, )
-                            ),
-                            
-                      ],
-                    ),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.edit),
-                      onPressed: () {},
-                    ),
-                  ),
-                );
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Colors.black.withOpacity(0.4),
+        ),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      child: ListTile(
+        title: Text(dummyFormResponses[index].form?.name ?? "Form Name",
+            style: const TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            )),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+                "Last Updated: ${dummyFormResponses[index].dateUpdated?.toString().split(".").first.split("T").join(" ")}",
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w400,
+                )),
+            Text(
+                "No of Questions: ${dummyFormResponses[index].answers?.length.toString().padLeft(2, "0")}",
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w400,
+                )),
+          ],
+        ),
+        trailing: IconButton(
+          icon: const Icon(Icons.edit),
+          onPressed: () {},
+        ),
+      ),
+    );
   }
 }
