@@ -111,6 +111,7 @@ class _AddFormState extends State<AddForm> {
                       const Text(
                         "Questions",
                         style: TextStyle(
+                          fontSize: 24,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -514,6 +515,7 @@ class _AddFormState extends State<AddForm> {
         const Text(
           "Name*",
           style: TextStyle(
+            fontSize: 24,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -544,7 +546,8 @@ class _AddFormState extends State<AddForm> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(
-              height: 32,),
+              height: 32,
+            ),
             Text(
               title,
               style: const TextStyle(

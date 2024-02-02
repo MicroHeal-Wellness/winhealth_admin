@@ -53,37 +53,37 @@ class QuestionProvider with ChangeNotifier {
 
   
   final List<FormBuilderQuestion> formQuestions = [
-    //dummy data
-    FormBuilderQuestion(
-      key: 1,
-      type: 'text',
-      question: 'What is your name?',
-    ),
-    FormBuilderQuestion(
-      key: 2,
-      type: 'slider',
-      question: 'How old are you?',
-    ),
-    FormBuilderQuestion(
-      key: 3,
-      type: 'singlechoice',
-      question: 'Which is your favourite color?',
-      choices: [
-        Choice(label: 'Choice 1'),
-        Choice(label: 'Choice 2'),
-        Choice(label: 'Choice 3'),
-      ],
-    ),
-    FormBuilderQuestion(
-      key: 4,
-      type: 'multiChoice',
-      question: 'Which are your favourite colors?',
-      choices: [
-        Choice(label: 'Choice 1'),
-        Choice(label: 'Choice 2'),
-        Choice(label: 'Choice 3'),
-      ],
-    ),
+    // //dummy data
+    // FormBuilderQuestion(
+    //   key: 1,
+    //   type: 'text',
+    //   question: 'What is your name?',
+    // ),
+    // FormBuilderQuestion(
+    //   key: 2,
+    //   type: 'slider',
+    //   question: 'How old are you?',
+    // ),
+    // FormBuilderQuestion(
+    //   key: 3,
+    //   type: 'singlechoice',
+    //   question: 'Which is your favourite color?',
+    //   choices: [
+    //     Choice(label: 'Choice 1'),
+    //     Choice(label: 'Choice 2'),
+    //     Choice(label: 'Choice 3'),
+    //   ],
+    // ),
+    // FormBuilderQuestion(
+    //   key: 4,
+    //   type: 'multiChoice',
+    //   question: 'Which are your favourite colors?',
+    //   choices: [
+    //     Choice(label: 'Choice 1'),
+    //     Choice(label: 'Choice 2'),
+    //     Choice(label: 'Choice 3'),
+    //   ],
+    // ),
   ];
 
   void addQuestion(FormBuilderQuestion question) {
