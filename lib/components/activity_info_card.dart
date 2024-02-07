@@ -119,6 +119,13 @@ class _ActivityInfoCardState extends State<ActivityInfoCard> {
                     : const SizedBox()
               ],
             ),
+            Text(
+              "Last Update By: ${widget.activityItem.addedBy == null ? "N/A" : widget.activityItem.addedBy!.firstName}",
+              style: const TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
             mapper(
               widget.activityItem.activityType,
             )

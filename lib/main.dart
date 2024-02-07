@@ -17,8 +17,12 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => SideBarProvider()),
-        ChangeNotifierProvider(create: (_) => QuestionProvider()),
+        ChangeNotifierProvider(
+          create: (_) => SideBarProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => QuestionProvider(),
+        ),
       ],
       child: const MyApp(),
     ),

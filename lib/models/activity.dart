@@ -5,46 +5,58 @@
 import 'dart:convert';
 
 import 'package:winhealth_admin/models/food_item.dart';
+import 'package:winhealth_admin/models/user_model.dart';
 
-
-ActivityItem activityItemFromJson(String str) => ActivityItem.fromJson(json.decode(str));
+ActivityItem activityItemFromJson(String str) =>
+    ActivityItem.fromJson(json.decode(str));
 
 String activityItemToJson(ActivityItem data) => json.encode(data.toJson());
 
 class ActivityItem {
-    String? id;
-    String? userCreated;
-    DateTime? dateCreated;
-    dynamic response;
-    String? activityType;
-    DateTime? date;
+  String? id;
+  String? userCreated;
+  UserModel? addedBy;
+  DateTime? dateCreated;
+  dynamic response;
+  String? activityType;
+  DateTime? date;
 
-    ActivityItem({
-        this.id,
-        this.userCreated,
-        this.dateCreated,
-        this.response,
-        this.activityType,
-        this.date,
-    });
+  ActivityItem({
+    this.id,
+    this.userCreated,
+    this.addedBy,
+    this.dateCreated,
+    this.response,
+    this.activityType,
+    this.date,
+  });
 
-    factory ActivityItem.fromJson(Map<String, dynamic> json) => ActivityItem(
+  factory ActivityItem.fromJson(Map<String, dynamic> json) => ActivityItem(
         id: json["id"],
         userCreated: json["user_created"],
-        dateCreated: json["date_created"] == null ? null : DateTime.parse(json["date_created"]),
-        response: json["response"] == null ? null : mapper(json["activity_type"], json["response"]),
+        addedBy: json["added_by"] == null
+            ? null
+            : UserModel.fromJson(json["added_by"]),
+        dateCreated: json["date_created"] == null
+            ? null
+            : DateTime.parse(json["date_created"]),
+        response: json["response"] == null
+            ? null
+            : mapper(json["activity_type"], json["response"]),
         activityType: json["activity_type"],
         date: json["date"] == null ? null : DateTime.parse(json["date"]),
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "id": id,
         "user_created": userCreated,
+        "added_by": addedBy,
         "date_created": dateCreated?.toIso8601String(),
         "response": response.toJson(),
         "activity_type": activityType,
-        "date": "${date!.year.toString().padLeft(4, '0')}-${date!.month.toString().padLeft(2, '0')}-${date!.day.toString().padLeft(2, '0')}",
-    };
+        "date":
+            "${date!.year.toString().padLeft(4, '0')}-${date!.month.toString().padLeft(2, '0')}-${date!.day.toString().padLeft(2, '0')}",
+      };
 }
 
 mapper(name, json) {
@@ -111,16 +123,20 @@ class FoodActivity {
   factory FoodActivity.fromJson(Map<String, dynamic> json) => FoodActivity(
         breakfast: json["breakfast"] == null
             ? []
-            : List<FoodItem>.from(json["breakfast"]!.map((x) => FoodItem.fromJson(x))),
-        lunch: json["lunch"]== null
+            : List<FoodItem>.from(
+                json["breakfast"]!.map((x) => FoodItem.fromJson(x))),
+        lunch: json["lunch"] == null
             ? []
-            : List<FoodItem>.from(json["lunch"]!.map((x) => FoodItem.fromJson(x))),
-        dinner: json["dinner"]== null
+            : List<FoodItem>.from(
+                json["lunch"]!.map((x) => FoodItem.fromJson(x))),
+        dinner: json["dinner"] == null
             ? []
-            : List<FoodItem>.from(json["dinner"]!.map((x) => FoodItem.fromJson(x))),
-        others: json["others"]== null
+            : List<FoodItem>.from(
+                json["dinner"]!.map((x) => FoodItem.fromJson(x))),
+        others: json["others"] == null
             ? []
-            : List<FoodItem>.from(json["others"]!.map((x) => FoodItem.fromJson(x))),
+            : List<FoodItem>.from(
+                json["others"]!.map((x) => FoodItem.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -163,20 +179,13 @@ class StoolActivity {
   int? frequency;
   dynamic formOfStoolTypes;
 
-  StoolActivity({
-    this.frequency,
-    this.formOfStoolTypes
-  });
+  StoolActivity({this.frequency, this.formOfStoolTypes});
 
   factory StoolActivity.fromJson(Map<String, dynamic> json) => StoolActivity(
-        frequency: json["frequency"],
-        formOfStoolTypes:  json["formOfStoolTypes"]
-      );
+      frequency: json["frequency"], formOfStoolTypes: json["formOfStoolTypes"]);
 
-  Map<String, dynamic> toJson() => {
-        "frequency": frequency,
-        "formOfStoolTypes": formOfStoolTypes
-      };
+  Map<String, dynamic> toJson() =>
+      {"frequency": frequency, "formOfStoolTypes": formOfStoolTypes};
 }
 
 class StressActivity {

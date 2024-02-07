@@ -71,7 +71,7 @@ class UserModel {
       lastName: json["last_name"] ?? "",
       phoneNumber: json["phone_number"],
       email: json["email"],
-      dob: json["dob"] == null ? null : DateTime.parse(json["dob"]),
+      dob: json["dob"] == null ? DateTime.now() : DateTime.parse(json["dob"]),
       gender: json["gender"],
       avatar: json["avatar"],
       access: json["access"].runtimeType == String || json["access"] == null
