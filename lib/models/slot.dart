@@ -20,7 +20,7 @@ class Slot {
   factory Slot.fromJson(Map<String, dynamic> json) {
     return Slot(
       id: json["id"],
-      status: json["status"],
+      status: json["status"] ?? "unavailable",
       startTime: json["start_time"],
       endTime: json["end_time"],
       date: json["date"] == null ? null : DateTime.parse(json["date"]),

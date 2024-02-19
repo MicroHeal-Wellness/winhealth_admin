@@ -27,7 +27,7 @@ class ActivityService {
   static Future<List<ActivityItem>> getActivitiesByUserIDandDate(
       String userID, String date) async {
     final response = await BaseService.makeAuthenticatedRequest(
-      '${BaseService.BASE_URL}/items/activity_log?filter={"_and":[{"user_created":"$userID"},{"date":{"_eq":"$date"}}]}',
+      '${BaseService.BASE_URL}/items/activity_log?filter={"_and":[{"user_created":"$userID"},{"date":{"_eq":"$date"}}]}&fields=*,added_by.*',
       method: 'GET',
     );
     List<ActivityItem> activityItemList = [];

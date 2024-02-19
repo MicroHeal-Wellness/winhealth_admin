@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:winhealth_admin/models/user_model.dart';
 import 'package:winhealth_admin/screens/auth/login_screen.dart';
+import 'package:winhealth_admin/screens/batch_slot_update.dart';
 import 'package:winhealth_admin/screens/foms_home.dart';
 import 'package:winhealth_admin/screens/landing_screen.dart';
 import 'package:winhealth_admin/services/auth_service.dart';
@@ -43,6 +44,11 @@ class _InitialRouterState extends State<InitialRouter> {
               builder: (context) => const LandingScreen(),
             ),
           );
+          // Navigator.of(context).pushReplacement(
+          //   MaterialPageRoute(
+          //     builder: (context) => BatchSlotUpdate(currentUser: currentUser),
+          //   ),
+          // );
         } else {
           Fluttertoast.showToast(msg: "Not a valid user type");
           await AuthService.logOut(context);

@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:winhealth_admin/components/slot_card.dart';
 import 'package:winhealth_admin/models/slot.dart';
 import 'package:winhealth_admin/models/user_model.dart';
+import 'package:winhealth_admin/screens/batch_slot_update.dart';
 import 'package:winhealth_admin/services/slot_service.dart';
 import 'package:winhealth_admin/utils/constants.dart';
 
@@ -70,8 +71,10 @@ class _SlotsHomeState extends State<SlotsHome> {
     setState(() {
       loading = true;
     });
+    print(slots.length);
     slots = await SlotService.getSlotsByDocterID(widget.currentUser!.id!,
         "${currentDate!.year}-${currentDate!.month.toString().padLeft(2, "0")}-${currentDate!.day.toString().padLeft(2, "0")}");
+    print(slots.length);
     setState(() {
       loading = false;
     });
@@ -161,6 +164,29 @@ class _SlotsHomeState extends State<SlotsHome> {
                             ),
                           ),
                         ),
+                        // const SizedBox(
+                        //   width: 32,
+                        // ),
+                        // GestureDetector(
+                        //   onTap: () async {
+                        //     await Navigator.of(context).push(
+                        //       MaterialPageRoute(
+                        //         builder: (context) => BatchSlotUpdate(
+                        //           currentUser: widget.currentUser,
+                        //         ),
+                        //       ),
+                        //     );
+                        //   },
+                        //   child: const CircleAvatar(
+                        //     radius: 24,
+                        //     backgroundColor: Colors.blueAccent,
+                        //     child: Icon(
+                        //       Icons.change_circle,
+                        //       color: Colors.white,
+                        //       size: 24,
+                        //     ),
+                        //   ),
+                        // ),
                       ],
                     ),
                     const SizedBox(
@@ -265,6 +291,57 @@ class _SlotsHomeState extends State<SlotsHome> {
                                                       .updateSlotById(
                                                     slot.id!,
                                                     "available",
+                                                  );
+                                                  if (res) {
+                                                    Fluttertoast.showToast(
+                                                        msg: "Slot Updated");
+                                                  } else {
+                                                    Fluttertoast.showToast(
+                                                        msg:
+                                                            "Slot Update Failed");
+                                                  }
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: const Text("Ok"),
+                                              ),
+                                              MaterialButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: const Text("Cancel"),
+                                              )
+                                            ],
+                                          ),
+                                        );
+                                        await getInitData();
+                                      } else if (slot.status == "available" &&
+                                          DateTime(
+                                            currentDate!.year,
+                                            currentDate!.month,
+                                            currentDate!.day,
+                                            int.parse(slot.startTime!
+                                                .split(":")
+                                                .first),
+                                            int.parse(
+                                              slot.startTime!.split(":")[1],
+                                            ),
+                                          ).isAfter(
+                                            DateTime.now(),
+                                          )) {
+                                        await showDialog(
+                                          context: context,
+                                          builder: (context) => AlertDialog(
+                                            title: const Text("Slot Update"),
+                                            content: const Text(
+                                              "Are you sure you want to mark the slot as unavailable?",
+                                            ),
+                                            actions: [
+                                              MaterialButton(
+                                                onPressed: () async {
+                                                  bool res = await SlotService
+                                                      .updateSlotById(
+                                                    slot.id!,
+                                                    "unavailable",
                                                   );
                                                   if (res) {
                                                     Fluttertoast.showToast(
