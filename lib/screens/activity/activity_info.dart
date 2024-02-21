@@ -9,7 +9,8 @@ import 'package:winhealth_admin/utils/constants.dart';
 class ActivityInfo extends StatefulWidget {
   final UserModel patient;
   final UserModel currentUser;
-  const ActivityInfo({super.key, required this.patient, required this.currentUser});
+  const ActivityInfo(
+      {super.key, required this.patient, required this.currentUser});
 
   @override
   State<ActivityInfo> createState() => _ActivityInfoState();
@@ -18,8 +19,8 @@ class ActivityInfo extends StatefulWidget {
 class _ActivityInfoState extends State<ActivityInfo> {
   ScrollController scrollController = ScrollController();
   bool showbtn = false;
-  DateTime? currentDate = DateTime.now();
-  DateTime today =
+  DateTime today = DateTime.now();
+  DateTime? currentDate =
       DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
 
   bool isLoadingActivities = false;
@@ -48,6 +49,8 @@ class _ActivityInfoState extends State<ActivityInfo> {
   }
 
   getInitData() async {
+    print(currentDate);
+    print(today);
     setState(() {
       isLoadingActivities = true;
     });
@@ -167,9 +170,8 @@ class _ActivityInfoState extends State<ActivityInfo> {
                           patient: widget.patient,
                           currentUser: widget.currentUser,
                           func: getInitData,
-                          isEditable:
-                              DateFormat('yyyy-MM-dd').format(currentDate!) ==
-                                  DateFormat('yyyy-MM-dd').format(today!),
+                          currentDateTime: currentDate!,
+                          isEditable:currentDate!.isBefore(today),
                         );
                       },
                       itemCount: dayActivityList.length,

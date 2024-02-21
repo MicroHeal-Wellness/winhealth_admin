@@ -62,6 +62,7 @@ class ActivityInfoCard extends StatefulWidget {
   final ActivityItem activityItem;
   final UserModel patient;
   final UserModel currentUser;
+  final DateTime currentDateTime;
   final bool isEditable;
   final Function func;
   const ActivityInfoCard(
@@ -69,6 +70,7 @@ class ActivityInfoCard extends StatefulWidget {
       required this.activityItem,
       required this.patient,
       required this.func,
+      required this.currentDateTime,
       required this.currentUser,
       required this.isEditable});
 
@@ -109,6 +111,7 @@ class _ActivityInfoCardState extends State<ActivityInfoCard> {
                               builder: (context) => ActivityItemScreen(
                                 currentUser: widget.patient,
                                 activityItem: widget.activityItem,
+                                dateTime: widget.currentDateTime,
                               ),
                             ),
                           );

@@ -12,10 +12,12 @@ import 'acitivity_item_form.dart';
 class ActivityItemScreen extends StatefulWidget {
   final UserModel currentUser;
   final ActivityItem activityItem;
+  final DateTime dateTime;
   final bool allowUpdate;
   const ActivityItemScreen(
       {super.key,
       required this.currentUser,
+      required this.dateTime,
       required this.activityItem,
       this.allowUpdate = true});
 
@@ -48,13 +50,12 @@ class _ActivityItemScreenState extends State<ActivityItemScreen> {
   }
 
   void onClickSave(BuildContext context) async {
-    DateTime date = DateTime.now();
     Map<String, dynamic> params = {
       "activity_type": widget.activityItem.activityType!,
       "response": widget.activityItem.response.toJson(),
       "user_created": widget.currentUser.id,
       "date":
-          "${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}"
+          "${widget.dateTime.year.toString().padLeft(4, '0')}-${widget.dateTime.month.toString().padLeft(2, '0')}-${widget.dateTime.day.toString().padLeft(2, '0')}"
     };
     setState(() {
       isSavingActivity = true;

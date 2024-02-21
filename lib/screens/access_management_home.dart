@@ -99,6 +99,7 @@ class _AccessMangementHomeState extends State<AccessMangementHome> {
                                       if (val == null || val.isEmpty) {
                                         return "Please Enter a valid Name";
                                       }
+                                      return null;
                                     },
                                   ),
                                 ),

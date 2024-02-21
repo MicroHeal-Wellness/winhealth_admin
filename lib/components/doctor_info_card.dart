@@ -7,10 +7,11 @@ import 'package:winhealth_admin/models/user_model.dart';
 class DoctorInfoCard extends StatefulWidget {
   final UserModel doctor;
   final Function callback;
-  const DoctorInfoCard(
-      {super.key,
-      required this.doctor,
-      required this.callback});
+  const DoctorInfoCard({
+    super.key,
+    required this.doctor,
+    required this.callback,
+  });
 
   @override
   State<DoctorInfoCard> createState() => _DoctorInfoCardState();
@@ -49,6 +50,26 @@ class _DoctorInfoCardState extends State<DoctorInfoCard> {
               ),
               Text(
                 "${widget.doctor.firstName} ${widget.doctor.lastName}",
+                style: const TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 8,
+          ),
+          Row(
+            children: [
+              const Text(
+                "Gender: ",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                "${widget.doctor.gender}",
                 style: const TextStyle(
                   fontSize: 16,
                 ),
@@ -111,6 +132,26 @@ class _DoctorInfoCardState extends State<DoctorInfoCard> {
               ),
               Text(
                 "${widget.doctor.license ?? "N/A"}",
+                style: const TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 8,
+          ),
+          Row(
+            children: [
+              const Text(
+                "Regs Year: ",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                "${widget.doctor.registrationYear!.year}",
                 style: const TextStyle(
                   fontSize: 16,
                 ),

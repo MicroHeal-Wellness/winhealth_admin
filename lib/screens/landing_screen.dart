@@ -4,11 +4,11 @@ import 'package:winhealth_admin/components/side_bar_item.dart';
 import 'package:winhealth_admin/models/user_model.dart';
 import 'package:winhealth_admin/provider/sidebar_provvider.dart';
 import 'package:winhealth_admin/screens/appointment_home.dart';
+import 'package:winhealth_admin/screens/defualt_page.dart';
 import 'package:winhealth_admin/screens/doctor_home.dart';
-import 'package:winhealth_admin/screens/not_allowed.dart';
 import 'package:winhealth_admin/screens/form_builder/patient_form_builder.dart';
-import 'package:winhealth_admin/screens/patient_home.dart';
 import 'package:winhealth_admin/screens/access_management_home.dart';
+import 'package:winhealth_admin/screens/patient_screens/patient_home.dart';
 import 'package:winhealth_admin/screens/slots_home.dart';
 import 'package:winhealth_admin/screens/user_directory_home.dart';
 import 'package:winhealth_admin/services/base_service.dart';
@@ -25,6 +25,13 @@ class _LandingScreenState extends State<LandingScreen> {
   bool loading = false;
   screenSwitcher(int index) {
     switch (index) {
+      case -1:
+        return
+            // currentUser!.access != null &&
+            //         currentUser!.access!.permission!.contains("appointment")
+            //     ?
+            const DefaultPage();
+      // : const NotAllowed();
       case 0:
         return
             // currentUser!.access != null &&
@@ -119,19 +126,6 @@ class _LandingScreenState extends State<LandingScreen> {
                           ),
                         ),
                         MediaQuery.of(context).size.width > 1600
-                            ? const Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 16.0, vertical: 8),
-                                child: Text(
-                                  // "Doctor's Dashboard",
-                                  "Dashboard",
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              )
-                            : const SizedBox(),
-                        MediaQuery.of(context).size.width > 1600
                             ? Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 16.0, vertical: 8),
@@ -140,6 +134,20 @@ class _LandingScreenState extends State<LandingScreen> {
                                   style: const TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold),
+                                ),
+                              )
+                            : const SizedBox(),
+                        MediaQuery.of(context).size.width > 1600
+                            ? Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 16.0,right: 16.0, bottom: 8),
+                                child: Text(
+                                  // "Doctor's Dashboard",
+                                  currentUser!.access!.title!,
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               )
                             : const SizedBox(),

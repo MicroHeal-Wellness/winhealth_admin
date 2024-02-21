@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:winhealth_admin/models/user_model.dart';
 import 'package:winhealth_admin/screens/activity/activity_info.dart';
-import 'package:winhealth_admin/screens/activity_stats.dart';
-import 'package:winhealth_admin/screens/diet_home.dart';
 import 'package:winhealth_admin/screens/foms_home.dart';
-import 'package:winhealth_admin/screens/notes_home.dart';
-import 'package:winhealth_admin/screens/report_home.dart';
 import 'package:intl/intl.dart';
+import 'package:winhealth_admin/screens/patient_screens/activity_stats.dart';
+import 'package:winhealth_admin/screens/patient_screens/diet_home.dart';
+import 'package:winhealth_admin/screens/patient_screens/notes_home.dart';
+import 'package:winhealth_admin/screens/patient_screens/report_home.dart';
+import 'package:winhealth_admin/screens/patient_screens/team_notes_home.dart';
 import 'package:winhealth_admin/services/activity_service.dart';
 
 class PatientInfoCard extends StatefulWidget {
@@ -179,6 +180,27 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
                               Fluttertoast.showToast(msg: "Access Denied");
                             },
                       child: const Text('Notes'),
+                    ),
+                    MenuItemButton(
+                      style: const ButtonStyle(
+                        backgroundColor: MaterialStatePropertyAll(Colors.white),
+                      ),
+                      onPressed: (widget.currentUser.access != null &&
+                              widget.currentUser.access!.permission!
+                                  .contains("team_notes"))
+                          ? () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => TeamNotesHome(
+                                    patient: widget.patient,
+                                  ),
+                                ),
+                              );
+                            }
+                          : () {
+                              Fluttertoast.showToast(msg: "Access Denied");
+                            },
+                      child: const Text('Team Notes'),
                     ),
                     MenuItemButton(
                       style: const ButtonStyle(

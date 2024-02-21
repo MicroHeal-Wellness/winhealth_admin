@@ -101,24 +101,27 @@ class _DoctorHomeState extends State<DoctorHome> {
                     const SizedBox(
                       height: 16,
                     ),
-                    Wrap(
-                      direction: Axis.horizontal,
-                      runSpacing: 16,
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      spacing: 16,
-                      children: doctorsList
-                          .map((doctor) => SizedBox(
-                                width: MediaQuery.of(context).size.width > 1800
-                                    ? 350
-                                    : MediaQuery.of(context).size.width > 1200
-                                        ? 400
-                                        : 600,
-                                child: DoctorInfoCard(
-                                  doctor: doctor,
-                                  callback: getInitData,
-                                ),
-                              ))
-                          .toList(),
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Wrap(
+                        direction: Axis.horizontal,
+                        runSpacing: 16,
+                        crossAxisAlignment: WrapCrossAlignment.start,
+                        spacing: 16,
+                        children: doctorsList
+                            .map((doctor) => SizedBox(
+                                  width: MediaQuery.of(context).size.width > 1800
+                                      ? 350
+                                      : MediaQuery.of(context).size.width > 1200
+                                          ? 400
+                                          : 600,
+                                  child: DoctorInfoCard(
+                                    doctor: doctor,
+                                    callback: getInitData,
+                                  ),
+                                ))
+                            .toList(),
+                      ),
                     )
                     // GridView.builder(
                     //   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
