@@ -1,9 +1,0 @@
-{
-    "apps": [
-        {
-            "name": "my-app",
-            "script": "dhttpd",
-            "args" : "--path outputs/web/"
-        }
-    ]
-}
