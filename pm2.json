@@ -3,7 +3,7 @@
         {
             "name": "my-app",
             "script": "dhttpd",
-            "args" : ""
+            "args" : "--path outputs/web/"
         }
     ]
 }
